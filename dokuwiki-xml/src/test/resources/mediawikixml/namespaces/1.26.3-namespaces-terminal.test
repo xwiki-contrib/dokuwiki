@@ -1,0 +1,261 @@
+.#------------------------------------------------------------------------------
+.expect|filter+xml
+.#------------------------------------------------------------------------------
+<wikiSpace name="Main">
+  <wikiDocument name="WebHome">
+    <wikiDocumentLocale>
+      <wikiDocumentRevision revision="1">
+        <p>
+          <parameters>
+            <entry>
+              <string>revision_minor</string>
+              <boolean>false</boolean>
+            </entry>
+            <entry>
+              <string>title</string>
+              <string>Main Page</string>
+            </entry>
+            <entry>
+              <string>revision_date</string>
+              <date>2016-06-24 09:37:15.0 UTC</date>
+            </entry>
+            <entry>
+              <string>revision_author</string>
+              <null></null>
+            </entry>
+            <entry>
+              <string>content</string>
+              <string>[[.Space.Page]]
+[[.Space.Page]]
+[[Regular]]
+[[No_namespace:Page]]
+[[User.username]]</string>
+            </entry>
+            <entry>
+              <string>syntax</string>
+              <org.xwiki.rendering.syntax.Syntax>
+                <type>
+                  <name>XWiki</name>
+                  <id>xwiki</id>
+                </type>
+                <version>2.1</version>
+              </org.xwiki.rendering.syntax.Syntax>
+            </entry>
+          </parameters>
+        </p>
+      </wikiDocumentRevision>
+    </wikiDocumentLocale>
+  </wikiDocument>
+  <wikiSpace name="Space">
+    <wikiDocument name="Page">
+      <wikiDocumentLocale>
+        <wikiDocumentRevision revision="1">
+          <p>
+            <parameters>
+              <entry>
+                <string>revision_minor</string>
+                <boolean>false</boolean>
+              </entry>
+              <entry>
+                <string>title</string>
+                <string>Space/Page</string>
+              </entry>
+              <entry>
+                <string>revision_date</string>
+                <date>2016-06-24 09:37:15.0 UTC</date>
+              </entry>
+              <entry>
+                <string>revision_author</string>
+                <null></null>
+              </entry>
+              <entry>
+                <string>content</string>
+                <string>content 4</string>
+              </entry>
+              <entry>
+                <string>syntax</string>
+                <org.xwiki.rendering.syntax.Syntax>
+                  <type>
+                    <name>XWiki</name>
+                    <id>xwiki</id>
+                  </type>
+                  <version>2.1</version>
+                </org.xwiki.rendering.syntax.Syntax>
+              </entry>
+            </parameters>
+          </p>
+        </wikiDocumentRevision>
+      </wikiDocumentLocale>
+    </wikiDocument>
+    <wikiDocument name="Page">
+      <wikiDocumentLocale>
+        <wikiDocumentRevision revision="1">
+          <p>
+            <parameters>
+              <entry>
+                <string>revision_minor</string>
+                <boolean>false</boolean>
+              </entry>
+              <entry>
+                <string>title</string>
+                <string>Space/Page/</string>
+              </entry>
+              <entry>
+                <string>revision_date</string>
+                <date>2016-06-24 09:37:15.0 UTC</date>
+              </entry>
+              <entry>
+                <string>revision_author</string>
+                <null></null>
+              </entry>
+              <entry>
+                <string>content</string>
+                <string>content 5</string>
+              </entry>
+              <entry>
+                <string>syntax</string>
+                <org.xwiki.rendering.syntax.Syntax>
+                  <type>
+                    <name>XWiki</name>
+                    <id>xwiki</id>
+                  </type>
+                  <version>2.1</version>
+                </org.xwiki.rendering.syntax.Syntax>
+              </entry>
+            </parameters>
+          </p>
+        </wikiDocumentRevision>
+      </wikiDocumentLocale>
+    </wikiDocument>
+  </wikiSpace>
+  <wikiDocument name="Regular">
+    <wikiDocumentLocale>
+      <wikiDocumentRevision revision="1">
+        <p>
+          <parameters>
+            <entry>
+              <string>revision_minor</string>
+              <boolean>false</boolean>
+            </entry>
+            <entry>
+              <string>title</string>
+              <string>Regular</string>
+            </entry>
+            <entry>
+              <string>revision_date</string>
+              <date>2016-06-24 09:37:15.0 UTC</date>
+            </entry>
+            <entry>
+              <string>revision_author</string>
+              <null></null>
+            </entry>
+            <entry>
+              <string>content</string>
+              <string>regular page</string>
+            </entry>
+            <entry>
+              <string>syntax</string>
+              <org.xwiki.rendering.syntax.Syntax>
+                <type>
+                  <name>XWiki</name>
+                  <id>xwiki</id>
+                </type>
+                <version>2.1</version>
+              </org.xwiki.rendering.syntax.Syntax>
+            </entry>
+          </parameters>
+        </p>
+      </wikiDocumentRevision>
+    </wikiDocumentLocale>
+  </wikiDocument>
+  <wikiDocument name="No_namespace:Page">
+    <wikiDocumentLocale>
+      <wikiDocumentRevision revision="1">
+        <p>
+          <parameters>
+            <entry>
+              <string>revision_minor</string>
+              <boolean>false</boolean>
+            </entry>
+            <entry>
+              <string>title</string>
+              <string>No namespace:Page</string>
+            </entry>
+            <entry>
+              <string>revision_date</string>
+              <date>2016-06-24 09:37:15.0 UTC</date>
+            </entry>
+            <entry>
+              <string>revision_author</string>
+              <null></null>
+            </entry>
+            <entry>
+              <string>content</string>
+              <string>no namespace page</string>
+            </entry>
+            <entry>
+              <string>syntax</string>
+              <org.xwiki.rendering.syntax.Syntax>
+                <type>
+                  <name>XWiki</name>
+                  <id>xwiki</id>
+                </type>
+                <version>2.1</version>
+              </org.xwiki.rendering.syntax.Syntax>
+            </entry>
+          </parameters>
+        </p>
+      </wikiDocumentRevision>
+    </wikiDocumentLocale>
+  </wikiDocument>
+</wikiSpace>
+<wikiSpace name="User">
+  <wikiDocument name="username">
+    <wikiDocumentLocale>
+      <wikiDocumentRevision revision="1">
+        <p>
+          <parameters>
+            <entry>
+              <string>revision_minor</string>
+              <boolean>false</boolean>
+            </entry>
+            <entry>
+              <string>title</string>
+              <string>User:username</string>
+            </entry>
+            <entry>
+              <string>revision_date</string>
+              <date>2016-06-24 09:37:15.0 UTC</date>
+            </entry>
+            <entry>
+              <string>revision_author</string>
+              <null></null>
+            </entry>
+            <entry>
+              <string>content</string>
+              <string>user 6</string>
+            </entry>
+            <entry>
+              <string>syntax</string>
+              <org.xwiki.rendering.syntax.Syntax>
+                <type>
+                  <name>XWiki</name>
+                  <id>xwiki</id>
+                </type>
+                <version>2.1</version>
+              </org.xwiki.rendering.syntax.Syntax>
+            </entry>
+          </parameters>
+        </p>
+      </wikiDocumentRevision>
+    </wikiDocumentLocale>
+  </wikiDocument>
+</wikiSpace>
+.#------------------------------------------------------------------------------
+.input|dokuwiki+xml
+.configuration.source=../1.26.3-namespaces.xml
+.configuration.files=file:${{{xwiki.test.folder}}}/dokuwikixml/1.26.3-files/
+.configuration.fileAttached=true
+.configuration.terminalPages=true
+.configuration.spaceSeparator=/
+.#------------------------------------------------------------------------------

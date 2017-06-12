@@ -1,0 +1,132 @@
+.#------------------------------------------------------------------------------
+.expect|filter+xml
+.#------------------------------------------------------------------------------
+<wikiSpace name="Main">
+  <wikiDocument name="Test_ImageReference">
+    <wikiDocumentLocale>
+      <wikiDocumentRevision revision="1">
+        <p>
+          <parameters>
+            <entry>
+              <string>revision_minor</string>
+              <boolean>false</boolean>
+            </entry>
+            <entry>
+              <string>title</string>
+              <string>Test ImageReference</string>
+            </entry>
+            <entry>
+              <string>revision_date</string>
+              <date>2017-01-26 07:21:19.0 UTC</date>
+            </entry>
+            <entry>
+              <string>revision_author</string>
+              <string>TEST Test</string>
+            </entry>
+            <entry>
+              <string>content</string>
+              <string>[[[[image:File.Pixel_white\.png@Pixel_white.png||alt="centre" title="centre"]]&gt;&gt;File.Pixel_white\.png]]</string>
+            </entry>
+            <entry>
+              <string>syntax</string>
+              <org.xwiki.rendering.syntax.Syntax>
+                <type>
+                  <name>XWiki</name>
+                  <id>xwiki</id>
+                </type>
+                <version>2.1</version>
+              </org.xwiki.rendering.syntax.Syntax>
+            </entry>
+          </parameters>
+        </p>
+      </wikiDocumentRevision>
+    </wikiDocumentLocale>
+  </wikiDocument>
+  <wikiDocument name="Test_EmptyImageReference">
+    <wikiDocumentLocale>
+      <wikiDocumentRevision revision="1">
+        <p>
+          <parameters>
+            <entry>
+              <string>revision_minor</string>
+              <boolean>false</boolean>
+            </entry>
+            <entry>
+              <string>title</string>
+              <string>Test EmptyImageReference</string>
+            </entry>
+            <entry>
+              <string>revision_date</string>
+              <date>2017-01-26 07:21:19.0 UTC</date>
+            </entry>
+            <entry>
+              <string>revision_author</string>
+              <string>TEST Test</string>
+            </entry>
+            <entry>
+              <string>content</string>
+              <string>[[attach:]]</string>
+            </entry>
+            <entry>
+              <string>syntax</string>
+              <org.xwiki.rendering.syntax.Syntax>
+                <type>
+                  <name>XWiki</name>
+                  <id>xwiki</id>
+                </type>
+                <version>2.1</version>
+              </org.xwiki.rendering.syntax.Syntax>
+            </entry>
+          </parameters>
+        </p>
+      </wikiDocumentRevision>
+    </wikiDocumentLocale>
+  </wikiDocument>
+  <wikiDocument name="Test_ImageReference_with_http_link">
+    <wikiDocumentLocale>
+      <wikiDocumentRevision revision="1">
+        <p>
+          <parameters>
+            <entry>
+              <string>revision_minor</string>
+              <boolean>false</boolean>
+            </entry>
+            <entry>
+              <string>title</string>
+              <string>Test ImageReference with http link</string>
+            </entry>
+            <entry>
+              <string>revision_date</string>
+              <date>2017-01-26 07:21:19.0 UTC</date>
+            </entry>
+            <entry>
+              <string>revision_author</string>
+              <string>TEST Test</string>
+            </entry>
+            <entry>
+              <string>content</string>
+              <string>[[[[image:File.Pixel_white\.png@Pixel_white.png]]&gt;&gt;url:http://testdomain.com]]</string>
+            </entry>
+            <entry>
+              <string>syntax</string>
+              <org.xwiki.rendering.syntax.Syntax>
+                <type>
+                  <name>XWiki</name>
+                  <id>xwiki</id>
+                </type>
+                <version>2.1</version>
+              </org.xwiki.rendering.syntax.Syntax>
+            </entry>
+          </parameters>
+        </p>
+      </wikiDocumentRevision>
+    </wikiDocumentLocale>
+  </wikiDocument>
+</wikiSpace>
+.#------------------------------------------------------------------------------
+.input|dokuwiki+xml
+.configuration.source=../imagesreferences.xml
+.configuration.files=file:${{{xwiki.test.folder}}}/dokuwikixml/1.26.3-files/
+.configuration.fileAttached=false
+.configuration.terminalPages=true
+.#------------------------------------------------------------------------------
