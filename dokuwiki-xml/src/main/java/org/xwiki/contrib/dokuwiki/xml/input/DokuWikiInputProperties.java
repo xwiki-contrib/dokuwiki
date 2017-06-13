@@ -31,7 +31,6 @@ import org.xwiki.properties.annotation.PropertyName;
  * DokuWiki XML input properties.
  * 
  * @version $Id: 408d9389abed98e4ab2fa6f528557e5d2c032b24 $
- * @since 1.8
  */
 public class DokuWikiInputProperties extends XMLInputProperties
 {
@@ -63,9 +62,7 @@ public class DokuWikiInputProperties extends XMLInputProperties
      */
     private EntityReference fileSpace;
 
-    /**
-     * @see #getFileAttachmed()
-     */
+
     private boolean fileAttached = true;
 
     /**

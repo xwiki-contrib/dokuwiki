@@ -25,11 +25,11 @@
   <parent>
     <groupId>org.xwiki.contrib</groupId>
     <artifactId>parent-platform</artifactId>
-    <version>7.4-13</version>
+    <version>8.4-7</version>
   </parent>
   <groupId>org.xwiki.contrib.dokuwiki</groupId>
   <artifactId>dokuwiki</artifactId>
-  <version>1.9.1-SNAPSHOT</version>
+  <version>1.0-SNAPSHOT</version>
   <name>DokuWiki - Parent POM</name>
   <description>Parent POM for DokuWiki modules</description>
   <packaging>pom</packaging>
@@ -50,8 +50,8 @@
     </developer>
   </developers>
   <modules>
-    <module>dokuwiki-syntax</module>
-    <module>dokuwiki-syntax10override</module>
+    <!--<module>dokuwiki-syntax</module>-->
+    <!--<module>dokuwiki-syntax10override</module>-->
     <module>dokuwiki-xml</module>
   </modules>
 
@@ -82,32 +82,6 @@
           <value>true</value>
         </property>
       </activation>
-      <build>
-        <plugins>
-          <!-- Change the version of Java inherited from parent pom -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-enforcer-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>enforce-java</id>
-                <goals>
-                  <goal>enforce</goal>
-                </goals>
-                <configuration>
-                  <skip>${xwiki.enforcer.enforce-java.skip}</skip>
-                  <rules>
-                    <requireJavaVersion>
-                      <message>You must release with Java 8!</message>
-                      <version>[1.8, 1.9)</version>
-                    </requireJavaVersion>
-                  </rules>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
   </profiles>
 </project>
