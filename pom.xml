@@ -48,6 +48,10 @@
       <id>tmortagne</id>
       <name>Thomas Mortagne</name>
     </developer>
+    <developer>
+      <id>slayerjain</id>
+      <name>Shubham Jain</name>
+    </developer>
   </developers>
   <modules>
     <!--<module>dokuwiki-syntax</module>-->
