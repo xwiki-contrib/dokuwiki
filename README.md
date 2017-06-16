@@ -1,6 +1,6 @@
 # DokuWiki
 
-Various tools to manipulate DokuWiki in context of XWiki (wiki importer, syntax parser, etc.).
+Various tools to manipulate [Docuwiki](http://docuwiki.net/index.php?title=Main_Page) in context of XWiki (wiki importer, syntax parser, etc.).
 
 
 
@@ -14,9 +14,3 @@ Various tools to manipulate DokuWiki in context of XWiki (wiki importer, syntax 
 * Translations: N/A
 * Sonar Dashboard: N/A
 * Continuous Integration Status: [![Build Status](http://ci.xwiki.org/job/XWiki%20Contrib/job/dokuwiki/job/master/badge/icon)](http://ci.xwiki.org/job/XWiki%20Contrib/job/dokuwiki/job/master/)
-
-
-### Learn more about DocuWiki here:
-
-* [Docuwiki](http://docuwiki.net/index.php?title=Main_Page)
-
