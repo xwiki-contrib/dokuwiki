@@ -3,6 +3,10 @@
 Various tools to manipulate [Docuwiki](http://docuwiki.net/index.php?title=Main_Page) in context of XWiki (wiki importer, syntax parser, etc.).
 
 
+##Resources
+
+* Dokuwiki export: https://www.dokuwiki.org/export
+* Dokuwiki syntax: https://www.dokuwiki.org/wiki:syntax
 
 ## Project informations
 
