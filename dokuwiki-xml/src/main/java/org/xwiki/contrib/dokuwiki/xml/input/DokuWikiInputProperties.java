@@ -28,7 +28,7 @@ import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyName;
 
 /**
- * DokuWiki XML input properties.
+ * DokuWiki TEXT input properties.
  * 
  * @version $Id: 408d9389abed98e4ab2fa6f528557e5d2c032b24 $
  */
@@ -37,15 +37,17 @@ public class DokuWikiInputProperties extends XMLInputProperties
     /**
      * The DokuWiki XML format.
      */
-    //locally defined until updated in globally
-    public static final SystemType DOKUWIKI = new SystemType("dokuwiki");
+    //locally defined until updated in the framework
+    private static final SystemType DOKUWIKI = new SystemType("dokuwiki");
+    private static final String DATA_TEXT = "text";
+
     public static final FilterStreamType FILTER_STREAM_TYPE =
-        new FilterStreamType(DOKUWIKI, FilterStreamType.DATA_XML);
+        new FilterStreamType(DOKUWIKI, DATA_TEXT);
 
     /**
-     * The DokuWiki XML format as String.
+     * The DokuWiki TEXT format as String.
      */
-    public static final String FILTER_STREAM_TYPE_STRING = "dokuwiki+xml";
+    public static final String FILTER_STREAM_TYPE_STRING = "dokuwiki+text";
 
     /**
      * @see #getFiles()
