@@ -45,7 +45,7 @@ public class DokuWikiInputFilterStreamFactory
     {
         super(DokuWikiInputProperties.FILTER_STREAM_TYPE);
 
-        setName("DokuWiki XML input stream");
-        setDescription("Generates wiki events from DokuWiki XML package.");
+        setName("DokuWiki TEXT input stream");
+        setDescription("Generates wiki events from DokuWiki TEXT package.");
     }
 }
