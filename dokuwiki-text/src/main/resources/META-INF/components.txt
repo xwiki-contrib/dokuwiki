@@ -1,4 +1,4 @@
-FileCatcherListener
-DokuWikiContextConverterListener
-DokuWikiInputFilterStream
-DokuWikiInputFilterStreamFactory
+org.xwiki.contrib.dokuwiki.text.internal.input.FileCatcherListener
+org.xwiki.contrib.dokuwiki.text.internal.input.DokuWikiContextConverterListener
+org.xwiki.contrib.dokuwiki.text.internal.input.DokuWikiInputFilterStream
+org.xwiki.contrib.dokuwiki.text.internal.input.DokuWikiInputFilterStreamFactory

@@ -88,21 +88,21 @@ public class DokuWikiContextConverterListener extends WrappingListener
 
     void initialize(Listener listener, DokuWikiInputFilterStream stream, Syntax targetSyntax)
     {
-        setWrappedListener(listener);
-
-        this.fileCatcher.initialize(stream);
-        this.fileCatcher.setWrappedListener(new VoidListener());
-        this.stream = stream;
-        this.targetSyntax = targetSyntax;
+//        setWrappedListener(listener);
+//
+//        this.fileCatcher.initialize(stream);
+//        this.fileCatcher.setWrappedListener(new VoidListener());
+//        this.stream = stream;
+//        this.targetSyntax = targetSyntax;
     }
 
     /**
      * @return the catched files
      */
-    public Set<String> getFiles()
-    {
-        return this.fileCatcher.getFiles();
-    }
+//    public Set<String> getFiles()
+//    {
+////        return this.fileCatcher.getFiles();
+//    }
 
     public Set<String> getCategories()
     {
