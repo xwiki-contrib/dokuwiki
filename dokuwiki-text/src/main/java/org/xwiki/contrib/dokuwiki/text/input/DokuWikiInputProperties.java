@@ -19,6 +19,7 @@
  */
 package org.xwiki.contrib.dokuwiki.text.input;
 
+import org.xwiki.filter.DefaultFilterStreamProperties;
 import org.xwiki.filter.type.FilterStreamType;
 import org.xwiki.filter.type.SystemType;
 
@@ -27,10 +28,10 @@ import org.xwiki.filter.type.SystemType;
  * 
  * @version $Id: 408d9389abed98e4ab2fa6f528557e5d2c032b24 $
  */
-public class DokuWikiInputProperties
+public class DokuWikiInputProperties extends DefaultFilterStreamProperties
 {
     /**
-     * The DokuWiki XML format.
+     * The DokuWiki TEXT format.
      */
     // locally defined until updated in the framework
     private static final SystemType DOKUWIKI = new SystemType("dokuwiki");
