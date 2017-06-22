@@ -56,6 +56,6 @@
   <modules>
     <!--<module>dokuwiki-syntax</module>-->
     <!--<module>dokuwiki-syntax10override</module>-->
-    <module>dokuwiki-xml</module>
+    <module>dokuwiki-text</module>
   </modules>
 </project>
