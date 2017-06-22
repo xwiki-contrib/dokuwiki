@@ -114,9 +114,9 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     @Inject
     private Logger logger;
 
-//    @Inject
-//    @Named(DokuWikiSyntaxInputProperties.FILTER_STREAM_TYPE_STRING)
-    private InputFilterStreamFactory parserFactory;
+////    @Inject
+////    @Named(DokuWikiSyntaxInputProperties.FILTER_STREAM_TYPE_STRING)
+//    private InputFilterStreamFactory parserFactory;
 
     @Inject
     private ModelConfiguration modelConfiguration;
@@ -124,9 +124,9 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     @Inject
     private Provider<DokuWikiContextConverterListener> listenerProvider;
 
-    @Inject
-    @Named("xwiki/2.1")
-    private PrintRendererFactory xwiki21Factory;
+//    @Inject
+//    @Named("xwiki/2.1")
+//    private PrintRendererFactory xwiki21Factory;
 
     private DokuWikiNamespaces namespaces = new DokuWikiNamespaces();
 
