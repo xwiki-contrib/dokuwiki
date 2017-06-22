@@ -17,32 +17,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.dokuwiki.text.input;
+package org.xwiki.filter.text;
 
 import org.xwiki.filter.DefaultFilterStreamProperties;
-import org.xwiki.filter.text.input.TextInputProperties;
-import org.xwiki.filter.type.FilterStreamType;
-import org.xwiki.filter.type.SystemType;
 
-/**
- * DokuWiki TEXT input properties.
- * 
- * @version $Id: 408d9389abed98e4ab2fa6f528557e5d2c032b24 $
- */
-public class DokuWikiInputProperties extends TextInputProperties {
-    /**
-     * The DokuWiki TEXT format.
-     */
-    // locally defined until updated in the framework
-    private static final SystemType DOKUWIKI = new SystemType("dokuwiki");
+public class TextProperties extends DefaultFilterStreamProperties {
+    public TextProperties() {
 
-    private static final String DATA_TEXT = "text";
+    }
 
-    public static final FilterStreamType FILTER_STREAM_TYPE = new FilterStreamType(DOKUWIKI, DATA_TEXT);
-
-    /**
-     * The DokuWiki TEXT format as String.
-     */
-    public static final String FILTER_STREAM_TYPE_STRING = "dokuwiki+text";
 
 }

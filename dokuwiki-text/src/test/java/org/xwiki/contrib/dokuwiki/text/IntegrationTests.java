@@ -36,7 +36,7 @@ import org.xwiki.test.annotation.AllComponents;
  */
 @RunWith(FilterTestSuite.class)
 @AllComponents
-@FilterTestSuite.Scope(value = "data/pages-test"/*, pattern = "attached.test"*/)
+@FilterTestSuite.Scope(value = "dokuwikitest/"/*, pattern = "attached.test"*/)
 public class IntegrationTests
 {
     public IntegrationTests() throws URISyntaxException
