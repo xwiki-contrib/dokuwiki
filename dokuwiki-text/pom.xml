@@ -43,6 +43,10 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
     </dependency>
+      <dependency>
+          <groupId>commons-codec</groupId>
+          <artifactId>commons-codec</artifactId>
+      </dependency>
     <dependency>
       <groupId>commons-configuration</groupId>
       <artifactId>commons-configuration</artifactId>
@@ -71,11 +75,12 @@
       <version>${commons.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>commons-codec</groupId>
-      <artifactId>commons-codec</artifactId>
-      <version>1.10</version>
-    </dependency>
+      <dependency>
+          <groupId>org.xwiki.commons</groupId>
+          <artifactId>xwiki-commons-filter-stream-xml</artifactId>
+          <version>${commons.version}</version>
+          <scope>test</scope>
+      </dependency>
   </dependencies>
 
   <build>
