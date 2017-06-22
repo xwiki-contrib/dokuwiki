@@ -73,27 +73,6 @@ public class DokuWikiNamespaces
     private final Map<Integer, String> defaultNamespace = new HashMap<>();
 
     /**
-     * Default constructor.
-     */
-    public DokuWikiNamespaces()
-    {
-        // Initialize with standard namespaces.
-        // See https://www.dokuwiki.org/wiki/Manual:Namespace#Built-in_namespaces
-        addNamespace(0, "");
-        addNamespace(NAMESPACE_USER_IDX, NAMESPACE_USER_DEFAULT);
-        addNamespace(4, "Project");
-        addNamespace(NAMESPACE_FILE_IDX, NAMESPACE_FILE_DEFAULT);
-        addNamespace(NAMESPACE_FILE_IDX, "Image");
-        addNamespace(8, "DokuWiki");
-        addNamespace(10, "Template");
-        addNamespace(12, "Help");
-        addNamespace(14, "Category");
-
-        addNamespace(NAMESPACE_SPECIAL_IDX, NAMESPACE_SPECIAL_DEFAULT);
-        addNamespace(-2, "Doku");
-    }
-
-    /**
      * @param key the key associated to the namespace
      * @param namespace the namespace
      */
