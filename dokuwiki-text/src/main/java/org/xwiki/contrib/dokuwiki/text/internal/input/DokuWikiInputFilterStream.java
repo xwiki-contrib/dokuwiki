@@ -45,10 +45,9 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
     }
 
-
     @Override
     public void close() throws IOException
     {
-
+        this.properties.getSource().close();
     }
 }
