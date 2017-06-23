@@ -27,7 +27,6 @@ import org.xwiki.properties.annotation.PropertyName;
 
 public class TextInputProperties extends TextProperties {
     private InputSource source;
-    private String encoding;
 
     public TextInputProperties() {
     }

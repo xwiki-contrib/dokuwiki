@@ -24,6 +24,7 @@ import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.contrib.dokuwiki.text.input.DokuWikiInputProperties;
 import org.xwiki.contrib.dokuwiki.text.internal.DokuWikiFilter;
+import org.xwiki.filter.FilterEventParameters;
 import org.xwiki.filter.FilterException;
 import org.xwiki.filter.input.AbstractBeanInputFilterStream;
 import org.xwiki.filter.input.DefaultURLInputSource;
@@ -56,9 +57,13 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         }
     }
 
-    private void readPagesFolder(DefaultURLInputSource source, Object filter, DokuWikiFilter proxyFilter) throws MalformedURLException, URISyntaxException {
-        DefaultURLInputSource mainNameSpace = new DefaultURLInputSource(concatenate(source.getURL(),"pages"));
-        this.properties.setPagesFolder(mainNameSpace);
+    private void readPagesFolder(DefaultURLInputSource source, Object filter, DokuWikiFilter proxyFilter) throws MalformedURLException, URISyntaxException, FilterException {
+        DefaultURLInputSource pagesFolder = new DefaultURLInputSource(concatenate(source.getURL(),"pages"));
+        this.properties.setPagesFolder(pagesFolder);
+        proxyFilter.beginWikiSpace("Main", FilterEventParameters.EMPTY);
+        //TODO recursively search for files (creating documents) and folders  (creating namespaces)
+
+
     }
 
     @Override
