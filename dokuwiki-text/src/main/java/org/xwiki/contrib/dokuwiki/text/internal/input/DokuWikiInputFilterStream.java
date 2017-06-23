@@ -26,9 +26,14 @@ import org.xwiki.contrib.dokuwiki.text.input.DokuWikiInputProperties;
 import org.xwiki.contrib.dokuwiki.text.internal.DokuWikiFilter;
 import org.xwiki.filter.FilterException;
 import org.xwiki.filter.input.AbstractBeanInputFilterStream;
+import org.xwiki.filter.input.DefaultURLInputSource;
 
 import javax.inject.Named;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 
 /**
@@ -42,7 +47,18 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     @Override
     protected void read(Object filter, DokuWikiFilter proxyFilter) throws FilterException
     {
+        try {
+            DefaultURLInputSource source = (DefaultURLInputSource) this.properties.getSource();
+            readPagesFolder(source, filter, proxyFilter);
 
+        } catch (Exception e) {
+            throw new FilterException("Not a URL input source");
+        }
+    }
+
+    private void readPagesFolder(DefaultURLInputSource source, Object filter, DokuWikiFilter proxyFilter) throws MalformedURLException, URISyntaxException {
+        DefaultURLInputSource mainNameSpace = new DefaultURLInputSource(concatenate(source.getURL(),"pages"));
+        this.properties.setPagesFolder(mainNameSpace);
     }
 
     @Override
@@ -50,4 +66,15 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     {
         this.properties.getSource().close();
     }
+
+    //helper functions
+    private static URL concatenate(URL baseUrl, String extraPath) throws URISyntaxException,
+            MalformedURLException {
+        URI uri = baseUrl.toURI();
+        String newPath = uri.getPath() + '/' + extraPath;
+        URI newUri = uri.resolve(newPath);
+        return newUri.toURL();
+    }
 }
+
+

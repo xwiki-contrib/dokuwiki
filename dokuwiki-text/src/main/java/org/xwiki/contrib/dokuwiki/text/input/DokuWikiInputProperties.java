@@ -20,9 +20,13 @@
 package org.xwiki.contrib.dokuwiki.text.input;
 
 import org.xwiki.filter.DefaultFilterStreamProperties;
+import org.xwiki.filter.input.DefaultURLInputSource;
+import org.xwiki.filter.input.InputSource;
 import org.xwiki.filter.text.input.TextInputProperties;
 import org.xwiki.filter.type.FilterStreamType;
 import org.xwiki.filter.type.SystemType;
+import org.xwiki.properties.annotation.PropertyDescription;
+import org.xwiki.properties.annotation.PropertyName;
 
 /**
  * DokuWiki TEXT input properties.
@@ -44,5 +48,28 @@ public class DokuWikiInputProperties extends TextInputProperties {
      * The DokuWiki TEXT format as String.
      */
     public static final String FILTER_STREAM_TYPE_STRING = "dokuwiki+text";
+
+    /**
+     * @see #getPagesFolder()
+     */
+    private DefaultURLInputSource pagesFolder;
+
+    /**
+     * @return the folder or package containing files
+     */
+    @PropertyName("Pages Folder")
+    @PropertyDescription("The root folder of text files")
+    public DefaultURLInputSource getPagesFolder()
+    {
+        return this.pagesFolder;
+    }
+
+    /**
+     * @param pagesFolder the folder corresponding to root namespace and contains all text files/folders
+     */
+    public void setPagesFolder(DefaultURLInputSource pagesFolder)
+    {
+        this.pagesFolder = pagesFolder;
+    }
 
 }
