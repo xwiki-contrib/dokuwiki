@@ -59,7 +59,6 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
     private void readPagesFolder(DefaultURLInputSource source, Object filter, DokuWikiFilter proxyFilter) throws MalformedURLException, URISyntaxException, FilterException {
         DefaultURLInputSource pagesFolder = new DefaultURLInputSource(concatenate(source.getURL(),"pages"));
-        this.properties.setPagesFolder(pagesFolder);
         proxyFilter.beginWikiSpace("Main", FilterEventParameters.EMPTY);
         //TODO recursively search for files (creating documents) and folders  (creating namespaces)
 

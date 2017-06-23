@@ -48,28 +48,4 @@ public class DokuWikiInputProperties extends TextInputProperties {
      * The DokuWiki TEXT format as String.
      */
     public static final String FILTER_STREAM_TYPE_STRING = "dokuwiki+text";
-
-    /**
-     * @see #getPagesFolder()
-     */
-    private DefaultURLInputSource pagesFolder;
-
-    /**
-     * @return the folder or package containing files
-     */
-    @PropertyName("Pages Folder")
-    @PropertyDescription("The root folder of text files")
-    public DefaultURLInputSource getPagesFolder()
-    {
-        return this.pagesFolder;
-    }
-
-    /**
-     * @param pagesFolder the folder corresponding to root namespace and contains all text files/folders
-     */
-    public void setPagesFolder(DefaultURLInputSource pagesFolder)
-    {
-        this.pagesFolder = pagesFolder;
-    }
-
 }
