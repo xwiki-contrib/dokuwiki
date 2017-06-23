@@ -19,6 +19,7 @@
  */
 package org.xwiki.contrib.dokuwiki.text.internal.input;
 
+import org.apache.commons.io.IOUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
@@ -33,13 +34,13 @@ import org.xwiki.filter.input.InputStreamInputSource;
 
 import javax.inject.Named;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-
-
 /**
  * @version $Id: 41df1dab66b03111214dbec56fee8dbd44747638 $
  */
@@ -51,16 +52,26 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     protected void read(Object filter, DokuWikiFilter proxyFilter) throws FilterException {
         InputSource inputSource = this.properties.getSource();
         if (inputSource instanceof FileInputSource) {
-            readFolder(inputSource, filter, proxyFilter);
+            File sourceFolder = ((FileInputSource) inputSource).getFile();
+            readFolder(sourceFolder, filter, proxyFilter);
         } else if (inputSource instanceof InputStreamInputSource) {
-            //TODO handle input stream
+            try {
+                File sourceFolder = null;
+                OutputStream outputStream = new FileOutputStream(sourceFolder);
+                IOUtils.copy(((InputStreamInputSource) inputSource).getInputStream(), outputStream);
+                outputStream.close();
+                readFolder(sourceFolder, filter, proxyFilter);
+            } catch (Exception e) {
+                throw new FilterException("Unsupported input source [" + inputSource.getClass() + "]");
+            }
+
         } else {
             throw new FilterException("Unsupported input source [" + inputSource.getClass() + "]");
         }
     }
 
-    private void readFolder(InputSource source, Object filter, DokuWikiFilter proxyFilter) throws FilterException {
-        File sourceFolder = ((FileInputSource) source).getFile();
+
+    private void readFolder(File sourceFolder, Object filter, DokuWikiFilter proxyFilter) throws FilterException {
         if (sourceFolder.isDirectory()) {
 
             File[] listOfFiles = sourceFolder.listFiles();
@@ -94,7 +105,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             }
         }
     }
-    
+
     @Override
     public void close() throws IOException {
         this.properties.getSource().close();
