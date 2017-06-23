@@ -62,7 +62,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                 outputStream.close();
                 readFolder(sourceFolder, filter, proxyFilter);
             } catch (Exception e) {
-                throw new FilterException("Unsupported input source [" + inputSource.getClass() + "]");
+                throw new FilterException("Unsupported input stream [" + inputSource.getClass() + "]");
             }
 
         } else {
