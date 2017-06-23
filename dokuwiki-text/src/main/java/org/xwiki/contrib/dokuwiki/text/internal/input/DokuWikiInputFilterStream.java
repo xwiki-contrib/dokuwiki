@@ -27,9 +27,12 @@ import org.xwiki.contrib.dokuwiki.text.internal.DokuWikiFilter;
 import org.xwiki.filter.FilterEventParameters;
 import org.xwiki.filter.FilterException;
 import org.xwiki.filter.input.AbstractBeanInputFilterStream;
-import org.xwiki.filter.input.DefaultURLInputSource;
+import org.xwiki.filter.input.FileInputSource;
+import org.xwiki.filter.input.InputSource;
+import org.xwiki.filter.input.InputStreamInputSource;
 
 import javax.inject.Named;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -43,31 +46,57 @@ import java.net.URL;
 @Component
 @Named(DokuWikiInputProperties.FILTER_STREAM_TYPE_STRING)
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
-public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<DokuWikiInputProperties, DokuWikiFilter>
-{
+public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<DokuWikiInputProperties, DokuWikiFilter> {
     @Override
-    protected void read(Object filter, DokuWikiFilter proxyFilter) throws FilterException
-    {
-        try {
-            DefaultURLInputSource source = (DefaultURLInputSource) this.properties.getSource();
-            readPagesFolder(source, filter, proxyFilter);
-
-        } catch (Exception e) {
-            throw new FilterException("Not a URL input source");
+    protected void read(Object filter, DokuWikiFilter proxyFilter) throws FilterException {
+        InputSource inputSource = this.properties.getSource();
+        if (inputSource instanceof FileInputSource) {
+            readFolder(inputSource, filter, proxyFilter);
+        } else if (inputSource instanceof InputStreamInputSource) {
+            //TODO handle input stream
+        } else {
+            throw new FilterException("Unsupported input source [" + inputSource.getClass() + "]");
         }
     }
 
-    private void readPagesFolder(DefaultURLInputSource source, Object filter, DokuWikiFilter proxyFilter) throws MalformedURLException, URISyntaxException, FilterException {
-        DefaultURLInputSource pagesFolder = new DefaultURLInputSource(concatenate(source.getURL(),"pages"));
-        proxyFilter.beginWikiSpace("Main", FilterEventParameters.EMPTY);
-        //TODO recursively search for files (creating documents) and folders  (creating namespaces)
+    private void readFolder(InputSource source, Object filter, DokuWikiFilter proxyFilter) throws FilterException {
+        File sourceFolder = ((FileInputSource) source).getFile();
+        if (sourceFolder.isDirectory()) {
 
-
+            File[] listOfFiles = sourceFolder.listFiles();
+            if (listOfFiles != null)
+                for (File file : listOfFiles) {
+                    String fileName = file.getName();
+                    if (file.isDirectory() && (file.getName().equals("pages"))) {
+                        proxyFilter.beginWikiSpace("Main", FilterEventParameters.EMPTY);
+                        readPagesFolder(file, filter, proxyFilter);
+                        proxyFilter.endWikiSpace("Main", FilterEventParameters.EMPTY);
+                    }
+                }
+        } else
+            throw new FilterException("There's no file inside this folder");
     }
 
+    private void readPagesFolder(File pages, Object filter, DokuWikiFilter proxyFilter) throws FilterException {
+        File[] files = pages.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    String folder = file.getName();
+                    proxyFilter.beginWikiSpace(folder, FilterEventParameters.EMPTY);
+                    readPagesFolder(file, filter, proxyFilter);
+                    proxyFilter.endWikiSpace(folder, FilterEventParameters.EMPTY);
+                } else if (file.isFile() && file.getName().endsWith(".txt")) {
+                    String fileName = file.getName().replace(".txt", "");
+                    proxyFilter.beginWikiDocument(fileName, FilterEventParameters.EMPTY);
+                    proxyFilter.endWikiDocument(fileName, FilterEventParameters.EMPTY);
+                }
+            }
+        }
+    }
+    
     @Override
-    public void close() throws IOException
-    {
+    public void close() throws IOException {
         this.properties.getSource().close();
     }
 

@@ -1,0 +1,18 @@
+.#------------------------------------------------------------------------------
+.expect|filter+xml
+.#------------------------------------------------------------------------------
+<wikiSpace name="Main">
+  <wikiSpace name="playground">
+    <wikiDocument name="playground"></wikiDocument>
+  </wikiSpace>
+  <wikiDocument name="start"></wikiDocument>
+  <wikiSpace name="wiki">
+    <wikiDocument name="dokuwiki"></wikiDocument>
+    <wikiDocument name="syntax"></wikiDocument>
+    <wikiDocument name="welcome"></wikiDocument>
+  </wikiSpace>
+</wikiSpace>
+.#------------------------------------------------------------------------------
+.input|dokuwiki+text
+.configuration.source=file:${{{xwiki.test.folder}}}/dokuwikitext/data
+.#------------------------------------------------------------------------------
