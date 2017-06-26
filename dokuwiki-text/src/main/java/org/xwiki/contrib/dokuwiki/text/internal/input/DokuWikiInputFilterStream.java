@@ -19,7 +19,11 @@
  */
 package org.xwiki.contrib.dokuwiki.text.internal.input;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.compressors.CompressorInputStream;
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
@@ -33,14 +37,10 @@ import org.xwiki.filter.input.InputSource;
 import org.xwiki.filter.input.InputStreamInputSource;
 
 import javax.inject.Named;
+import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+
 /**
  * @version $Id: 41df1dab66b03111214dbec56fee8dbd44747638 $
  */
@@ -56,36 +56,55 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             readFolder(sourceFolder, filter, proxyFilter);
         } else if (inputSource instanceof InputStreamInputSource) {
             try {
-                File sourceFolder = null;
-                OutputStream outputStream = new FileOutputStream(sourceFolder);
-                IOUtils.copy(((InputStreamInputSource) inputSource).getInputStream(), outputStream);
-                outputStream.close();
-                readFolder(sourceFolder, filter, proxyFilter);
+                CompressorInputStream input = new CompressorStreamFactory()
+                        .createCompressorInputStream(((InputStreamInputSource) inputSource).getInputStream());
+                ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
+                        .createArchiveInputStream(new BufferedInputStream(input));
+                ArchiveEntry archiveEntry = archiveInputStream.getNextEntry();
+                DirectoryTree rootDirectory = new DirectoryTree(new Folder("root", "root"));
+                while (archiveEntry != null) {
+                    String entryName = archiveEntry.getName();
+                    rootDirectory.addElement(entryName, archiveEntry.isDirectory());
+                    archiveEntry = archiveInputStream.getNextEntry();
+                }
+                Folder dataDirectory = rootDirectory.getCommonRoot();
+                Folder pagesDirectory = dataDirectory.childs.get(dataDirectory.childs.indexOf(new Folder("pages", "root/data/pages")));
+                proxyFilter.beginWikiSpace("Main", FilterEventParameters.EMPTY);
+                readPageFolderStream(pagesDirectory, archiveInputStream, filter, proxyFilter);
+                proxyFilter.endWikiSpace("Main", FilterEventParameters.EMPTY);
             } catch (Exception e) {
                 throw new FilterException("Unsupported input stream [" + inputSource.getClass() + "]");
             }
-
         } else {
             throw new FilterException("Unsupported input source [" + inputSource.getClass() + "]");
         }
     }
 
+    private void readPageFolderStream(Folder pagesFolderTree, ArchiveInputStream archiveInputStream, Object filter, DokuWikiFilter proxyFilter) throws FilterException {
+        for (Folder i : pagesFolderTree.childs) {
+            proxyFilter.beginWikiSpace(i.toString(), FilterEventParameters.EMPTY);
+            readPageFolderStream(i, archiveInputStream, filter, proxyFilter);
+            proxyFilter.endWikiSpace(i.toString(), FilterEventParameters.EMPTY);
+        }
+        for (Folder j : pagesFolderTree.leafs) {
+            String leafName = j.toString().replace(".txt", "");
+            proxyFilter.beginWikiDocument(leafName, FilterEventParameters.EMPTY);
+            proxyFilter.endWikiDocument(leafName, FilterEventParameters.EMPTY);
+        }
+    }
 
     private void readFolder(File sourceFolder, Object filter, DokuWikiFilter proxyFilter) throws FilterException {
         if (sourceFolder.isDirectory()) {
-
-            File[] listOfFiles = sourceFolder.listFiles();
-            if (listOfFiles != null)
-                for (File file : listOfFiles) {
-                    String fileName = file.getName();
-                    if (file.isDirectory() && (file.getName().equals("pages"))) {
-                        proxyFilter.beginWikiSpace("Main", FilterEventParameters.EMPTY);
-                        readPagesFolder(file, filter, proxyFilter);
-                        proxyFilter.endWikiSpace("Main", FilterEventParameters.EMPTY);
-                    }
-                }
+            File pageFolder = new File(sourceFolder, "pages");
+            if (pageFolder.exists() && pageFolder.isDirectory()) {
+                proxyFilter.beginWikiSpace("Main", FilterEventParameters.EMPTY);
+                readPagesFolder(pageFolder, filter, proxyFilter);
+                proxyFilter.endWikiSpace("Main", FilterEventParameters.EMPTY);
+            } else {
+                throw new FilterException("Can't locate Pages folder: Invalid Package");
+            }
         } else
-            throw new FilterException("There's no file inside this folder");
+            throw new FilterException("Input folder is not a directory");
     }
 
     private void readPagesFolder(File pages, Object filter, DokuWikiFilter proxyFilter) throws FilterException {
@@ -112,13 +131,13 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     }
 
     //helper functions
-    private static URL concatenate(URL baseUrl, String extraPath) throws URISyntaxException,
-            MalformedURLException {
-        URI uri = baseUrl.toURI();
-        String newPath = uri.getPath() + '/' + extraPath;
-        URI newUri = uri.resolve(newPath);
-        return newUri.toURL();
-    }
+//    private static URL concatenate(URL baseUrl, String extraPath) throws URISyntaxException,
+//            MalformedURLException {
+//        URI uri = baseUrl.toURI();
+//        String newPath = uri.getPath() + '/' + extraPath;
+//        URI newUri = uri.resolve(newPath);
+//        return newUri.toURL();
+//    }
 }
 
 

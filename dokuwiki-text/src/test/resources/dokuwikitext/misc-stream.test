@@ -1,0 +1,18 @@
+.#------------------------------------------------------------------------------
+.expect|filter+xml
+.#------------------------------------------------------------------------------
+<wikiSpace name="Main">
+  <wikiSpace name="wiki">
+    <wikiDocument name="syntax"></wikiDocument>
+    <wikiDocument name="welcome"></wikiDocument>
+    <wikiDocument name="dokuwiki"></wikiDocument>
+  </wikiSpace>
+  <wikiSpace name="playground">
+    <wikiDocument name="playground"></wikiDocument>
+  </wikiSpace>
+  <wikiDocument name="start"></wikiDocument>
+</wikiSpace>
+.#------------------------------------------------------------------------------
+.input|dokuwiki+text
+.configuration.source=data.tar.gz
+.#------------------------------------------------------------------------------
