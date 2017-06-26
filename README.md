@@ -13,7 +13,7 @@ Various tools to manipulate [Docuwiki](http://docuwiki.net/index.php?title=Main_
 * [Issue Tracker](http://jira.xwiki.org/browse/DOKUWIKI)
 * Communication: [Mailing List](http://dev.xwiki.org/xwiki/bin/view/Community/MailingLists), [IRC](http://dev.xwiki.org/xwiki/bin/view/Community/IRC)
 * [Development Practices](http://dev.xwiki.org)
-* Minimal XWiki version supported: XWiki 7.4
+* Minimal XWiki version supported: XWiki 8.4
 * License: LGPL 2.1
 * Translations: N/A
 * Sonar Dashboard: N/A
