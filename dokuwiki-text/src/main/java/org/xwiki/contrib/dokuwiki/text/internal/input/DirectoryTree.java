@@ -19,27 +19,22 @@
  */
 package org.xwiki.contrib.dokuwiki.text.internal.input;
 
-import org.xwiki.filter.input.DirectoryInputSource;
+class DirectoryTree {
+    private Folder root;
+    private Folder commonRoot;
 
-/**
- * Created by shubhamjain on 26/06/17.
- */
-public class DirectoryTree {
-    Folder root;
-    Folder commonRoot;
-
-    public DirectoryTree( Folder root ) {
+    DirectoryTree( Folder root ) {
         this.root = root;
         commonRoot = null;
     }
 
-    public void addElement( String elementValue, Boolean isFolder) {
+    void addElement( String elementValue, Boolean isFolder) {
         String[] list = elementValue.split("/");
         // last element of the list is the filename.extrension
         root.addElement(root.incrementalPath, list, isFolder);
     }
 
-    public Folder getCommonRoot() {
+    Folder getCommonRoot() {
         if ( commonRoot != null)
             return commonRoot;
         else {

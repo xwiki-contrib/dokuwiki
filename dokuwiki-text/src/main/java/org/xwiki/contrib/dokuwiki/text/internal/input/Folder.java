@@ -23,27 +23,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by shubhamjain on 26/06/17.
- */
-public class Folder {
+class Folder {
     List<Folder> childs;
     List<Folder> leafs;
-    String name;
+    private String name;
     String incrementalPath;
 
-    public Folder( String nodeValue, String incrementalPath ) {
+    Folder( String nodeValue, String incrementalPath ) {
         childs = new ArrayList<Folder>();
         leafs = new ArrayList<Folder>();
         name = nodeValue;
         this. incrementalPath = incrementalPath;
     }
 
-    public boolean isLeaf() {
+    boolean isLeaf() {
         return childs.isEmpty() && leafs.isEmpty();
     }
 
-    public void addElement(String currentPath, String[] list, boolean isFolder) {
+    void addElement(String currentPath, String[] list, boolean isFolder) {
 
         //Avoid first element that can be an empty string if you split a string that has a starting slash as /sd/card/
         while( list[0] == null || list[0].equals("") )
@@ -51,7 +48,6 @@ public class Folder {
         Folder currentChild = new Folder(list[0], currentPath+"/"+list[0]);
         if ( list.length == 1 & !isFolder) {
             leafs.add(currentChild);
-            return;
         } else {
             int index = childs.indexOf( currentChild );
             if ( index == -1) {
