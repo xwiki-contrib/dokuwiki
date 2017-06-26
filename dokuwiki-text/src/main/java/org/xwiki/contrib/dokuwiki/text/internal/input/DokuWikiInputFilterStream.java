@@ -40,7 +40,6 @@ import org.xwiki.filter.input.InputStreamInputSource;
 
 import javax.inject.Named;
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -91,7 +90,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         }
     }
 
-    private void readDataStream( ArchiveInputStream archiveInputStream,
+    private void readDataStream(ArchiveInputStream archiveInputStream,
                                  Object filter, DokuWikiFilter proxyFilter) throws IOException, FilterException {
         DirectoryTree rootDirectory = new DirectoryTree(new Folder(TAG_ROOT_NODE, TAG_ROOT_NODE));
         ArchiveEntry archiveEntry = archiveInputStream.getNextEntry();
