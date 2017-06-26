@@ -50,6 +50,5 @@ public class DirectoryTree {
             commonRoot = current;
             return commonRoot;
         }
-
     }
 }
