@@ -47,31 +47,43 @@ import java.io.IOException;
 @Component
 @Named(DokuWikiInputProperties.FILTER_STREAM_TYPE_STRING)
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
-public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<DokuWikiInputProperties, DokuWikiFilter> {
+public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<DokuWikiInputProperties, DokuWikiFilter>
+{
+    private static final String TAG_ROOT_NODE = "root";
+    private static final String TAG_PAGES = "pages";
+    private static final String TAG_PAGES_PATH = "root/data/pages";
+    private static final String TAG_MAIN_SPACE = "Main";
+    private static final String TAG_TEXT_FILE_FORMAT = ".txt";
+
+
     @Override
-    protected void read(Object filter, DokuWikiFilter proxyFilter) throws FilterException {
+    protected void read(Object filter, DokuWikiFilter proxyFilter) throws FilterException
+    {
         InputSource inputSource = this.properties.getSource();
-        if (inputSource instanceof FileInputSource) {
+        if (inputSource instanceof FileInputSource)
+        {
             File sourceFolder = ((FileInputSource) inputSource).getFile();
             readFolder(sourceFolder, filter, proxyFilter);
-        } else if (inputSource instanceof InputStreamInputSource) {
+        } else if (inputSource instanceof InputStreamInputSource)
+        {
             try {
                 CompressorInputStream input = new CompressorStreamFactory()
                         .createCompressorInputStream(((InputStreamInputSource) inputSource).getInputStream());
                 ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
                         .createArchiveInputStream(new BufferedInputStream(input));
                 ArchiveEntry archiveEntry = archiveInputStream.getNextEntry();
-                DirectoryTree rootDirectory = new DirectoryTree(new Folder("root", "root"));
+                DirectoryTree rootDirectory = new DirectoryTree(new Folder(TAG_ROOT_NODE, TAG_ROOT_NODE));
                 while (archiveEntry != null) {
                     String entryName = archiveEntry.getName();
                     rootDirectory.addElement(entryName, archiveEntry.isDirectory());
                     archiveEntry = archiveInputStream.getNextEntry();
                 }
                 Folder dataDirectory = rootDirectory.getCommonRoot();
-                Folder pagesDirectory = dataDirectory.childs.get(dataDirectory.childs.indexOf(new Folder("pages", "root/data/pages")));
-                proxyFilter.beginWikiSpace("Main", FilterEventParameters.EMPTY);
+                Folder pagesDirectory = dataDirectory.getChilds()
+                        .get(dataDirectory.getChilds().indexOf(new Folder(TAG_PAGES, TAG_PAGES_PATH)));
+                proxyFilter.beginWikiSpace(TAG_MAIN_SPACE, FilterEventParameters.EMPTY);
                 readPageFolderStream(pagesDirectory, archiveInputStream, filter, proxyFilter);
-                proxyFilter.endWikiSpace("Main", FilterEventParameters.EMPTY);
+                proxyFilter.endWikiSpace(TAG_MAIN_SPACE, FilterEventParameters.EMPTY);
             } catch (Exception e) {
                 throw new FilterException("Unsupported input stream [" + inputSource.getClass() + "]");
             }
@@ -80,14 +92,15 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         }
     }
 
-    private void readPageFolderStream(Folder pagesFolderTree, ArchiveInputStream archiveInputStream, Object filter, DokuWikiFilter proxyFilter) throws FilterException {
-        for (Folder i : pagesFolderTree.childs) {
+    private void readPageFolderStream(Folder pagesFolderTree, ArchiveInputStream archiveInputStream,
+                                      Object filter, DokuWikiFilter proxyFilter) throws FilterException {
+        for (Folder i : pagesFolderTree.getChilds()) {
             proxyFilter.beginWikiSpace(i.toString(), FilterEventParameters.EMPTY);
             readPageFolderStream(i, archiveInputStream, filter, proxyFilter);
             proxyFilter.endWikiSpace(i.toString(), FilterEventParameters.EMPTY);
         }
-        for (Folder j : pagesFolderTree.leafs) {
-            String leafName = j.toString().replace(".txt", "");
+        for (Folder j : pagesFolderTree.getLeafs()) {
+            String leafName = j.toString().replace(TAG_TEXT_FILE_FORMAT, "");
             proxyFilter.beginWikiDocument(leafName, FilterEventParameters.EMPTY);
             proxyFilter.endWikiDocument(leafName, FilterEventParameters.EMPTY);
         }
@@ -95,16 +108,17 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
     private void readFolder(File sourceFolder, Object filter, DokuWikiFilter proxyFilter) throws FilterException {
         if (sourceFolder.isDirectory()) {
-            File pageFolder = new File(sourceFolder, "pages");
+            File pageFolder = new File(sourceFolder, TAG_PAGES);
             if (pageFolder.exists() && pageFolder.isDirectory()) {
-                proxyFilter.beginWikiSpace("Main", FilterEventParameters.EMPTY);
+                proxyFilter.beginWikiSpace(TAG_MAIN_SPACE, FilterEventParameters.EMPTY);
                 readPagesFolder(pageFolder, filter, proxyFilter);
-                proxyFilter.endWikiSpace("Main", FilterEventParameters.EMPTY);
+                proxyFilter.endWikiSpace(TAG_MAIN_SPACE, FilterEventParameters.EMPTY);
             } else {
                 throw new FilterException("Can't locate Pages folder: Invalid Package");
             }
-        } else
+        } else {
             throw new FilterException("Input folder is not a directory");
+        }
     }
 
     private void readPagesFolder(File pages, Object filter, DokuWikiFilter proxyFilter) throws FilterException {
@@ -116,8 +130,8 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                     proxyFilter.beginWikiSpace(folder, FilterEventParameters.EMPTY);
                     readPagesFolder(file, filter, proxyFilter);
                     proxyFilter.endWikiSpace(folder, FilterEventParameters.EMPTY);
-                } else if (file.isFile() && file.getName().endsWith(".txt")) {
-                    String fileName = file.getName().replace(".txt", "");
+                } else if (file.isFile() && file.getName().endsWith(TAG_TEXT_FILE_FORMAT)) {
+                    String fileName = file.getName().replace(TAG_TEXT_FILE_FORMAT, "");
                     proxyFilter.beginWikiDocument(fileName, FilterEventParameters.EMPTY);
                     proxyFilter.endWikiDocument(fileName, FilterEventParameters.EMPTY);
                 }

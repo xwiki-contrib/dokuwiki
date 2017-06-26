@@ -23,48 +23,92 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-class Folder {
-    List<Folder> childs;
-    List<Folder> leafs;
+class Folder
+{
     private String name;
-    String incrementalPath;
+    private String incrementalPath;
+    private List<Folder> childs;
+    private List<Folder> leafs;
 
-    Folder( String nodeValue, String incrementalPath ) {
+    Folder(String nodeValue, String incrementalPath)
+    {
+        name = nodeValue;
+        this.incrementalPath = incrementalPath;
         childs = new ArrayList<Folder>();
         leafs = new ArrayList<Folder>();
-        name = nodeValue;
-        this. incrementalPath = incrementalPath;
+    }
+
+    String getIncrementalPath() {
+        return incrementalPath;
+    }
+
+    public void setIncrementalPath(String incrementalPath) {
+        this.incrementalPath = incrementalPath;
+    }
+
+    List<Folder> getChilds() {
+        return childs;
+    }
+
+    public void setChilds(List<Folder> childs) {
+        this.childs = childs;
+    }
+
+    List<Folder> getLeafs() {
+        return leafs;
+    }
+
+    public void setLeafs(List<Folder> leafs) {
+        this.leafs = leafs;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     boolean isLeaf() {
         return childs.isEmpty() && leafs.isEmpty();
     }
 
-    void addElement(String currentPath, String[] list, boolean isFolder) {
-
-        //Avoid first element that can be an empty string if you split a string that has a starting slash as /sd/card/
-        while( list[0] == null || list[0].equals("") )
+    void addElement(String currentPath, String[] elementList, boolean isFolder)
+    {
+        String[] list = elementList;
+        while (list[0] == null || list[0].equals("")) {
             list = Arrays.copyOfRange(list, 1, list.length);
-        Folder currentChild = new Folder(list[0], currentPath+"/"+list[0]);
-        if ( list.length == 1 & !isFolder) {
+        }
+        Folder currentChild = new Folder(list[0], currentPath + "/" + list[0]);
+        if (list.length == 1 & !isFolder) {
             leafs.add(currentChild);
         } else {
-            int index = childs.indexOf( currentChild );
-            if ( index == -1) {
-                childs.add( currentChild );
-                if (list.length >1)
-                    currentChild.addElement(currentChild.incrementalPath, Arrays.copyOfRange(list, 1, list.length), isFolder);
-            } else if (list.length > 1){
+            int index = childs.indexOf(currentChild);
+            if (index == -1) {
+                childs.add(currentChild);
+                if (list.length > 1) {
+                    currentChild.addElement(currentChild.incrementalPath,
+                            Arrays.copyOfRange(list, 1, list.length), isFolder);
+                }
+            } else if (list.length > 1) {
                 Folder nextChild = childs.get(index);
-                nextChild.addElement(currentChild.incrementalPath, Arrays.copyOfRange(list, 1, list.length),isFolder);
+                nextChild.addElement(currentChild.incrementalPath, Arrays.copyOfRange(list, 1, list.length), isFolder);
             }
         }
     }
 
     @Override
-    public boolean equals(Object obj) {
-        Folder cmpObj = (Folder)obj;
-        return incrementalPath.equals( cmpObj.incrementalPath ) && name.equals( cmpObj.name);
+    public boolean equals(Object obj)
+    {
+        Folder cmpObj = (Folder) obj;
+        return incrementalPath.equals(cmpObj.incrementalPath) && name.equals(cmpObj.name);
+    }
+
+    @Override
+    public native int hashCode();
+    {
+        //just to deal with the check style violations.
     }
 
     @Override

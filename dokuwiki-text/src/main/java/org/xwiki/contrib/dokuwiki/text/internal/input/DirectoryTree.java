@@ -19,28 +19,33 @@
  */
 package org.xwiki.contrib.dokuwiki.text.internal.input;
 
-class DirectoryTree {
+class DirectoryTree
+{
     private Folder root;
     private Folder commonRoot;
 
-    DirectoryTree( Folder root ) {
+    DirectoryTree(Folder root)
+    {
         this.root = root;
         commonRoot = null;
     }
 
-    void addElement( String elementValue, Boolean isFolder) {
+    void addElement(String elementValue, Boolean isFolder)
+    {
         String[] list = elementValue.split("/");
         // last element of the list is the filename.extrension
-        root.addElement(root.incrementalPath, list, isFolder);
+        root.addElement(root.getIncrementalPath(), list, isFolder);
     }
 
-    Folder getCommonRoot() {
-        if ( commonRoot != null)
+    Folder getCommonRoot()
+    {
+        if (commonRoot != null) {
             return commonRoot;
-        else {
+        } else {
             Folder current = root;
-            while ( current.leafs.size() <= 0 ) {
-                current = current.childs.get(0);
+            while (current.getLeafs().size() <= 0)
+            {
+                current = current.getChilds().get(0);
             }
             commonRoot = current;
             return commonRoot;
