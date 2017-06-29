@@ -1,6 +1,6 @@
 # DokuWiki
 
-Various tools to manipulate [Docuwiki](http://docuwiki.net/index.php?title=Main_Page) in context of XWiki (wiki importer, syntax parser, etc.).
+Various tools to manipulate [Dokuwiki](http://docuwiki.net/index.php?title=Main_Page) in context of XWiki (wiki importer, syntax parser, etc.).
 
 
 ## Resources
