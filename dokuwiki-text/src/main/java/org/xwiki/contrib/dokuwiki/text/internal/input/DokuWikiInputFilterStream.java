@@ -52,7 +52,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 {
     private static final String TAG_ROOT_NODE = "root";
     private static final String TAG_PAGES = "pages";
-    private static final String TAG_PAGES_PATH = "root/data/pages";
+    private static final String TAG_PAGES_PATH = "/pages";
     private static final String TAG_MAIN_SPACE = "Main";
     private static final String TAG_TEXT_FILE_FORMAT = ".txt";
 
@@ -101,7 +101,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         }
         Folder dataDirectory = rootDirectory.getCommonRoot();
         Folder pagesDirectory = dataDirectory.getChilds()
-                .get(dataDirectory.getChilds().indexOf(new Folder(TAG_PAGES, TAG_PAGES_PATH)));
+                .get(dataDirectory.getChilds().indexOf(new Folder(TAG_PAGES, dataDirectory.getIncrementalPath() + TAG_PAGES_PATH)));
         proxyFilter.beginWikiSpace(TAG_MAIN_SPACE, FilterEventParameters.EMPTY);
         readPageFolderStream(pagesDirectory, archiveInputStream, filter, proxyFilter);
         proxyFilter.endWikiSpace(TAG_MAIN_SPACE, FilterEventParameters.EMPTY);
@@ -115,9 +115,11 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             proxyFilter.endWikiSpace(i.toString(), FilterEventParameters.EMPTY);
         }
         for (Folder j : pagesFolderTree.getLeafs()) {
-            String leafName = j.toString().replace(TAG_TEXT_FILE_FORMAT, "");
-            proxyFilter.beginWikiDocument(leafName, FilterEventParameters.EMPTY);
-            proxyFilter.endWikiDocument(leafName, FilterEventParameters.EMPTY);
+            if (j.toString().endsWith(".txt")) {
+                String leafName = j.toString().replace(TAG_TEXT_FILE_FORMAT, "");
+                proxyFilter.beginWikiDocument(leafName, FilterEventParameters.EMPTY);
+                proxyFilter.endWikiDocument(leafName, FilterEventParameters.EMPTY);
+            }
         }
     }
 

@@ -43,7 +43,7 @@ class DirectoryTree
             return commonRoot;
         } else {
             Folder current = root;
-            while (current.getLeafs().size() <= 0)
+            while (current.getLeafs().size() <= 0 && current.getChilds().size() <= 1)
             {
                 current = current.getChilds().get(0);
             }

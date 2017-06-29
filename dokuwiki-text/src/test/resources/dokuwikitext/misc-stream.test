@@ -14,5 +14,5 @@
 </wikiSpace>
 .#------------------------------------------------------------------------------
 .input|dokuwiki+text
-.configuration.source=data.tar.gz
+.configuration.source=data-folder.tar.gz
 .#------------------------------------------------------------------------------
