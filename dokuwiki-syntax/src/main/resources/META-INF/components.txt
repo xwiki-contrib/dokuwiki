@@ -1,0 +1,3 @@
+
+org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiParser
+org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiStreamParser

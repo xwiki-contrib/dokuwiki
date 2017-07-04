@@ -55,5 +55,6 @@
   </developers>
   <modules>
     <module>dokuwiki-text</module>
+    <module>dokuwiki-syntax</module>
   </modules>
 </project>
