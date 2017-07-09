@@ -49,7 +49,7 @@ public class DokuWikiParser implements Parser
      */
     @Inject
     @Named(DokuWikiStreamParser.SYNTAX_STRING)
-    private StreamParser mediawikiStreamParser;
+    private StreamParser dokuwikiStreamParser;
 
     @Override
     public Syntax getSyntax()
@@ -61,7 +61,7 @@ public class DokuWikiParser implements Parser
     public XDOM parse(Reader source) throws ParseException
     {
         XDOMGeneratorListener xdomGeneratorListener = new XDOMGeneratorListener();
-        this.mediawikiStreamParser.parse(source, xdomGeneratorListener);
+        this.dokuwikiStreamParser.parse(source, xdomGeneratorListener);
         return xdomGeneratorListener.getXDOM();
     }
 }

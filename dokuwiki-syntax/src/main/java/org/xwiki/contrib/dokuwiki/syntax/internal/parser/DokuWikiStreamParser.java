@@ -21,7 +21,6 @@ package org.xwiki.contrib.dokuwiki.syntax.internal.parser;
 
 import java.io.IOException;
 import java.io.Reader;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -64,9 +63,9 @@ public class DokuWikiStreamParser implements StreamParser
      */
     public static final String SYNTAX_STRING = "dokuwiki/1.0";
 
-//    @Inject
-//    @Named(org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties.FILTER_STREAM_TYPE_STRING)
-//    private InputFilterStreamFactory filter;
+    @Inject
+    @Named(org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties.FILTER_STREAM_TYPE_STRING)
+    private InputFilterStreamFactory filter;
 
     @Override
     public Syntax getSyntax()
@@ -77,18 +76,18 @@ public class DokuWikiStreamParser implements StreamParser
     @Override
     public void parse(Reader source, Listener listener) throws ParseException
     {
-//        org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties properties = new org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties();
-//        properties.setSource(new DefaultReaderInputSource(source));
-//
-//        BeanInputFilterStreamFactory<org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties> beanFilter =
-//            (BeanInputFilterStreamFactory<org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties>) this.filter;
-//
-//        try (InputFilterStream stream = beanFilter.createInputFilterStream(properties)) {
-//            stream.read(listener);
-//        } catch (IOException e) {
-//            throw new ParseException("Failed to close source", e);
-//        } catch (FilterException e) {
-//            throw new ParseException("Failed to parse content", e);
-//        }
+        org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties properties = new org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties();
+        properties.setSource(new DefaultReaderInputSource(source));
+
+        BeanInputFilterStreamFactory<org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties> beanFilter =
+            (BeanInputFilterStreamFactory<org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties>) this.filter;
+
+        try (InputFilterStream stream = beanFilter.createInputFilterStream(properties)) {
+            stream.read(listener);
+        } catch (IOException e) {
+            throw new ParseException("Failed to close source", e);
+        } catch (FilterException e) {
+            throw new ParseException("Failed to parse content", e);
+        }
     }
 }

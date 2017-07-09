@@ -36,11 +36,13 @@ import org.xwiki.contrib.dokuwiki.text.internal.DokuWikiFilter;
 import org.xwiki.filter.FilterEventParameters;
 import org.xwiki.filter.FilterException;
 import org.xwiki.filter.input.*;
+import org.xwiki.rendering.renderer.PrintRendererFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 
@@ -57,7 +59,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     private static final String TAG_TEXT_FILE_FORMAT = ".txt";
     private static final String TAG_STRING_ENCODING_FORMAT = "UTF-8";
 
-    //    @Inject
+//    @Inject
 //    @Named("xwiki/2.1")
 //    private PrintRendererFactory xwiki21Factory;
     @Inject
@@ -68,17 +70,31 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     protected void read(Object filter, DokuWikiFilter proxyFilter) throws FilterException {
         InputSource inputSource = this.properties.getSource();
         if (inputSource instanceof FileInputSource) {
-            try {
+                try {
                 CompressorInputStream input = new CompressorStreamFactory()
                         .createCompressorInputStream(new BufferedInputStream(
                                 ((InputStreamInputSource) inputSource).getInputStream()));
-                assert input != null;
                 ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
                         .createArchiveInputStream(new BufferedInputStream(input));
                 readDataStream(archiveInputStream, filter, proxyFilter);
-            } catch (ArchiveException | IOException | CompressorException e) {
-                e.printStackTrace();
-            }
+            }catch (Exception e1) {
+                    try {
+                        ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
+                                .createArchiveInputStream(new BufferedInputStream(
+                                        ((InputStreamInputSource) inputSource).getInputStream()));
+                        readDataStream(archiveInputStream, filter, proxyFilter);
+
+                    } catch (Exception e2) {
+                        try {
+                            CompressorInputStream input = new CompressorStreamFactory()
+                                    .createCompressorInputStream(new BufferedInputStream(
+                                            ((InputStreamInputSource) inputSource).getInputStream()));
+                            //Implement readDataStream method for Compressor input stream
+                        } catch (CompressorException | IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
         } else if (inputSource instanceof InputStreamInputSource) {
             try {
                 CompressorInputStream input = new CompressorStreamFactory()
@@ -86,8 +102,21 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                 ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
                         .createArchiveInputStream(new BufferedInputStream(input));
                 readDataStream(archiveInputStream, filter, proxyFilter);
-            } catch (Exception e) {
-                throw new FilterException("Unsupported input stream [" + inputSource.getClass() + "]");
+            } catch (Exception e1) {
+                try {
+                ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
+                        .createArchiveInputStream(new BufferedInputStream((InputStream) ((InputStreamInputSource) inputSource).getInputStream()));
+                    readDataStream(archiveInputStream, filter, proxyFilter);
+                } catch(Exception e2) {
+                    try {
+                        CompressorInputStream input = new CompressorStreamFactory()
+                                .createCompressorInputStream(((InputStreamInputSource) inputSource).getInputStream());
+                        ////Implement readDataStream method for Compressor input stream
+
+                    }  catch (IOException | CompressorException e3) {
+                        e3.printStackTrace();
+                }
+                }
             }
         } else {
             throw new FilterException("Unsupported input source [" + inputSource.getClass() + "]");
@@ -102,6 +131,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             String entryName = archiveEntry.getName();
             String[] pathArray = entryName.split(Matcher.quoteReplacement(System.getProperty("file.separator")));
             if (Arrays.asList(pathArray).contains(TAG_PAGES)) {
+                //Index of the 'pages' folder which contains the wiki documents and spaces.
                 int indexOfPages = ArrayUtils.indexOf(pathArray, TAG_PAGES);
                 int j = indexOfPages;
                 for (int i = indexOfPages+ 1; i < pathArray.length; j++, i++) {
