@@ -19,9 +19,6 @@
  */
 package org.xwiki.contrib.dokuwiki.syntax;
 
-import java.util.Collection;
-import java.util.Map;
-
 import org.xwiki.filter.DefaultFilterStreamProperties;
 import org.xwiki.filter.input.InputSource;
 import org.xwiki.filter.type.FilterStreamType;
@@ -63,14 +60,14 @@ public class DokuWikiSyntaxInputProperties extends DefaultFilterStreamProperties
     // locally defined until updated in the framework
     private static final SystemType DOKUWIKI = new SystemType("dokuwiki");
     /**
-     * The MediaWiki Syntax format.
+     * The DokuWiki Syntax format.
      */
     public static final FilterStreamType FILTER_STREAM_TYPE = new FilterStreamType(DOKUWIKI, "text");
 
     /**
-     * The MediaWiki Syntax format as String.
+     * The DokuWiki Syntax format as String.
      */
-    public static final String FILTER_STREAM_TYPE_STRING = "mediawiki+text";
+    public static final String FILTER_STREAM_TYPE_STRING = "dokuwiki+text";
 
     /**
      * @see #getSource()

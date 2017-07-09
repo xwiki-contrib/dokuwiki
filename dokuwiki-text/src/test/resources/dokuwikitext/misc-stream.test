@@ -4,13 +4,19 @@
 <wikiSpace name="Main">
   <wikiSpace name="wiki">
     <wikiDocument name="syntax"></wikiDocument>
+  </wikiSpace>
+  <wikiSpace name="wiki">
     <wikiDocument name="welcome"></wikiDocument>
+  </wikiSpace>
+  <wikiDocument name="start"></wikiDocument>
+  <wikiSpace name="wiki">
     <wikiDocument name="dokuwiki"></wikiDocument>
   </wikiSpace>
+  <wikiSpace name="playground"></wikiSpace>
+  <wikiSpace name="wiki"></wikiSpace>
   <wikiSpace name="playground">
     <wikiDocument name="playground"></wikiDocument>
   </wikiSpace>
-  <wikiDocument name="start"></wikiDocument>
 </wikiSpace>
 .#------------------------------------------------------------------------------
 .input|dokuwiki+text

@@ -2,15 +2,21 @@
 .expect|filter+xml
 .#------------------------------------------------------------------------------
 <wikiSpace name="Main">
+  <wikiSpace name="playground"></wikiSpace>
+  <wikiDocument name="start"></wikiDocument>
+  <wikiSpace name="wiki"></wikiSpace>
+  <wikiSpace name="wiki">
+    <wikiDocument name="dokuwiki"></wikiDocument>
+  </wikiSpace>
+  <wikiSpace name="wiki">
+    <wikiDocument name="syntax"></wikiDocument>
+  </wikiSpace>
+  <wikiSpace name="wiki">
+    <wikiDocument name="welcome"></wikiDocument>
+  </wikiSpace>
   <wikiSpace name="playground">
     <wikiDocument name="playground"></wikiDocument>
   </wikiSpace>
-  <wikiSpace name="wiki">
-    <wikiDocument name="dokuwiki"></wikiDocument>
-    <wikiDocument name="syntax"></wikiDocument>
-    <wikiDocument name="welcome"></wikiDocument>
-  </wikiSpace>
-  <wikiDocument name="start"></wikiDocument>
 </wikiSpace>
 .#------------------------------------------------------------------------------
 .input|dokuwiki+text
