@@ -1,0 +1,18 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.6
+.#-----------------------------------------------------
+<center>
+some content
+</center>
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginGroup [[style]=[margin-right: auto; margin-left: auto;text-align: center]]
+beginParagraph
+onWord [some]
+onSpace
+onWord [content]
+endParagraph
+endGroup [[style]=[margin-right: auto; margin-left: auto;text-align: center]]
+endDocument

@@ -1,0 +1,15 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.6
+.#-----------------------------------------------------
+Test <code>CODE 1</code>.
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+onWord [Test]
+onSpace
+onMacroInline [code] [] [CODE 1]
+onSpecialSymbol [.]
+endParagraph
+endDocument

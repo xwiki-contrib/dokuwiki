@@ -1,0 +1,14 @@
+.#------------------------------------------------------------------------------
+.input|dokuwiki/1.6
+.#------------------------------------------------------------------------------
+[[File:image.png|50x60px]]
+.#------------------------------------------------------------------------------
+.expect|event/1.0
+.#------------------------------------------------------------------------------
+beginDocument
+beginParagraph
+beginLink [Typed = [false] Type = [url] Reference = [File:image.png]] [false]
+onImage [Typed = [false] Type = [url] Reference = [image.png]] [false] [[height]=[60px][width]=[50px]]
+endLink [Typed = [false] Type = [url] Reference = [File:image.png]] [false]
+endParagraph
+endDocument

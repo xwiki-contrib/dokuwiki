@@ -1,0 +1,13 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.6
+.#-----------------------------------------------------
+[[:Image:attach.ext]]
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+beginLink [Typed = [false] Type = [url] Reference = [Image:attach.ext]] [false]
+endLink [Typed = [false] Type = [url] Reference = [Image:attach.ext]] [false]
+endParagraph
+endDocument

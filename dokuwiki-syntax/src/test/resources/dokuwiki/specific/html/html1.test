@@ -1,0 +1,20 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.6
+.#-----------------------------------------------------
+&gt; &amp; &nbsp; < &#62;
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+onSpecialSymbol [>]
+onSpace
+onSpecialSymbol [&]
+onSpace
+onSpace
+onSpace
+onSpecialSymbol [<]
+onSpace
+onSpecialSymbol [>]
+endParagraph
+endDocument

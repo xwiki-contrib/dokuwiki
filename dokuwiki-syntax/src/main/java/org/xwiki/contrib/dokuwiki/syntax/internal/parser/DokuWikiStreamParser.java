@@ -38,6 +38,8 @@ import org.xwiki.rendering.parser.StreamParser;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.syntax.SyntaxType;
 
+import static org.xwiki.rendering.listener.Listener.EMPTY_PARAMETERS;
+
 /**
  * DokuWiki streamed parser
  *
@@ -76,18 +78,12 @@ public class DokuWikiStreamParser implements StreamParser
     @Override
     public void parse(Reader source, Listener listener) throws ParseException
     {
-        org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties properties = new org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties();
-        properties.setSource(new DefaultReaderInputSource(source));
+        try {
+            source.read();
 
-        BeanInputFilterStreamFactory<org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties> beanFilter =
-            (BeanInputFilterStreamFactory<org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties>) this.filter;
-
-        try (InputFilterStream stream = beanFilter.createInputFilterStream(properties)) {
-            stream.read(listener);
         } catch (IOException e) {
-            throw new ParseException("Failed to close source", e);
-        } catch (FilterException e) {
-            throw new ParseException("Failed to parse content", e);
+            e.printStackTrace();
         }
+
     }
 }

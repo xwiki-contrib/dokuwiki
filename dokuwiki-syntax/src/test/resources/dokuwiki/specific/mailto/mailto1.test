@@ -1,0 +1,16 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.6
+.#-----------------------------------------------------
+[mailto:info@example.org email me]
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+beginLink [Typed = [true] Type = [mailto] Reference = [info@example.org]] [false]
+onWord [email]
+onSpace
+onWord [me]
+endLink [Typed = [true] Type = [mailto] Reference = [info@example.org]] [false]
+endParagraph
+endDocument

@@ -1,0 +1,21 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.6
+.#-----------------------------------------------------
+<math>
+a+b
+</math>
+
+Formula <math>a+b</math>
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+onMacroInline [formula] [] [a+b]
+endParagraph
+beginParagraph
+onWord [Formula]
+onSpace
+onMacroInline [formula] [] [a+b]
+endParagraph
+endDocument

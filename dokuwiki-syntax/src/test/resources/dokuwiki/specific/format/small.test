@@ -1,0 +1,18 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.6
+.#-----------------------------------------------------
+This is <small>small</small>
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+onWord [This]
+onSpace
+onWord [is]
+onSpace
+beginFormat [NONE] [[style]=[font-size:small]]
+onWord [small]
+endFormat [NONE] [[style]=[font-size:small]]
+endParagraph
+endDocument

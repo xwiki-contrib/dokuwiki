@@ -1,0 +1,12 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.6
+.#-----------------------------------------------------
+<div style="text-align:right">content</div>
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginGroup [[style]=[text-align:right]]
+onWord [content]
+endGroup [[style]=[text-align:right]]
+endDocument

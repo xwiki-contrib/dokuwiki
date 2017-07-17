@@ -1,0 +1,14 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.6
+.#-----------------------------------------------------
+[mailto:info@example.org?Subject=URL%20Encoded%20Subject&body=Body%20Text info]
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+beginLink [Typed = [true] Type = [mailto] Reference = [info@example.org?Subject=URL%20Encoded%20Subject&body=Body%20Text]] [false]
+onWord [info]
+endLink [Typed = [true] Type = [mailto] Reference = [info@example.org?Subject=URL%20Encoded%20Subject&body=Body%20Text]] [false]
+endParagraph
+endDocument

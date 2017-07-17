@@ -1,0 +1,13 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.6
+.#-----------------------------------------------------
+[[reference#See also]]
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+beginLink [Typed = [false] Type = [url] Reference = [reference#See_also]] [false]
+endLink [Typed = [false] Type = [url] Reference = [reference#See_also]] [false]
+endParagraph
+endDocument

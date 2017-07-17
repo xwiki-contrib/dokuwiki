@@ -1,0 +1,93 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.6
+.#-----------------------------------------------------
+= Title level 1 =
+== Title level 2 ==
+=== Title level 3 ===
+==== Title level 4 ====
+===== Title level 5 =====
+====== Title level 6 ======
+===== Title level 5.2 =====
+= Title level 1.2 =
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+onMacroStandalone [toc] []
+beginSection
+beginHeader [1, Title_level_1]
+onWord [Title]
+onSpace
+onWord [level]
+onSpace
+onWord [1]
+endHeader [1, Title_level_1]
+beginSection
+beginHeader [2, Title_level_2]
+onWord [Title]
+onSpace
+onWord [level]
+onSpace
+onWord [2]
+endHeader [2, Title_level_2]
+beginSection
+beginHeader [3, Title_level_3]
+onWord [Title]
+onSpace
+onWord [level]
+onSpace
+onWord [3]
+endHeader [3, Title_level_3]
+beginSection
+beginHeader [4, Title_level_4]
+onWord [Title]
+onSpace
+onWord [level]
+onSpace
+onWord [4]
+endHeader [4, Title_level_4]
+beginSection
+beginHeader [5, Title_level_5]
+onWord [Title]
+onSpace
+onWord [level]
+onSpace
+onWord [5]
+endHeader [5, Title_level_5]
+beginSection
+beginHeader [6, Title_level_6]
+onWord [Title]
+onSpace
+onWord [level]
+onSpace
+onWord [6]
+endHeader [6, Title_level_6]
+endSection
+endSection
+beginSection
+beginHeader [5, Title_level_5.2]
+onWord [Title]
+onSpace
+onWord [level]
+onSpace
+onWord [5]
+onSpecialSymbol [.]
+onWord [2]
+endHeader [5, Title_level_5.2]
+endSection
+endSection
+endSection
+endSection
+endSection
+beginSection
+beginHeader [1, Title_level_1.2]
+onWord [Title]
+onSpace
+onWord [level]
+onSpace
+onWord [1]
+onSpecialSymbol [.]
+onWord [2]
+endHeader [1, Title_level_1.2]
+endSection
+endDocument

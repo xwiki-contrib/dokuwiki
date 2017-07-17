@@ -1,0 +1,13 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.6
+.#-----------------------------------------------------
+[[File:file.txt]]
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+beginLink [Typed = [true] Type = [attach] Reference = [file.txt]] [false]
+endLink [Typed = [true] Type = [attach] Reference = [file.txt]] [false]
+endParagraph
+endDocument

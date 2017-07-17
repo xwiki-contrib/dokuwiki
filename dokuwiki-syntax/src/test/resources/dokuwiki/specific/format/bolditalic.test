@@ -1,0 +1,24 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.6
+.#-----------------------------------------------------
+This is '''''bold & italic'''''
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+onWord [This]
+onSpace
+onWord [is]
+onSpace
+beginFormat [ITALIC]
+beginFormat [BOLD]
+onWord [bold]
+onSpace
+onSpecialSymbol [&]
+onSpace
+onWord [italic]
+endFormat [BOLD]
+endFormat [ITALIC]
+endParagraph
+endDocument

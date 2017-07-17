@@ -1,0 +1,13 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.6
+.#-----------------------------------------------------
+http://xwiki.org
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+beginLink [Typed = [true] Type = [url] Reference = [http://xwiki.org]] [true]
+endLink [Typed = [true] Type = [url] Reference = [http://xwiki.org]] [true]
+endParagraph
+endDocument

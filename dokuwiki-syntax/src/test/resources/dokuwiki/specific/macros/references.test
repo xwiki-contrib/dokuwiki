@@ -1,0 +1,43 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.6
+.#-----------------------------------------------------
+The Sun is pretty big.<ref>E. Miller, ''The Sun'', (New York: Academic Press, 2005), 23-5.</ref> The Moon, however, is not so big.<ref>''R. Smith, "Size of the Moon", ''Scientific American'', 46 (April 1978): 44-6.</ref>
+
+<references />
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+onWord [The]
+onSpace
+onWord [Sun]
+onSpace
+onWord [is]
+onSpace
+onWord [pretty]
+onSpace
+onWord [big]
+onSpecialSymbol [.]
+onMacroInline [footnote] [] [E. Miller, The Sun, (New York: Academic Press, 2005), 23-5.]
+onSpace
+onWord [The]
+onSpace
+onWord [Moon]
+onSpecialSymbol [,]
+onSpace
+onWord [however]
+onSpecialSymbol [,]
+onSpace
+onWord [is]
+onSpace
+onWord [not]
+onSpace
+onWord [so]
+onSpace
+onWord [big]
+onSpecialSymbol [.]
+onMacroInline [footnote] [] [R. Smith, "Size of the Moon", Scientific American, 46 (April 1978): 44-6.]
+endParagraph
+onMacroStandalone [putFootnotes] [] []
+endDocument
