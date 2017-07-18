@@ -21,10 +21,14 @@ package org.xwiki.contrib.dokuwiki.syntax.internal.parser;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
+import java.nio.CharBuffer;
+import java.util.ArrayList;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.apache.commons.io.IOUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties.ReferenceType;
 import org.xwiki.filter.FilterException;
@@ -48,8 +52,7 @@ import static org.xwiki.rendering.listener.Listener.EMPTY_PARAMETERS;
 @Component
 @Named(org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiStreamParser.SYNTAX_STRING)
 @Singleton
-public class DokuWikiStreamParser implements StreamParser
-{
+public class DokuWikiStreamParser implements StreamParser {
     /**
      * The syntax type.
      */
@@ -65,25 +68,15 @@ public class DokuWikiStreamParser implements StreamParser
      */
     public static final String SYNTAX_STRING = "dokuwiki/1.0";
 
-    @Inject
-    @Named(org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties.FILTER_STREAM_TYPE_STRING)
-    private InputFilterStreamFactory filter;
-
     @Override
-    public Syntax getSyntax()
-    {
+    public Syntax getSyntax() {
         return SYNTAX;
     }
 
     @Override
-    public void parse(Reader source, Listener listener) throws ParseException
-    {
-        try {
-            source.read();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void parse(Reader source, Listener listener) throws ParseException {
+        DokuWikiRecursiveParser parser = new DokuWikiRecursiveParser();
+        parser.parse(source, listener);
 
     }
 }

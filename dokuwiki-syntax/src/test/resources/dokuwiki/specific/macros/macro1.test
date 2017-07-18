@@ -1,5 +1,5 @@
 .#-----------------------------------------------------
-.input|dokuwiki/1.6
+.input|dokuwiki/1.0
 .#-----------------------------------------------------
 <macro:standalone param1="value1" param2="value2">
 some '''unparsed''' content

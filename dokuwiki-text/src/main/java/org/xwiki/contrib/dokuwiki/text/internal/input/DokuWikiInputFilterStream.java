@@ -156,7 +156,6 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                             throw new FilterException("Failed to convert content page", e);
                         }
 
-
                         proxyFilter.endWikiDocument(documentName, FilterEventParameters.EMPTY);
                         break;
                     }

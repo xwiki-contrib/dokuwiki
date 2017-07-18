@@ -59,10 +59,6 @@ public class DokuWikiSyntaxInputProperties extends DefaultFilterStreamProperties
 
     // locally defined until updated in the framework
     private static final SystemType DOKUWIKI = new SystemType("dokuwiki");
-    /**
-     * The DokuWiki Syntax format.
-     */
-    public static final FilterStreamType FILTER_STREAM_TYPE = new FilterStreamType(DOKUWIKI, "text");
 
     /**
      * The DokuWiki Syntax format as String.

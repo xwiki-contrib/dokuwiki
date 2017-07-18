@@ -35,7 +35,7 @@ import org.xwiki.rendering.parser.StreamParser;
 import org.xwiki.rendering.syntax.Syntax;
 
 /**
- * MediaWiki block parser.
+ * DokuWiki block parser.
  *
  * @version $Id: 82fb920b4209cb0616bebf0e226334e618a28144 $
  */
