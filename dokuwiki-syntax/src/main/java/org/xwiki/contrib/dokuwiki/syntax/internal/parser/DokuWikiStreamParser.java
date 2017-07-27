@@ -37,6 +37,7 @@ import org.xwiki.filter.input.DefaultReaderInputSource;
 import org.xwiki.filter.input.InputFilterStream;
 import org.xwiki.filter.input.InputFilterStreamFactory;
 import org.xwiki.rendering.listener.Listener;
+import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.parser.ParseException;
 import org.xwiki.rendering.parser.StreamParser;
 import org.xwiki.rendering.syntax.Syntax;
@@ -56,12 +57,12 @@ public class DokuWikiStreamParser implements StreamParser {
     /**
      * The syntax type.
      */
-    public static final SyntaxType SYNTAX_TYPE = new SyntaxType("dokuwiki", "DokuWiki");
+    private static final SyntaxType SYNTAX_TYPE = new SyntaxType("dokuwiki", "dokuwiki");
 
     /**
      * The syntax with version.
      */
-    public static final Syntax SYNTAX = new Syntax(SYNTAX_TYPE, "1.0");
+    static final Syntax SYNTAX = new Syntax(SYNTAX_TYPE, "1.0");
 
     /**
      * The String version of the syntax.
@@ -76,7 +77,9 @@ public class DokuWikiStreamParser implements StreamParser {
     @Override
     public void parse(Reader source, Listener listener) throws ParseException {
         DokuWikiRecursiveParser parser = new DokuWikiRecursiveParser();
-        parser.parse(source, listener);
+        MetaData metaData = new MetaData();
+        metaData.addMetaData("syntax", SYNTAX);
+        parser.parse(source, listener, metaData);
 
     }
 }
