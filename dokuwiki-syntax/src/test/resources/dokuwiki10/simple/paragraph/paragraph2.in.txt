@@ -1,5 +1,3 @@
-paragraph1 on
-multiple
-lines
+paragraph1 on\\ multiple\\ lines
 
 paragraph2
