@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 class DokuWikiRecursiveParser {
-    private static String[] supportedTags = new String[] {"<del>", "</del>", "<sub>", "</sub>", "<sup>", "</sup>", "<nowiki>", "</nowiki>"};
+    private static String[] supportedTags = new String[]{"<del>", "</del>", "<sub>", "</sub>", "<sup>", "</sup>", "<nowiki>", "</nowiki>"};
 
     void parse(Reader source, Listener listener, MetaData metaData) throws ParseException {
         try {
@@ -47,6 +47,7 @@ class DokuWikiRecursiveParser {
 
     private void parseRecursive(Reader source, Listener listener) throws IOException {
         ArrayList<Character> buffer = new ArrayList<>();
+        boolean inParagraph = false;
         boolean addNewParagraph = false;
         boolean onNewLineCharacter = false;
         boolean horizontalLineAdded = false;
@@ -56,14 +57,12 @@ class DokuWikiRecursiveParser {
         boolean underlineOpen = false;
         boolean monospaceOpen = false;
         boolean linkOpen = true;
-        int spaceIndentationUnOrdered  = -1;
+        int listSpaceidentation = -1;
         int quotationLevel = -1;
         boolean inQuotation = false;
         boolean listEnded = true;
 
-        listener.beginParagraph(Listener.EMPTY_PARAMETERS);
-
-        while (source.ready() && (readCharacter = source.read()) != -1 ) {
+        while (source.ready() && (readCharacter = source.read()) != -1) {
             buffer.add((char) readCharacter);
             if (getStringRepresentation(buffer).endsWith("----")) {
                 //end paragraph
@@ -83,32 +82,37 @@ class DokuWikiRecursiveParser {
                 continue;
             }
 
-            if (addNewParagraph) {
-                if (!(buffer.size() > 0 && (buffer.get(buffer.size() - 1) == '-' || buffer.get(buffer.size() - 1) == ' '))) {
+            if (!(buffer.size() > 0 && (buffer.get(buffer.size() - 1) == '-' || buffer.get(buffer.size() - 1) == '\n' ||
+                    buffer.get(buffer.size() - 1) == ' ' ||buffer.get(buffer.size()-1) == '*' || !listEnded ))) {
+                if (addNewParagraph) {
                     listener.endParagraph(Listener.EMPTY_PARAMETERS);
                     listener.beginParagraph(Listener.EMPTY_PARAMETERS);
                     addNewParagraph = false;
                 }
+                if (!inParagraph) {
+                    listener.beginParagraph(Listener.EMPTY_PARAMETERS);
+                    inParagraph = true;
+                }
             }
-            horizontalLineAdded  =false;
+            horizontalLineAdded = false;
             //bufferString.append(buffer.get(buffer.size()-1));
-            if (buffer.size() > 0 && buffer.get(buffer.size()-1) == '>') {
+            if (buffer.size() > 0 && buffer.get(buffer.size() - 1) == '>') {
                 //process quotation.
                 inQuotation = true;
                 processWords(addNewParagraph, 1, buffer, listener);
                 buffer.add((char) source.read());
                 int currentQuotationLevel = 0;
-                while(buffer.get(buffer.size()-1) !=  ' ') {
+                while (buffer.get(buffer.size() - 1) != ' ') {
                     currentQuotationLevel++;
                     buffer.add((char) source.read());
                 }
                 if (currentQuotationLevel > quotationLevel) {
-                    while(currentQuotationLevel > quotationLevel) {
+                    while (currentQuotationLevel > quotationLevel) {
                         listener.beginQuotation(Listener.EMPTY_PARAMETERS);
                         quotationLevel++;
                     }
                 } else if (currentQuotationLevel < quotationLevel) {
-                    while(currentQuotationLevel < quotationLevel) {
+                    while (currentQuotationLevel < quotationLevel) {
                         listener.endQuotation(Listener.EMPTY_PARAMETERS);
                         quotationLevel--;
                     }
@@ -134,19 +138,52 @@ class DokuWikiRecursiveParser {
                 }
                 if (buffer.get(buffer.size() - 1) == ' ' && buffer.get(buffer.size() - 2) == '*') {
                     //unordered list
-                    buffer.subList(buffer.size() - 2, buffer.size()).clear();
-                    listEnded = false;
-
-                    if (buffer.size() > spaceIndentationUnOrdered) {
-                        listener.beginList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
-                        spaceIndentationUnOrdered++;
-                    } else if (buffer.size() < spaceIndentationUnOrdered) {
-                        listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
-                        spaceIndentationUnOrdered--;
+                    if (buffer.size() - 2 > listSpaceidentation) {
+                        while (listSpaceidentation < buffer.size() -2) {
+                            listener.beginList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
+                            listener.beginListItem();
+                            listSpaceidentation++;
+                        }
+                    } else if (buffer.size() - 2 < listSpaceidentation) {
+                        while(listSpaceidentation > (buffer.size() -2)) {
+                            listener.endListItem();
+                            listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
+                            listSpaceidentation--;
+                        }
+                        listener.endListItem();
+                        listener.beginListItem();
                     } else {
+                        listener.endListItem();
                         listener.beginListItem();
                     }
-                    buffer.subList(buffer.size() - spaceIndentationUnOrdered, buffer.size()).clear();
+
+                    listEnded = false;
+                    buffer.clear();
+                    continue;
+                }
+
+                if (buffer.get(buffer.size() - 1) == ' ' && buffer.get(buffer.size() - 2) == '-') {
+                    //Ordered list
+                    if (buffer.size() - 2 > listSpaceidentation) {
+                        while (listSpaceidentation < buffer.size() -2) {
+                            listener.beginList(ListType.NUMBERED, Listener.EMPTY_PARAMETERS);
+                            listener.beginListItem();
+                            listSpaceidentation++;
+                        }
+                    } else if (buffer.size() - 2 < listSpaceidentation) {
+                        while(listSpaceidentation > (buffer.size() -2)) {
+                            listener.endListItem();
+                            listener.endList(ListType.NUMBERED, Listener.EMPTY_PARAMETERS);
+                            listener.endListItem();
+                            listSpaceidentation--;
+                        }
+                        listener.beginListItem();
+                    } else {
+                        listener.endListItem();
+                        listener.beginListItem();
+                    }
+                    listEnded = false;
+                    buffer.clear();
                     continue;
                 }
 
@@ -192,35 +229,38 @@ class DokuWikiRecursiveParser {
                 }
             }
 
-            if (buffer.size() >0 && buffer.get(buffer.size()-1) == '\n') {
+            if (buffer.size() > 0 && buffer.get(buffer.size() - 1) == '\n') {
                 //handle lists
+                if (!listEnded) {
+                    onNewLineCharacter = false;
+                }
                 if (buffer.size() >= 0) {
                     processWords(addNewParagraph, 1, buffer, listener);
                 }
-                if (spaceIndentationUnOrdered >= 0 && !listEnded) {
+                if (listSpaceidentation >= 0 && listEnded) {
                     listener.endListItem();
-                    listEnded = true;
-                } else if(spaceIndentationUnOrdered >=0 && listEnded) {
-                    while (spaceIndentationUnOrdered >= 0) {
+                    while (listSpaceidentation >= 0) {
                         listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
-                        spaceIndentationUnOrdered--;
+                        listSpaceidentation--;
                     }
-                }else if (quotationLevel >= 0 && inQuotation) {
+                } else if (quotationLevel >= 0 && inQuotation) {
                     //handle quotation input.
                     listener.endQuotationLine();
                     inQuotation = false;
                 } else if (quotationLevel >= 0) {
-                    while (quotationLevel >=0) {
+                    while (quotationLevel >= 0) {
                         listener.endQuotation(Listener.EMPTY_PARAMETERS);
                         quotationLevel--;
                     }
-                } else if (onNewLineCharacter){
-                    addNewParagraph =true;
+                } else if (onNewLineCharacter) {
+                    addNewParagraph = true;
                     onNewLineCharacter = false;
                     continue;
-                } else {
+                } else if (listEnded){
                     onNewLineCharacter = true;
                 }
+                listEnded = true;
+                buffer.clear();
             }
 
             if (getStringRepresentation(buffer).endsWith("[[")) {
@@ -247,16 +287,16 @@ class DokuWikiRecursiveParser {
                 continue;
             }
 
-            if (buffer.size() >0 && buffer.get(buffer.size()-1) == '<') {
+            if (buffer.size() > 0 && buffer.get(buffer.size() - 1) == '<') {
                 //email address
                 processWords(addNewParagraph, 1, buffer, listener);
-                while(source.ready()) {
+                while (source.ready()) {
                     buffer.add((char) source.read());
-                    if (buffer.get(buffer.size()-1) == '>') {
+                    if (buffer.get(buffer.size() - 1) == '>') {
                         if (Arrays.asList(supportedTags).contains("<" + getStringRepresentation(buffer))) {
                             buffer.add(0, '<');
                         } else if (buffer.contains('@')) {
-                            buffer.subList(buffer.size() - 1,buffer.size()).clear();
+                            buffer.subList(buffer.size() - 1, buffer.size()).clear();
                             ResourceReference reference = new ResourceReference(getStringRepresentation(buffer), ResourceType.MAILTO);
                             listener.beginLink(reference, true, Listener.EMPTY_PARAMETERS);
                             listener.endLink(reference, true, Listener.EMPTY_PARAMETERS);
@@ -269,10 +309,10 @@ class DokuWikiRecursiveParser {
             if (getStringRepresentation(buffer).endsWith("<nowiki>")) {
                 //override syntax
                 processWords(addNewParagraph, 8, buffer, listener);
-                while(source.ready()) {
+                while (source.ready()) {
                     buffer.add((char) source.read());
-                    if (buffer.get(buffer.size()-1) == '>') {
-                        buffer.subList(buffer.size() - 9,buffer.size()).clear();
+                    if (buffer.get(buffer.size() - 1) == '>') {
+                        buffer.subList(buffer.size() - 9, buffer.size()).clear();
                         listener.onVerbatim(getStringRepresentation(buffer), true, Listener.EMPTY_PARAMETERS);
                         buffer.clear();
                         break;
@@ -283,10 +323,10 @@ class DokuWikiRecursiveParser {
             if (getStringRepresentation(buffer).endsWith("%%")) {
                 //Also override syntax (same as <nowiki>)
                 processWords(addNewParagraph, 2, buffer, listener);
-                while(source.ready()) {
+                while (source.ready()) {
                     buffer.add((char) source.read());
-                    if (buffer.get(buffer.size()-1) == '%' &&buffer.get(buffer.size()-2) == '%' ) {
-                        buffer.subList(buffer.size() - 2,buffer.size()).clear();
+                    if (buffer.get(buffer.size() - 1) == '%' && buffer.get(buffer.size() - 2) == '%') {
+                        buffer.subList(buffer.size() - 2, buffer.size()).clear();
                         listener.onVerbatim(getStringRepresentation(buffer), true, Listener.EMPTY_PARAMETERS);
                         buffer.clear();
                         break;
@@ -324,8 +364,8 @@ class DokuWikiRecursiveParser {
                 processWords(addNewParagraph, 6, buffer, listener);
                 listener.endFormat(Format.STRIKEDOUT, Listener.EMPTY_PARAMETERS);
             }
-            if (!inQuotation && quotationLevel >=0) {
-                while (quotationLevel >=0) {
+            if (!inQuotation && quotationLevel >= 0) {
+                while (quotationLevel >= 0) {
                     listener.endQuotation(Listener.EMPTY_PARAMETERS);
                 }
             }
@@ -334,11 +374,21 @@ class DokuWikiRecursiveParser {
         if (buffer.size() > 0) {
             processWords(addNewParagraph, 0, buffer, listener);
         }
-        listener.endParagraph(Listener.EMPTY_PARAMETERS);
+        //close remaining list items
+        while (listSpaceidentation >= 0) {
+                listener.endListItem();
+                listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
+                listSpaceidentation--;
+        }
+        if (inParagraph) {
+            listener.endParagraph(Listener.EMPTY_PARAMETERS);
+            inParagraph = false;
+        }
+
 
     }
 
-    private void processWords(boolean addNewParagraph,  int argumentTrimSize, ArrayList<Character> buffer, Listener listener) {
+    private void processWords(boolean addNewParagraph, int argumentTrimSize, ArrayList<Character> buffer, Listener listener) {
         buffer.subList(buffer.size() - argumentTrimSize, buffer.size()).clear();
         StringBuilder word = new StringBuilder();
 //        if (addNewParagraph) {
@@ -348,15 +398,15 @@ class DokuWikiRecursiveParser {
         for (char c : buffer) {
             if (c == ' ' && word.length() == 0) {
                 listener.onSpace();
-            } else  if (c == ' ') {
+            } else if (c == ' ') {
                 listener.onWord(word.toString());
                 listener.onSpace();
                 word.setLength(0);
             } else {
-                    word.append(c);
-                }
+                word.append(c);
             }
-            if (word.length() > 0) {
+        }
+        if (word.length() > 0) {
             listener.onWord(word.toString());
         }
         buffer.clear();
@@ -364,11 +414,11 @@ class DokuWikiRecursiveParser {
 
     private void processWordsFromReader(boolean addNewParagraph, Reader source, Listener listener, String endString) throws IOException {
         ArrayList<Character> buffer = new ArrayList<>();
-        while(source.ready()) {
+        while (source.ready()) {
             buffer.add((char) source.read());
             String readString = getStringRepresentation(buffer);
             if (readString.endsWith(endString)) {
-                buffer.subList(buffer.size() - endString.length(),buffer.size()).clear();
+                buffer.subList(buffer.size() - endString.length(), buffer.size()).clear();
                 //StringBuilder here has no utility.
                 processWords(addNewParagraph, 0, buffer, listener);
                 break;
@@ -378,18 +428,18 @@ class DokuWikiRecursiveParser {
 
     private void processImage(Reader source, Listener listener) throws IOException {
         StringBuilder imageNameBuilder = new StringBuilder();
-        while(source.ready()) {
+        while (source.ready()) {
             imageNameBuilder.append((char) source.read());
             String imageArgument = imageNameBuilder.toString();
-            boolean internalImage= true;
-            if(imageArgument.endsWith("}}")) {
+            boolean internalImage = true;
+            if (imageArgument.endsWith("}}")) {
                 if (!imageArgument.contains("wiki:")) {
                     internalImage = false;
                 }
                 if (imageArgument.startsWith("{{ ") && imageArgument.endsWith(" }}")) {
                     //align centre
                     if (internalImage) {
-                        String imageName = imageArgument.substring(5, imageArgument.length() -3);
+                        String imageName = imageArgument.substring(5, imageArgument.length() - 3);
                         //listener.onImage(new ResourceReference(imageName, ResourceType.URL), false,  );
                     }
                 } else if (imageArgument.startsWith(" ")) {
@@ -400,10 +450,10 @@ class DokuWikiRecursiveParser {
                     //no alignment info
                     String imageName;
                     if (internalImage) {
-                        imageName = imageArgument.substring(5, imageArgument.length() -2);
+                        imageName = imageArgument.substring(5, imageArgument.length() - 2);
 
                     } else {
-                        imageName = imageArgument.substring(1, imageArgument.length() -2);
+                        imageName = imageArgument.substring(1, imageArgument.length() - 2);
                     }
                     ResourceReference reference = new ResourceReference(imageName, ResourceType.URL);
                     reference.setTyped(false);
@@ -414,12 +464,12 @@ class DokuWikiRecursiveParser {
         }
     }
 
-    private void processLink(boolean addNewParagraph, Reader source, Listener  listener) throws IOException {
+    private void processLink(boolean addNewParagraph, Reader source, Listener listener) throws IOException {
         StringBuilder LinkBuilder = new StringBuilder();
-        while(source.ready()) {
+        while (source.ready()) {
             LinkBuilder.append((char) source.read());
             String linkArgument = LinkBuilder.toString();
-           // boolean internalLink = true;
+            // boolean internalLink = true;
             if (linkArgument.endsWith("|")) {
                 ResourceReference reference = new ResourceReference(linkArgument.substring(0, linkArgument.length() - 1), ResourceType.URL);
                 reference.setTyped(false);
