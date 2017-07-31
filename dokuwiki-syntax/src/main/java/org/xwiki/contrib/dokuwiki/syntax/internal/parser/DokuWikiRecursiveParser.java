@@ -34,6 +34,8 @@ import java.util.Arrays;
 
 class DokuWikiRecursiveParser {
     private static String[] supportedTags = new String[]{"<del>", "</del>", "<sub>", "</sub>", "<sup>", "</sup>", "<nowiki>", "</nowiki>"};
+    private static Character[] specialSymbols = new Character[] {
+            '@', '#', '$', '*', '%', '\'', '(', '!', ')', '-', '_', '^', '`', '?', ',', ';', '.', '/', ':', '=', '+', '<', '|', '>'};
 
     void parse(Reader source, Listener listener, MetaData metaData) throws ParseException {
         try {
@@ -153,55 +155,79 @@ class DokuWikiRecursiveParser {
                     buffer.clear();
                     continue;
                 }
-                if (buffer.get(buffer.size() - 1) == ' ' && buffer.get(buffer.size() - 2) == '*') {
-                    //unordered list
-                    if (buffer.size() - 2 > listSpaceidentation) {
-                        while (listSpaceidentation < buffer.size() -2) {
-                            listener.beginList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
-                            listener.beginListItem();
-                            listSpaceidentation++;
+                if ( buffer.get(buffer.size() - 1) == ' ' && buffer.get(buffer.size() - 2) == '*') {
+                    buffer.subList(buffer.size() - 2, buffer.size()).clear();
+                    boolean isUnorederedList = true;
+                    for (Character c : buffer) {
+                        if (c != ' ') {
+                            isUnorederedList = false;
                         }
-                    } else if (buffer.size() - 2 < listSpaceidentation) {
-                        while(listSpaceidentation > (buffer.size() -2)) {
-                            listener.endListItem();
-                            listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
-                            listSpaceidentation--;
-                        }
-                        listener.endListItem();
-                        listener.beginListItem();
-                    } else {
-                        listener.endListItem();
-                        listener.beginListItem();
                     }
+                    //unordered list
+                    if (isUnorederedList) {
+                        if (buffer.size() > listSpaceidentation) {
+                            while (listSpaceidentation < buffer.size()) {
+                                listener.beginList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
+                                listener.beginListItem();
+                                listSpaceidentation++;
+                            }
+                        } else if (buffer.size() < listSpaceidentation) {
+                            while (listSpaceidentation > (buffer.size())) {
+                                listener.endListItem();
+                                listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
+                                listSpaceidentation--;
+                            }
+                            listener.endListItem();
+                            listener.beginListItem();
+                        } else {
+                            listener.endListItem();
+                            listener.beginListItem();
+                        }
 
-                    listEnded = false;
-                    buffer.clear();
-                    continue;
+                        listEnded = false;
+                        buffer.clear();
+                        continue;
+                    } else {
+                        buffer.add('*');
+                        buffer.add(' ');
+                    }
                 }
 
                 if (buffer.get(buffer.size() - 1) == ' ' && buffer.get(buffer.size() - 2) == '-') {
                     //Ordered list
-                    if (buffer.size() - 2 > listSpaceidentation) {
-                        while (listSpaceidentation < buffer.size() -2) {
-                            listener.beginList(ListType.NUMBERED, Listener.EMPTY_PARAMETERS);
-                            listener.beginListItem();
-                            listSpaceidentation++;
+                    buffer.subList(buffer.size() - 2, buffer.size()).clear();
+                    boolean isOrederedList = true;
+                    for (Character c : buffer) {
+                        if (c != ' ') {
+                            isOrederedList = false;
                         }
-                    } else if (buffer.size() - 2 < listSpaceidentation) {
-                        while(listSpaceidentation > (buffer.size() -2)) {
-                            listener.endListItem();
-                            listener.endList(ListType.NUMBERED, Listener.EMPTY_PARAMETERS);
-                            listener.endListItem();
-                            listSpaceidentation--;
-                        }
-                        listener.beginListItem();
-                    } else {
-                        listener.endListItem();
-                        listener.beginListItem();
                     }
-                    listEnded = false;
-                    buffer.clear();
-                    continue;
+                    if (isOrederedList) {
+                        if (buffer.size() > listSpaceidentation) {
+                            while (listSpaceidentation < buffer.size()) {
+                                listener.beginList(ListType.NUMBERED, Listener.EMPTY_PARAMETERS);
+                                listener.beginListItem();
+                                listSpaceidentation++;
+                            }
+                        } else if (buffer.size() < listSpaceidentation) {
+                            while (listSpaceidentation > (buffer.size())) {
+                                listener.endListItem();
+                                listener.endList(ListType.NUMBERED, Listener.EMPTY_PARAMETERS);
+                                listener.endListItem();
+                                listSpaceidentation--;
+                            }
+                            listener.beginListItem();
+                        } else {
+                            listener.endListItem();
+                            listener.beginListItem();
+                        }
+                        listEnded = false;
+                        buffer.clear();
+                        continue;
+                    } else {
+                        buffer.add('-');
+                        buffer.add(' ');
+                    }
                 }
 
                 if (buffer.get(buffer.size() - 1) == '/' && buffer.get(buffer.size() - 2) == '/') {
@@ -290,9 +316,11 @@ class DokuWikiRecursiveParser {
                 continue;
             }
 
-            if (buffer.size() > 0 && buffer.get(buffer.size() - 1) == '<') {
+            if (buffer.size() > 1 && buffer.get(buffer.size() - 2) == '<' && buffer.get(buffer.size() - 1) != ' ') {
                 //email address
-                processWords(addNewParagraph, 1, buffer, listener);
+                char temp = buffer.get(buffer.size() - 1);
+                processWords(addNewParagraph, 2, buffer, listener);
+                buffer.add(temp);
                 while (source.ready()) {
                     buffer.add((char) source.read());
                     if (buffer.get(buffer.size() - 1) == '>') {
@@ -400,6 +428,8 @@ class DokuWikiRecursiveParser {
         for (char c : buffer) {
             if (c == ' ' && word.length() == 0) {
                 listener.onSpace();
+            } else if (Arrays.asList(specialSymbols).contains(c)) {
+                listener.onSpecialSymbol(c);
             } else if (c == ' ') {
                 listener.onWord(word.toString());
                 listener.onSpace();
