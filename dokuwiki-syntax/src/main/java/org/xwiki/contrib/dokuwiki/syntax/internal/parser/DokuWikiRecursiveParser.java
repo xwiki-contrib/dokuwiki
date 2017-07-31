@@ -58,19 +58,18 @@ class DokuWikiRecursiveParser {
         boolean monospaceOpen = false;
         boolean linkOpen = true;
         int listSpaceidentation = -1;
-        int quotationLevel = -1;
+        int quotationIdentation  = -1;
         boolean inQuotation = false;
         boolean listEnded = true;
 
         while (source.ready() && (readCharacter = source.read()) != -1) {
             buffer.add((char) readCharacter);
             if (getStringRepresentation(buffer).endsWith("----")) {
-                //end paragraph
-                listener.endParagraph(Listener.EMPTY_PARAMETERS);
                 //generate newline event
                 listener.onHorizontalLine(Listener.EMPTY_PARAMETERS);
                 //start paragraph
                 listener.beginParagraph(Listener.EMPTY_PARAMETERS);
+                inParagraph = true;
                 addNewParagraph = false;
                 horizontalLineAdded = true;
                 buffer.clear();
@@ -82,45 +81,39 @@ class DokuWikiRecursiveParser {
                 continue;
             }
 
-            if (!(buffer.size() > 0 && (buffer.get(buffer.size() - 1) == '-' || buffer.get(buffer.size() - 1) == '\n' ||
-                    buffer.get(buffer.size() - 1) == ' ' ||buffer.get(buffer.size()-1) == '*' || !listEnded ))) {
-                if (addNewParagraph) {
+            if (!(buffer.size() > 0 && (buffer.get(buffer.size() - 1) == '-' ||buffer.get(buffer.size() - 1) == '>' ||
+                    buffer.get(buffer.size() - 1) == ' ' ||buffer.get(buffer.size()-1) == '*' || !listEnded || inQuotation))) {
+                if (!inParagraph) {
+                    if (listSpaceidentation > -1 || quotationIdentation > -1) {
+                        while (listSpaceidentation >= 0) {
+                            listener.endListItem();
+                            listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
+                            listSpaceidentation--;
+                        }
+                        while (quotationIdentation >= 0) {
+                            listener.endQuotationLine();
+                            listener.endQuotation(Listener.EMPTY_PARAMETERS);
+                            quotationIdentation--;
+                        }
+                    } else {
+                        listener.beginParagraph(Listener.EMPTY_PARAMETERS);
+                        inParagraph = true;
+                    }
+                    addNewParagraph = false;
+                } else if (addNewParagraph) {
                     listener.endParagraph(Listener.EMPTY_PARAMETERS);
                     listener.beginParagraph(Listener.EMPTY_PARAMETERS);
                     addNewParagraph = false;
                 }
-                if (!inParagraph) {
-                    listener.beginParagraph(Listener.EMPTY_PARAMETERS);
-                    inParagraph = true;
+            } else {
+                if (addNewParagraph && inParagraph) {
+                    listener.endParagraph(Listener.EMPTY_PARAMETERS);
+                    inParagraph = false;
+                    addNewParagraph = false;
                 }
             }
             horizontalLineAdded = false;
             //bufferString.append(buffer.get(buffer.size()-1));
-            if (buffer.size() > 0 && buffer.get(buffer.size() - 1) == '>') {
-                //process quotation.
-                inQuotation = true;
-                processWords(addNewParagraph, 1, buffer, listener);
-                buffer.add((char) source.read());
-                int currentQuotationLevel = 0;
-                while (buffer.get(buffer.size() - 1) != ' ') {
-                    currentQuotationLevel++;
-                    buffer.add((char) source.read());
-                }
-                if (currentQuotationLevel > quotationLevel) {
-                    while (currentQuotationLevel > quotationLevel) {
-                        listener.beginQuotation(Listener.EMPTY_PARAMETERS);
-                        quotationLevel++;
-                    }
-                } else if (currentQuotationLevel < quotationLevel) {
-                    while (currentQuotationLevel < quotationLevel) {
-                        listener.endQuotation(Listener.EMPTY_PARAMETERS);
-                        quotationLevel--;
-                    }
-                }
-                listener.beginQuotationLine();
-                buffer.clear();
-                continue;
-            }
 
             if (buffer.size() >= 2) {
                 if (buffer.get(buffer.size() - 1) == '*' && buffer.get(buffer.size() - 2) == '*') {
@@ -134,6 +127,30 @@ class DokuWikiRecursiveParser {
                         listener.endFormat(Format.BOLD, Listener.EMPTY_PARAMETERS);
                         boldOpen = false;
                     }
+                    continue;
+                }
+                if (buffer.get(buffer.size() -1) == ' ' && buffer.get(buffer.size() - 2) == '>') {
+                    //process quotation.
+                    if (buffer.size() - 2 > quotationIdentation) {
+                        while (quotationIdentation < buffer.size() -2) {
+                            listener.beginQuotation(Listener.EMPTY_PARAMETERS);
+                            listener.beginQuotationLine();
+                            quotationIdentation++;
+                        }
+                    } else if (buffer.size() - 2 < quotationIdentation) {
+                        while(quotationIdentation > (buffer.size() -2)) {
+                            listener.endQuotationLine();
+                            listener.endQuotation(Listener.EMPTY_PARAMETERS);
+                            quotationIdentation--;
+                        }
+                        listener.endQuotationLine();
+                        listener.beginQuotationLine();
+                    } else {
+                        listener.endQuotationLine();
+                        listener.beginQuotationLine();
+                    }
+                    inQuotation = true;
+                    buffer.clear();
                     continue;
                 }
                 if (buffer.get(buffer.size() - 1) == ' ' && buffer.get(buffer.size() - 2) == '*') {
@@ -231,35 +248,21 @@ class DokuWikiRecursiveParser {
 
             if (buffer.size() > 0 && buffer.get(buffer.size() - 1) == '\n') {
                 //handle lists
-                if (!listEnded) {
+                if (!listEnded || inQuotation) {
                     onNewLineCharacter = false;
                 }
                 if (buffer.size() >= 0) {
                     processWords(addNewParagraph, 1, buffer, listener);
                 }
-                if (listSpaceidentation >= 0 && listEnded) {
-                    listener.endListItem();
-                    while (listSpaceidentation >= 0) {
-                        listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
-                        listSpaceidentation--;
-                    }
-                } else if (quotationLevel >= 0 && inQuotation) {
-                    //handle quotation input.
-                    listener.endQuotationLine();
-                    inQuotation = false;
-                } else if (quotationLevel >= 0) {
-                    while (quotationLevel >= 0) {
-                        listener.endQuotation(Listener.EMPTY_PARAMETERS);
-                        quotationLevel--;
-                    }
-                } else if (onNewLineCharacter) {
+                if (onNewLineCharacter) {
                     addNewParagraph = true;
                     onNewLineCharacter = false;
                     continue;
-                } else if (listEnded){
+                } else if (listEnded && !inQuotation){
                     onNewLineCharacter = true;
                 }
                 listEnded = true;
+                inQuotation = false;
                 buffer.clear();
             }
 
@@ -364,11 +367,6 @@ class DokuWikiRecursiveParser {
                 processWords(addNewParagraph, 6, buffer, listener);
                 listener.endFormat(Format.STRIKEDOUT, Listener.EMPTY_PARAMETERS);
             }
-            if (!inQuotation && quotationLevel >= 0) {
-                while (quotationLevel >= 0) {
-                    listener.endQuotation(Listener.EMPTY_PARAMETERS);
-                }
-            }
         }
         //parse remaining as strings
         if (buffer.size() > 0) {
@@ -380,12 +378,16 @@ class DokuWikiRecursiveParser {
                 listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
                 listSpaceidentation--;
         }
+        //close remaining quotations
+        while (quotationIdentation >= 0) {
+            listener.endQuotationLine();
+            listener.endQuotation(Listener.EMPTY_PARAMETERS);
+            quotationIdentation--;
+        }
         if (inParagraph) {
             listener.endParagraph(Listener.EMPTY_PARAMETERS);
             inParagraph = false;
         }
-
-
     }
 
     private void processWords(boolean addNewParagraph, int argumentTrimSize, ArrayList<Character> buffer, Listener listener) {
