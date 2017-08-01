@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 class DokuWikiRecursiveParser {
     private static String[] supportedTags = new String[]{"<del>", "</del>", "<sub>", "</sub>", "<sup>", "</sup>", "<nowiki>", "</nowiki>"};
@@ -84,7 +85,8 @@ class DokuWikiRecursiveParser {
             }
 
             if (!(buffer.size() > 0 && (buffer.get(buffer.size() - 1) == '-' ||buffer.get(buffer.size() - 1) == '>' ||
-                    buffer.get(buffer.size() - 1) == ' ' ||buffer.get(buffer.size()-1) == '*' || !listEnded || inQuotation))) {
+                    buffer.get(buffer.size() - 1) == ' ' ||buffer.get(buffer.size()-1) == '*' ||
+                    buffer.get(buffer.size() - 1) == '^' || !listEnded || inQuotation))) {
                 if (!inParagraph) {
                     if (listSpaceidentation > -1 || quotationIdentation > -1) {
                         while (listSpaceidentation >= 0) {
@@ -120,7 +122,7 @@ class DokuWikiRecursiveParser {
             if (buffer.size() >= 2) {
                 if (buffer.get(buffer.size() - 1) == '*' && buffer.get(buffer.size() - 2) == '*') {
                     //bold formatting parser
-                    processWords(addNewParagraph, 2, buffer, listener);
+                    processWords(2, buffer, listener);
                     if (!boldOpen) {
                         listener.beginFormat(Format.BOLD, Listener.EMPTY_PARAMETERS);
                         boldOpen = true;
@@ -232,7 +234,7 @@ class DokuWikiRecursiveParser {
 
                 if (buffer.get(buffer.size() - 1) == '/' && buffer.get(buffer.size() - 2) == '/') {
                     //Italics format parser
-                    processWords(addNewParagraph, 2, buffer, listener);
+                    processWords(2, buffer, listener);
                     if (!italicOpen) {
                         listener.beginFormat(Format.ITALIC, Listener.EMPTY_PARAMETERS);
                         italicOpen = true;
@@ -246,7 +248,7 @@ class DokuWikiRecursiveParser {
 
                 if (buffer.get(buffer.size() - 1) == '_' && buffer.get(buffer.size() - 2) == '_') {
                     //underline format parser
-                    processWords(addNewParagraph, 2, buffer, listener);
+                    processWords(2, buffer, listener);
                     if (!underlineOpen) {
                         listener.beginFormat(Format.UNDERLINED, Listener.EMPTY_PARAMETERS);
                         underlineOpen = true;
@@ -259,7 +261,7 @@ class DokuWikiRecursiveParser {
 
                 if (buffer.get(buffer.size() - 1) == '\'' && buffer.get(buffer.size() - 2) == '\'') {
                     //monospace format parser
-                    processWords(addNewParagraph, 2, buffer, listener);
+                    processWords(2, buffer, listener);
                     buffer.clear();
                     if (!monospaceOpen) {
                         listener.beginFormat(Format.MONOSPACE, Listener.EMPTY_PARAMETERS);
@@ -278,7 +280,7 @@ class DokuWikiRecursiveParser {
                     onNewLineCharacter = false;
                 }
                 if (buffer.size() >= 0) {
-                    processWords(addNewParagraph, 1, buffer, listener);
+                    processWords(1, buffer, listener);
                 }
                 if (onNewLineCharacter) {
                     addNewParagraph = true;
@@ -294,32 +296,89 @@ class DokuWikiRecursiveParser {
 
             if (getStringRepresentation(buffer).endsWith("[[")) {
                 //generate subscript event
-                processWords(addNewParagraph, 2, buffer, listener);
-                processLink(false, source, listener);
+                processWords(2, buffer, listener);
+                processLink(source, listener);
                 buffer.clear();
                 continue;
             }
 
             if (getStringRepresentation(buffer).endsWith("\\ ")) {
                 //generate newline event
-                processWords(addNewParagraph, 3, buffer, listener);
+                processWords(3, buffer, listener);
                 listener.onNewLine();
                 continue;
             }
 
             if (getStringRepresentation(buffer).endsWith("{{")) {
 
-                processWords(addNewParagraph, 2, buffer, listener);
+                processWords(2, buffer, listener);
                 //handle image input
                 processImage(source, listener);
                 buffer.clear();
                 continue;
             }
 
+            if(getStringRepresentation(buffer).endsWith("^ ")) {
+                //handle table
+                boolean isTable = true;
+                boolean hasVerticalTableHeaders = false;
+                for (char c: buffer.subList(0, buffer.size() -2)) {
+                    if (c != ' ') {
+                        isTable = false;
+                    } else {
+                        hasVerticalTableHeaders = true;
+                    }
+                }
+                if (isTable) {
+                    listener.beginTable(Listener.EMPTY_PARAMETERS);
+                    buffer.clear();
+                    listener.beginTableRow(Listener.EMPTY_PARAMETERS);
+                    boolean inRow = true;
+                    if (!hasVerticalTableHeaders) {
+                        int cInt;
+                        while (source.ready() && (cInt = source.read()) != -1) {
+                            char c = (char) cInt;
+                            if (c == '^') {
+                                listener.beginTableHeadCell(Listener.EMPTY_PARAMETERS);
+                                trimBuffer(buffer);
+                                processWords( 0, buffer, listener);
+                                listener.endTableHeadCell(Listener.EMPTY_PARAMETERS);
+
+                            } else if (c == '|') {
+                                listener.beginTableCell(Listener.EMPTY_PARAMETERS);
+                                trimBuffer(buffer);
+                                processWords(0, buffer, listener);
+                                listener.endTableCell(Listener.EMPTY_PARAMETERS);
+                            } else if (c == '\n') {
+                                buffer.clear();
+                                listener.endTableRow(Listener.EMPTY_PARAMETERS);
+                                inRow = false;
+                                c = (char) source.read();
+                                if (c == '|') {
+                                    listener.beginTableRow(Listener.EMPTY_PARAMETERS);
+                                    inRow = true;
+                                } else {
+                                    buffer.add(c);
+                                    break;
+                                }
+                            } else {
+                                buffer.add(c);
+                            }
+                        }
+                    } else {
+                        //handle vertical table
+                    }
+                    if (inRow) {
+                        listener.endTableRow(Listener.EMPTY_PARAMETERS);
+                    }
+                    listener.endTable(Listener.EMPTY_PARAMETERS);
+                }
+            }
+
             if (buffer.size() > 1 && buffer.get(buffer.size() - 2) == '<' && buffer.get(buffer.size() - 1) != ' ') {
                 //email address
                 char temp = buffer.get(buffer.size() - 1);
-                processWords(addNewParagraph, 2, buffer, listener);
+                processWords(2, buffer, listener);
                 buffer.add(temp);
                 while (source.ready()) {
                     buffer.add((char) source.read());
@@ -339,7 +398,7 @@ class DokuWikiRecursiveParser {
             }
             if (getStringRepresentation(buffer).endsWith("<nowiki>")) {
                 //override syntax
-                processWords(addNewParagraph, 8, buffer, listener);
+                processWords(8, buffer, listener);
                 while (source.ready()) {
                     buffer.add((char) source.read());
                     if (buffer.get(buffer.size() - 1) == '>') {
@@ -353,7 +412,7 @@ class DokuWikiRecursiveParser {
 
             if (getStringRepresentation(buffer).endsWith("%%")) {
                 //Also override syntax (same as <nowiki>)
-                processWords(addNewParagraph, 2, buffer, listener);
+                processWords(2, buffer, listener);
                 while (source.ready()) {
                     buffer.add((char) source.read());
                     if (buffer.get(buffer.size() - 1) == '%' && buffer.get(buffer.size() - 2) == '%') {
@@ -372,7 +431,7 @@ class DokuWikiRecursiveParser {
             }
             if (getStringRepresentation(buffer).endsWith("</sub>")) {
                 //generate subscript close event
-                processWords(addNewParagraph, 6, buffer, listener);
+                processWords(6, buffer, listener);
                 listener.endFormat(Format.SUBSCRIPT, Listener.EMPTY_PARAMETERS);
             }
             if (getStringRepresentation(buffer).endsWith("<sup>")) {
@@ -382,7 +441,7 @@ class DokuWikiRecursiveParser {
             }
             if (getStringRepresentation(buffer).endsWith("</sup>")) {
                 //generate superscript close event
-                processWords(addNewParagraph, 6, buffer, listener);
+                processWords(6, buffer, listener);
                 listener.endFormat(Format.SUPERSCRIPT, Listener.EMPTY_PARAMETERS);
             }
             if (getStringRepresentation(buffer).endsWith("<del>")) {
@@ -392,13 +451,13 @@ class DokuWikiRecursiveParser {
             }
             if (getStringRepresentation(buffer).endsWith("</del>")) {
                 //generate strikeout open event
-                processWords(addNewParagraph, 6, buffer, listener);
+                processWords(6, buffer, listener);
                 listener.endFormat(Format.STRIKEDOUT, Listener.EMPTY_PARAMETERS);
             }
         }
         //parse remaining as strings
         if (buffer.size() > 0) {
-            processWords(addNewParagraph, 0, buffer, listener);
+            processWords(0, buffer, listener);
         }
         //close remaining list items
         while (listSpaceidentation >= 0) {
@@ -418,13 +477,9 @@ class DokuWikiRecursiveParser {
         }
     }
 
-    private void processWords(boolean addNewParagraph, int argumentTrimSize, ArrayList<Character> buffer, Listener listener) {
+    private void processWords(int argumentTrimSize, ArrayList<Character> buffer, Listener listener) {
         buffer.subList(buffer.size() - argumentTrimSize, buffer.size()).clear();
         StringBuilder word = new StringBuilder();
-//        if (addNewParagraph) {
-//            listener.endParagraph(Listener.EMPTY_PARAMETERS);
-//            listener.beginParagraph(Listener.EMPTY_PARAMETERS);
-//        }
         for (char c : buffer) {
             if (c == ' ' && word.length() == 0) {
                 listener.onSpace();
@@ -444,7 +499,7 @@ class DokuWikiRecursiveParser {
         buffer.clear();
     }
 
-    private void processWordsFromReader(boolean addNewParagraph, Reader source, Listener listener, String endString) throws IOException {
+    private void processWordsFromReader(Reader source, Listener listener, String endString) throws IOException {
         ArrayList<Character> buffer = new ArrayList<>();
         while (source.ready()) {
             buffer.add((char) source.read());
@@ -452,7 +507,7 @@ class DokuWikiRecursiveParser {
             if (readString.endsWith(endString)) {
                 buffer.subList(buffer.size() - endString.length(), buffer.size()).clear();
                 //StringBuilder here has no utility.
-                processWords(addNewParagraph, 0, buffer, listener);
+                processWords(0, buffer, listener);
                 break;
             }
         }
@@ -496,7 +551,7 @@ class DokuWikiRecursiveParser {
         }
     }
 
-    private void processLink(boolean addNewParagraph, Reader source, Listener listener) throws IOException {
+    private void processLink(Reader source, Listener listener) throws IOException {
         StringBuilder LinkBuilder = new StringBuilder();
         while (source.ready()) {
             LinkBuilder.append((char) source.read());
@@ -506,7 +561,7 @@ class DokuWikiRecursiveParser {
                 ResourceReference reference = new ResourceReference(linkArgument.substring(0, linkArgument.length() - 1), ResourceType.URL);
                 reference.setTyped(false);
                 listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
-                processWordsFromReader(addNewParagraph, source, listener, "]]");
+                processWordsFromReader(source, listener, "]]");
                 listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
                 break;
             }
@@ -527,5 +582,14 @@ class DokuWikiRecursiveParser {
             builder.append(ch);
         }
         return builder.toString();
+    }
+
+    private void trimBuffer(ArrayList<Character> buffer) {
+        if (buffer.get(0) == ' ') {
+            buffer.remove(0);
+        }
+        if (buffer.get(buffer.size() -1) == ' ') {
+            buffer.remove(buffer.size() -1);
+        }
     }
 }
