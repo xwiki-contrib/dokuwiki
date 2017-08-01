@@ -29,7 +29,7 @@ import org.xwiki.rendering.test.integration.RenderingTestSuite;
  * @version $Id: 75488eb22c370f55a3e6bd9b38ec599be157b515 $
  */
 @RunWith(RenderingTestSuite.class)
-@RenderingTestSuite.Scope(value = "dokuwiki.specific"/*, pattern = "table1.test"*/)
+@RenderingTestSuite.Scope(value = "dokuwiki10.specific"/*, pattern = "table1.test"*/)
 public class DokuWikiSpecificTest
 {
 }

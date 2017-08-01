@@ -19,6 +19,7 @@
  */
 package org.xwiki.contrib.dokuwiki.syntax.internal.parser;
 
+
 import org.xwiki.rendering.listener.*;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
