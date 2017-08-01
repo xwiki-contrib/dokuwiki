@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 class DokuWikiRecursiveParser {
     private static String[] supportedTags = new String[]{"<del>", "</del>", "<sub>", "</sub>", "<sup>", "</sup>", "<nowiki>", "</nowiki>"};
@@ -233,43 +235,51 @@ class DokuWikiRecursiveParser {
 
                 if (buffer.get(buffer.size() - 1) == '/' && buffer.get(buffer.size() - 2) == '/') {
                     //Italics format parser
-                    processWords(2, buffer, listener);
-                    if (!italicOpen) {
+                    if (!italicOpen && buffer.get(buffer.size() -3) == ' ') {
+                        processWords(2, buffer, listener);
                         listener.beginFormat(Format.ITALIC, Listener.EMPTY_PARAMETERS);
                         italicOpen = true;
-                    } else {
+                        continue;
+                    }
+                    if (italicOpen && buffer.get(buffer.size() -3) != ' '){
                         //generate italic close event
+                        processWords(2, buffer, listener);
                         listener.endFormat(Format.ITALIC, Listener.EMPTY_PARAMETERS);
                         italicOpen = false;
+                        continue;
                     }
-                    continue;
                 }
 
                 if (buffer.get(buffer.size() - 1) == '_' && buffer.get(buffer.size() - 2) == '_') {
                     //underline format parser
-                    processWords(2, buffer, listener);
-                    if (!underlineOpen) {
+                    if (!underlineOpen && buffer.get(buffer.size() -3) == ' ') {
+                        processWords(2, buffer, listener);
                         listener.beginFormat(Format.UNDERLINED, Listener.EMPTY_PARAMETERS);
                         underlineOpen = true;
-                    } else {
+                        continue;
+                    }
+                    if (buffer.get(buffer.size() -3) != ' ') {
+                        processWords(2, buffer, listener);
                         listener.endFormat(Format.UNDERLINED, Listener.EMPTY_PARAMETERS);
                         underlineOpen = false;
+                        continue;
                     }
-                    continue;
                 }
 
                 if (buffer.get(buffer.size() - 1) == '\'' && buffer.get(buffer.size() - 2) == '\'') {
                     //monospace format parser
-                    processWords(2, buffer, listener);
-                    buffer.clear();
-                    if (!monospaceOpen) {
+                    if (!monospaceOpen && buffer.get(buffer.size() -3) == ' ') {
+                        processWords(2, buffer, listener);
                         listener.beginFormat(Format.MONOSPACE, Listener.EMPTY_PARAMETERS);
                         monospaceOpen = true;
-                    } else {
+                        continue;
+                    }
+                    if (buffer.get(buffer.size() -3) != ' '){
+                        processWords(2, buffer, listener);
                         listener.endFormat(Format.MONOSPACE, Listener.EMPTY_PARAMETERS);
                         monospaceOpen = false;
+                        continue;
                     }
-                    continue;
                 }
             }
 
@@ -482,20 +492,32 @@ class DokuWikiRecursiveParser {
         for (char c : buffer) {
             if (c == ' ' && word.length() == 0) {
                 listener.onSpace();
-            } else if (Arrays.asList(specialSymbols).contains(c)) {
-                listener.onSpecialSymbol(c);
-            } else if (c == ' ') {
-                listener.onWord(word.toString());
+            }  else if (c == ' ') {
+                processWord(word, listener);
                 listener.onSpace();
-                word.setLength(0);
             } else {
                 word.append(c);
             }
         }
         if (word.length() > 0) {
-            listener.onWord(word.toString());
+            processWord(word, listener);
         }
         buffer.clear();
+    }
+
+    private void processWord(StringBuilder word, Listener listener) {
+        if (Arrays.asList(specialSymbols).contains(word.charAt(0)) && word.length() == 1) {
+            //check if special symbol
+            listener.onSpecialSymbol(word.charAt(0));
+        } else if (checkURL(word.toString())) {
+            ResourceReference reference = new ResourceReference(word.toString(), ResourceType.URL);
+            reference.setTyped(false);
+            listener.beginLink(reference, true, Listener.EMPTY_PARAMETERS);
+            listener.endLink(reference, true, Listener.EMPTY_PARAMETERS);
+        } else {
+            listener.onWord(word.toString());
+        }
+        word.setLength(0);
     }
 
     private void processWordsFromReader(Reader source, Listener listener, String endString) throws IOException {
@@ -574,7 +596,7 @@ class DokuWikiRecursiveParser {
         }
     }
 
-    //helper methods
+    //generic helper methods
     private String getStringRepresentation(ArrayList<Character> list) {
         StringBuilder builder = new StringBuilder(list.size());
         for (Character ch : list) {
@@ -583,6 +605,16 @@ class DokuWikiRecursiveParser {
         return builder.toString();
     }
 
+    private boolean checkURL(String string) {
+        String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+        Pattern p = Pattern.compile(URL_REGEX);
+        Matcher m = p.matcher(string);
+        if(m.find()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     private void trimBuffer(ArrayList<Character> buffer) {
         if (buffer.get(0) == ' ') {
             buffer.remove(0);
