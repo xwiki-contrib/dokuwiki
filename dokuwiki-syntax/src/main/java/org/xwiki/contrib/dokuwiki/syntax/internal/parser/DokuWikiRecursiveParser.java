@@ -19,10 +19,7 @@
  */
 package org.xwiki.contrib.dokuwiki.syntax.internal.parser;
 
-import org.xwiki.rendering.listener.Format;
-import org.xwiki.rendering.listener.ListType;
-import org.xwiki.rendering.listener.Listener;
-import org.xwiki.rendering.listener.MetaData;
+import org.xwiki.rendering.listener.*;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.parser.ParseException;
@@ -33,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.lang.Math.abs;
 
 class DokuWikiRecursiveParser {
     private static String[] supportedTags = new String[]{"<del>", "</del>", "<sub>", "</sub>", "<sup>", "</sup>", "<nowiki>", "</nowiki>"};
@@ -65,6 +64,8 @@ class DokuWikiRecursiveParser {
         int quotationIdentation = -1;
         boolean inQuotation = false;
         boolean listEnded = true;
+        boolean inSectionEvent = false;
+        int headerLevel = 1;
 
         while (source.ready() && (readCharacter = source.read()) != -1) {
             buffer.add((char) readCharacter);
@@ -86,8 +87,8 @@ class DokuWikiRecursiveParser {
             }
 
             if (!(buffer.size() > 0 && (buffer.get(buffer.size() - 1) == '-' || buffer.get(buffer.size() - 1) == '>' ||
-                    buffer.get(buffer.size() - 1) == ' ' || buffer.get(buffer.size() - 1) == '*'
-                    || buffer.get(buffer.size() - 1) == '<' || buffer.get(buffer.size() - 1) == '^' || !listEnded || inQuotation))) {
+                    buffer.get(buffer.size() - 1) == ' ' || buffer.get(buffer.size() - 1) == '*' || buffer.get(buffer.size() - 1) == '='
+                    || buffer.get(buffer.size() - 1) == '<' || buffer.get(buffer.size() - 1) == '^' || !listEnded || inQuotation || inSectionEvent))) {
                 if (!inParagraph) {
                     if (listSpaceidentation > -1 || quotationIdentation > -1) {
                         while (listSpaceidentation >= 0) {
@@ -118,9 +119,31 @@ class DokuWikiRecursiveParser {
                 }
             }
             horizontalLineAdded = false;
-            //bufferString.append(buffer.get(buffer.size()-1));
-
+            if (buffer.size() == 1 && inSectionEvent && buffer.get(0) == '=') {
+                headerLevel++;
+                buffer.clear();
+            }
             if (buffer.size() >= 2) {
+                if (getStringRepresentation(buffer).endsWith( "==")){
+                    if (!inSectionEvent) {
+                        inSectionEvent = true;
+                        buffer.clear();
+                    } else if (inSectionEvent) {
+                        listener.beginSection(Listener.EMPTY_PARAMETERS);
+                        //Dokuwiki doesn't use ids in headers
+                        listener.beginHeader(HeaderLevel.parseInt(abs(7 - headerLevel)), "", Listener.EMPTY_PARAMETERS);
+                        processWords(2, buffer, listener);
+                        listener.endHeader(HeaderLevel.parseInt(headerLevel), "", Listener.EMPTY_PARAMETERS);
+                        listener.endSection(Listener.EMPTY_PARAMETERS);
+                        while (source.ready() && headerLevel > 1) {
+                            source.read();
+                            headerLevel--;
+                        }
+                        source.read();
+                        inSectionEvent = false;
+                    }
+                    continue;
+                }
                 if (buffer.get(buffer.size() - 1) == '*' && buffer.get(buffer.size() - 2) == '*') {
                     //bold formatting parser
                     processWords(2, buffer, listener);
