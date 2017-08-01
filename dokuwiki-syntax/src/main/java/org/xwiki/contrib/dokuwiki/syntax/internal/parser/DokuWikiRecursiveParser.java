@@ -86,8 +86,8 @@ class DokuWikiRecursiveParser {
             }
 
             if (!(buffer.size() > 0 && (buffer.get(buffer.size() - 1) == '-' || buffer.get(buffer.size() - 1) == '>' ||
-                    buffer.get(buffer.size() - 1) == ' ' || buffer.get(buffer.size() - 1) == '*' ||
-                    buffer.get(buffer.size() - 1) == '^' || !listEnded || inQuotation))) {
+                    buffer.get(buffer.size() - 1) == ' ' || buffer.get(buffer.size() - 1) == '*'
+                    || buffer.get(buffer.size() - 1) == '<' || buffer.get(buffer.size() - 1) == '^' || !listEnded || inQuotation))) {
                 if (!inParagraph) {
                     if (listSpaceidentation > -1 || quotationIdentation > -1) {
                         while (listSpaceidentation >= 0) {
@@ -235,13 +235,13 @@ class DokuWikiRecursiveParser {
 
                 if (buffer.get(buffer.size() - 1) == '/' && buffer.get(buffer.size() - 2) == '/') {
                     //Italics format parser
-                    if (!italicOpen && buffer.get(buffer.size() -3) == ' ') {
+                    if (!italicOpen && buffer.get(buffer.size() - 3) == ' ') {
                         processWords(2, buffer, listener);
                         listener.beginFormat(Format.ITALIC, Listener.EMPTY_PARAMETERS);
                         italicOpen = true;
                         continue;
                     }
-                    if (italicOpen && buffer.get(buffer.size() -3) != ' '){
+                    if (italicOpen && buffer.get(buffer.size() - 3) != ' ') {
                         //generate italic close event
                         processWords(2, buffer, listener);
                         listener.endFormat(Format.ITALIC, Listener.EMPTY_PARAMETERS);
@@ -252,13 +252,13 @@ class DokuWikiRecursiveParser {
 
                 if (buffer.get(buffer.size() - 1) == '_' && buffer.get(buffer.size() - 2) == '_') {
                     //underline format parser
-                    if (!underlineOpen && buffer.get(buffer.size() -3) == ' ') {
+                    if (!underlineOpen && buffer.get(buffer.size() - 3) == ' ') {
                         processWords(2, buffer, listener);
                         listener.beginFormat(Format.UNDERLINED, Listener.EMPTY_PARAMETERS);
                         underlineOpen = true;
                         continue;
                     }
-                    if (buffer.get(buffer.size() -3) != ' ') {
+                    if (buffer.get(buffer.size() - 3) != ' ') {
                         processWords(2, buffer, listener);
                         listener.endFormat(Format.UNDERLINED, Listener.EMPTY_PARAMETERS);
                         underlineOpen = false;
@@ -268,13 +268,13 @@ class DokuWikiRecursiveParser {
 
                 if (buffer.get(buffer.size() - 1) == '\'' && buffer.get(buffer.size() - 2) == '\'') {
                     //monospace format parser
-                    if (!monospaceOpen && buffer.get(buffer.size() -3) == ' ') {
+                    if (!monospaceOpen && buffer.get(buffer.size() - 3) == ' ') {
                         processWords(2, buffer, listener);
                         listener.beginFormat(Format.MONOSPACE, Listener.EMPTY_PARAMETERS);
                         monospaceOpen = true;
                         continue;
                     }
-                    if (buffer.get(buffer.size() -3) != ' '){
+                    if (buffer.get(buffer.size() - 3) != ' ') {
                         processWords(2, buffer, listener);
                         listener.endFormat(Format.MONOSPACE, Listener.EMPTY_PARAMETERS);
                         monospaceOpen = false;
@@ -383,44 +383,37 @@ class DokuWikiRecursiveParser {
                     listener.endTable(Listener.EMPTY_PARAMETERS);
                 }
             }
-
-            if (buffer.size() > 1 && buffer.get(buffer.size() - 2) == '<' && buffer.get(buffer.size() - 1) != ' ') {
-                //email address
-                char temp = buffer.get(buffer.size() - 1);
-                processWords(2, buffer, listener);
-                buffer.add(temp);
-                while (source.ready()) {
+            if (buffer.size() > 0 && buffer.get(buffer.size() - 1) == '<') {
+                //override syntax - supports inline
+                if (inParagraph) {
+                    processWords(1, buffer, listener);
+                    buffer.add('<');
+                }
+                boolean inNoWikiTag = true;
+                char[] noWikiTag = new char[]{'n', 'o', 'w', 'i', 'k', 'i', '>'};
+                for (int i = 0; source.ready() && i < 7; i++) {
                     buffer.add((char) source.read());
-                    if (buffer.get(buffer.size() - 1) == '>') {
-                        if (Arrays.asList(supportedTags).contains("<" + getStringRepresentation(buffer))) {
-                            buffer.add(0, '<');
-                        } else if (buffer.contains('@')) {
-                            buffer.subList(buffer.size() - 1, buffer.size()).clear();
-                            ResourceReference reference = new ResourceReference(getStringRepresentation(buffer), ResourceType.MAILTO);
-                            listener.beginLink(reference, true, Listener.EMPTY_PARAMETERS);
-                            listener.endLink(reference, true, Listener.EMPTY_PARAMETERS);
-                            buffer.clear();
-                        }
+                    if (noWikiTag[i] != buffer.get(buffer.size() - 1)) {
+                        inNoWikiTag = false;
                         break;
                     }
                 }
-            }
-            if (getStringRepresentation(buffer).endsWith("<nowiki>")) {
-                //override syntax
-                processWords(8, buffer, listener);
-                while (source.ready()) {
-                    buffer.add((char) source.read());
-                    if (buffer.get(buffer.size() - 1) == '>') {
-                        buffer.subList(buffer.size() - 9, buffer.size()).clear();
-                        listener.onVerbatim(getStringRepresentation(buffer), true, Listener.EMPTY_PARAMETERS);
-                        buffer.clear();
-                        break;
+                if (inNoWikiTag) {
+                    buffer.clear();
+                    while (source.ready()) {
+                        buffer.add((char) source.read());
+                        if (buffer.get(buffer.size() - 1) == '>') {
+                            buffer.subList(buffer.size() - 9, buffer.size()).clear();
+                            listener.onVerbatim(getStringRepresentation(buffer), inParagraph, Listener.EMPTY_PARAMETERS);
+                            buffer.clear();
+                            break;
+                        }
                     }
                 }
             }
 
             if (getStringRepresentation(buffer).endsWith("%%")) {
-                //Also override syntax (same as <nowiki>)
+                //Also override syntax (same as <nowiki>) but is always inline
                 processWords(2, buffer, listener);
                 while (source.ready()) {
                     buffer.add((char) source.read());
@@ -431,6 +424,18 @@ class DokuWikiRecursiveParser {
                         break;
                     }
                 }
+            }
+
+            if (getStringRepresentation(buffer).startsWith("<") && getStringRepresentation(buffer).endsWith(">")
+                    && getStringRepresentation(buffer).contains("@")) {
+                //email address
+                buffer.remove(0);
+                buffer.remove(buffer.size() - 1);
+                ResourceReference reference = new ResourceReference(getStringRepresentation(buffer), ResourceType.MAILTO);
+                listener.beginLink(reference, true, Listener.EMPTY_PARAMETERS);
+                listener.endLink(reference, true, Listener.EMPTY_PARAMETERS);
+                buffer.clear();
+                break;
             }
 
             if (getStringRepresentation(buffer).endsWith("<sub>")) {
@@ -492,7 +497,7 @@ class DokuWikiRecursiveParser {
         for (char c : buffer) {
             if (c == ' ' && word.length() == 0) {
                 listener.onSpace();
-            }  else if (c == ' ') {
+            } else if (c == ' ') {
                 processWord(word, listener);
                 listener.onSpace();
             } else {
@@ -609,12 +614,13 @@ class DokuWikiRecursiveParser {
         String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
         Pattern p = Pattern.compile(URL_REGEX);
         Matcher m = p.matcher(string);
-        if(m.find()) {
+        if (m.find()) {
             return true;
         } else {
             return false;
         }
     }
+
     private void trimBuffer(ArrayList<Character> buffer) {
         if (buffer.get(0) == ' ') {
             buffer.remove(0);
