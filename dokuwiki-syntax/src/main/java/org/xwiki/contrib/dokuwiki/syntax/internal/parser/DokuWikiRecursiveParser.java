@@ -381,9 +381,7 @@ class DokuWikiRecursiveParser {
 
                 processWords(2, buffer, listener);
                 //handle media input
-                processImage(source, listener);
-                buffer.clear();
-                continue;
+                processImage(buffer, source, listener);
             }
 
             if (getStringRepresentation(buffer).endsWith("^ ")) {
@@ -491,6 +489,41 @@ class DokuWikiRecursiveParser {
                 processEmailAddressFromBuffer(buffer, listener);
                 break;
             }
+            if (getStringRepresentation(buffer).equals("~~NOTOC~~")) {
+                //disable table of content
+                processWords(9, buffer, listener);
+                //disable toc
+                continue;
+            }
+            if (getStringRepresentation(buffer).equals("~~NOCACHE~~")) {
+                //TODO Disable cache
+                processWords(11, buffer, listener);
+                continue;
+            }
+            if (getStringRepresentation(buffer).equals("rss>")) {
+                //handle RSS generation feeds
+                processWords(4, buffer, listener);
+                int c;
+                HashMap<String, String> param = new HashMap<>();
+                while (source.ready() && (c = source.read()) != -1) {
+                    buffer.add((char) c);
+                    if (c == '}') {
+                        String[] argument = getStringRepresentation(buffer).split("\\s");
+                        param.put("feed", argument[0]);
+                        param.put("count", "8");
+                        if (Arrays.asList(argument).contains("description")) {
+                            param.put("content", "true");
+                        }
+                        listener.onMacro("rss", param, null, true);
+                        //remove remaining curly bracket
+                        source.read();
+                        break;
+                    }
+                }
+                buffer.clear();
+                continue;
+            }
+
             if (getStringRepresentation(buffer).startsWith("<php>")) {
                 processWords(5, buffer, listener);
                 int c;
@@ -503,6 +536,7 @@ class DokuWikiRecursiveParser {
                     }
                 }
                 buffer.clear();
+                continue;
             }
             if (getStringRepresentation(buffer).startsWith("<PHP>")) {
                 processWords(5, buffer, listener);
@@ -516,6 +550,7 @@ class DokuWikiRecursiveParser {
                     }
                 }
                 buffer.clear();
+                continue;
             }
        if (getStringRepresentation(buffer).startsWith("<html>")) {
                 //html inline macro
@@ -530,6 +565,7 @@ class DokuWikiRecursiveParser {
                     }
                 }
                 buffer.clear();
+                continue;
             }
             if (getStringRepresentation(buffer).startsWith("<HTML>")) {
                 //html block macro
@@ -544,6 +580,7 @@ class DokuWikiRecursiveParser {
                     }
                 }
                 buffer.clear();
+                continue;
             }
 
             if (getStringRepresentation(buffer).startsWith("<code ") ||getStringRepresentation(buffer).startsWith("<code>") ||
@@ -693,14 +730,16 @@ class DokuWikiRecursiveParser {
         }
     }
 
-    private void processImage(Reader source, Listener listener) throws IOException {
-        StringBuilder imageNameBuilder = new StringBuilder();
+    private void processImage(ArrayList<Character> buffer, Reader source, Listener listener) throws IOException {
         int c;
         while (source.ready() && (c = source.read()) != -1) {
-            imageNameBuilder.append((char) c);
-            String imageArgument = imageNameBuilder.toString();
+            buffer.add((char) c);
+            String imageArgument = getStringRepresentation(buffer);
             boolean internalImage = true;
             HashMap<String, String> param = new HashMap<>();
+            if (imageArgument.startsWith("rss>")) {
+                break;
+            }
             if (imageArgument.endsWith("}}")) {
                 String imageName;
                 if (!imageArgument.contains("wiki:")) {
@@ -744,6 +783,7 @@ class DokuWikiRecursiveParser {
                 ResourceReference reference = new ResourceReference(imageName, ResourceType.URL);
                 reference.setTyped(false);
                 listener.onImage(reference, false, param);
+                buffer.clear();
                 break;
             }
         }

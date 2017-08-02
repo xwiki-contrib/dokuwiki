@@ -1,10 +1,12 @@
 .#-----------------------------------------------------
 .input|dokuwiki/1.0
 .#-----------------------------------------------------
-~~NOCACHE~~
+{{rss>http://slashdot.org/index.rss 5 author date 1h }}
 .#-----------------------------------------------------
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-onMacroStandalone [toc] []
+beginParagraph
+onMacroInline [rss] [feed=http://slashdot.org/index.rss|count=8]
+endParagraph
 endDocument

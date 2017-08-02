@@ -20,102 +20,113 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.xwiki.contrib.dokuwiki</groupId>
-    <artifactId>dokuwiki</artifactId>
-    <version>1.0-milestone-2-SNAPSHOT</version>
-  </parent>
-  <artifactId>dokuwiki-syntax</artifactId>
-  <name>DokuWiki - Syntax</name>
-  <description>DokuWiki Syntax Parser</description>
-  <properties>
-    <xwiki.jacoco.instructionRatio>0.85</xwiki.jacoco.instructionRatio>
-    <!-- Name to display by the Extension Manager -->
-    <xwiki.extension.name>DokuWiki Syntax</xwiki.extension.name>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.xwiki.contrib.dokuwiki</groupId>
+        <artifactId>dokuwiki</artifactId>
+        <version>1.0-milestone-2-SNAPSHOT</version>
+    </parent>
+    <artifactId>dokuwiki-syntax</artifactId>
+    <name>DokuWiki - Syntax</name>
+    <description>DokuWiki Syntax Parser</description>
+    <properties>
+        <xwiki.jacoco.instructionRatio>0.85</xwiki.jacoco.instructionRatio>
+        <!-- Name to display by the Extension Manager -->
+        <xwiki.extension.name>DokuWiki Syntax</xwiki.extension.name>
 
-    <!-- List it as a rendering syntax related module -->
-    <xwiki.extension.category>syntax</xwiki.extension.category>
-      
-  </properties>
-  <dependencies>
-      <dependency>
-          <groupId>commons-codec</groupId>
-          <artifactId>commons-codec</artifactId>
-      </dependency>
-    <dependency>
-      <groupId>commons-configuration</groupId>
-      <artifactId>commons-configuration</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-filter-event-model</artifactId>
-      <version>${platform.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-filter-event-user</artifactId>
-      <version>${platform.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-model</artifactId>
-      <version>${platform.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-macro-footnotes</artifactId>
-      <optional>true</optional>
-    </dependency>
+        <!-- List it as a rendering syntax related module -->
+        <xwiki.extension.category>syntax</xwiki.extension.category>
+
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.xwiki.platform</groupId>
+            <artifactId>xwiki-platform-filter-event-model</artifactId>
+            <version>${platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xwiki.platform</groupId>
+            <artifactId>xwiki-platform-filter-event-user</artifactId>
+            <version>${platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xwiki.platform</groupId>
+            <artifactId>xwiki-platform-model</artifactId>
+            <version>${platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xwiki.rendering</groupId>
+            <artifactId>xwiki-rendering-macro-footnotes</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.xwiki.platform</groupId>
+            <artifactId>xwiki-platform-rendering-macro-rss</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.xwiki.contrib</groupId>
+            <artifactId>macro-php</artifactId>
+            <optional>true</optional>
+        </dependency>
 
 
-    <!-- Test dependencies -->
-    <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-test</artifactId>
-      <version>${rendering.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-syntax-event</artifactId>
-      <version>${rendering.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-syntax-xwiki21</artifactId>
-      <version>${rendering.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.commons</groupId>
-      <artifactId>xwiki-commons-filter-test</artifactId>
-      <version>${commons.version}</version>
-      <scope>test</scope>
-    </dependency>
-      <dependency>
-          <groupId>org.xwiki.commons</groupId>
-          <artifactId>xwiki-commons-filter-stream-xml</artifactId>
-          <version>${commons.version}</version>
-          <scope>test</scope>
-      </dependency>
-  </dependencies>
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.xwiki.rendering</groupId>
+            <artifactId>xwiki-rendering-test</artifactId>
+            <version>${rendering.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xwiki.rendering</groupId>
+            <artifactId>xwiki-rendering-syntax-event</artifactId>
+            <version>${rendering.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xwiki.rendering</groupId>
+            <artifactId>xwiki-rendering-syntax-xwiki21</artifactId>
+            <version>${rendering.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xwiki.commons</groupId>
+            <artifactId>xwiki-commons-filter-test</artifactId>
+            <version>${commons.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xwiki.commons</groupId>
+            <artifactId>xwiki-commons-filter-stream-xml</artifactId>
+            <version>${commons.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <!-- Apply the Checkstyle configurations defined in the top level text.xml file -->
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <excludes>
-              org/xwiki/contrib/dokuwiki/xml/internal/input/DokuWikiContextConverterListener.java,
-              org/xwiki/contrib/dokuwiki/xml/internal/input/DokuWikiInputFilterStream.java
-          </excludes>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+    <build>
+        <plugins>
+            <plugin>
+                <!-- Apply the Checkstyle configurations defined in the top level text.xml file -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        org/xwiki/contrib/dokuwiki/xml/internal/input/DokuWikiContextConverterListener.java,
+                        org/xwiki/contrib/dokuwiki/xml/internal/input/DokuWikiInputFilterStream.java
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
