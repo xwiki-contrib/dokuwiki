@@ -29,13 +29,14 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.Math.abs;
 
 class DokuWikiRecursiveParser {
-    private static String[] supportedTags = new String[]{"<del>", "</del>", "<sub>", "</sub>", "<sup>", "</sup>", "<nowiki>", "</nowiki>"};
+    //private static String[] supportedTags = new String[]{"<del>", "</del>", "<sub>", "</sub>", "<sup>", "</sup>", "<nowiki>", "</nowiki>"};
     private static Character[] specialSymbols = new Character[]{
             '@', '#', '$', '*', '%', '\'', '(', '!', ')', '-', '_', '^', '`', '?', ',', ';', '.', '/', ':', '=', '+', '<', '|', '>'};
 
@@ -87,7 +88,8 @@ class DokuWikiRecursiveParser {
                 continue;
             }
 
-            if (!(buffer.size() > 0 && (buffer.get(buffer.size() - 1) == '-' || buffer.get(buffer.size() - 1) == '>' ||
+
+            if (!(buffer.size() > 0 && (buffer.get(buffer.size() - 1) == '-' || buffer.get(buffer.size() - 1) == '>' || (buffer.contains('<') && !buffer.contains('@')) ||
                     buffer.get(buffer.size() - 1) == ' ' || buffer.get(buffer.size() - 1) == '*' || buffer.get(buffer.size() - 1) == '='
                     || buffer.get(buffer.size() - 1) == '<' || buffer.get(buffer.size() - 1) == '^' || !listEnded || inQuotation || inSectionEvent))) {
                 if (!inParagraph) {
@@ -142,6 +144,25 @@ class DokuWikiRecursiveParser {
                         }
                         source.read();
                         inSectionEvent = false;
+                    }
+                    continue;
+                }
+                if (getStringRepresentation(buffer).equals("  ") && listSpaceidentation == -1) {
+                    //code section
+                    buffer.clear();
+                    int c;
+                    boolean endOfLine = false;
+                    while (source.ready() && (c = source.read()) != -1) {
+                        buffer.add((char) c);
+                        if (((char) c ) == '\n') {
+                            listener.onMacro("code", Listener.EMPTY_PARAMETERS,getStringRepresentation(buffer), false);
+                            buffer.clear();
+                            endOfLine = true;
+                        }
+                    }
+                    if (!endOfLine) {
+                        listener.onMacro("code", Listener.EMPTY_PARAMETERS,getStringRepresentation(buffer), false);
+                        buffer.clear();
                     }
                     continue;
                 }
@@ -461,6 +482,46 @@ class DokuWikiRecursiveParser {
                 buffer.clear();
                 break;
             }
+
+            if (getStringRepresentation(buffer).startsWith("<code ") ||getStringRepresentation(buffer).startsWith("<code>") ||
+                    getStringRepresentation(buffer).startsWith("<file ") ||getStringRepresentation(buffer).startsWith("<file>")) {
+                //handle code block
+                String language;
+                int c;
+                boolean readLangauge = false;
+                HashMap<String, String> param = new HashMap<>();
+                buffer.subList(0,5).clear();
+                if (buffer.get(0) != '>') {
+                    readLangauge = true;
+                    buffer.clear();
+                }
+                //read language and code
+                while (source.ready() && (c = source.read()) != -1) {
+                    buffer.add((char) c);
+                    if (readLangauge && ((char) c) == '>') {
+                        if (buffer.contains(' ')) {
+                            language = getStringRepresentation(buffer).substring(0, buffer.indexOf(' ')).trim();
+                        } else {
+                            language = getStringRepresentation(buffer).substring(0, buffer.size() - 1).trim();
+                        }
+                        param.put("language", language);
+                        buffer.clear();
+                        readLangauge = false;
+                        //consume a newLine character.
+                        source.read();
+                    }
+
+                    if (getStringRepresentation(buffer).endsWith("</code>") || getStringRepresentation(buffer).endsWith("</file>")) {
+                        buffer.subList(buffer.size() - 8, buffer.size()).clear();
+                        listener.onMacro("code", param,getStringRepresentation(buffer), false);
+                        buffer.clear();
+                        //consume a newLine character.
+                        source.read();
+                    }
+                }
+                continue;
+            }
+
 
             if (getStringRepresentation(buffer).endsWith("<sub>")) {
                 //generate subscript open event
