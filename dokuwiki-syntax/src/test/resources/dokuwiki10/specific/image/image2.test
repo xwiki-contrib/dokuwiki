@@ -1,14 +1,12 @@
 .#-----------------------------------------------------
 .input|dokuwiki/1.0
 .#-----------------------------------------------------
-[[File:image.png|caption]]
+{{wiki:image.png|caption}}
 .#-----------------------------------------------------
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
 beginParagraph
-beginLink [Typed = [false] Type = [url] Reference = [File:image.png]] [false]
 onImage [Typed = [false] Type = [url] Reference = [image.png]] [false] [[alt]=[caption][title]=[caption]]
-endLink [Typed = [false] Type = [url] Reference = [File:image.png]] [false]
 endParagraph
 endDocument

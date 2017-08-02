@@ -34,6 +34,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.sin;
 
 class DokuWikiRecursiveParser {
     //private static String[] supportedTags = new String[]{"<del>", "</del>", "<sub>", "</sub>", "<sup>", "</sup>", "<nowiki>", "</nowiki>"};
@@ -366,7 +367,7 @@ class DokuWikiRecursiveParser {
             if (getStringRepresentation(buffer).endsWith("{{")) {
 
                 processWords(2, buffer, listener);
-                //handle image input
+                //handle media input
                 processImage(source, listener);
                 buffer.clear();
                 continue;
@@ -627,33 +628,50 @@ class DokuWikiRecursiveParser {
             imageNameBuilder.append((char) c);
             String imageArgument = imageNameBuilder.toString();
             boolean internalImage = true;
+            HashMap<String, String> param = new HashMap<>();
             if (imageArgument.endsWith("}}")) {
+                String imageName;
                 if (!imageArgument.contains("wiki:")) {
                     internalImage = false;
                 }
                 if (imageArgument.startsWith("{{ ") && imageArgument.endsWith(" }}")) {
                     //align centre
-                    if (internalImage) {
-                        String imageName = imageArgument.substring(5, imageArgument.length() - 3);
-                        //listener.onImage(new ResourceReference(imageName, ResourceType.URL), false,  );
-                    }
+                    param.put("align", "middle");
                 } else if (imageArgument.startsWith(" ")) {
                     //align left
+                    param.put("align", "left");
                 } else if (imageArgument.endsWith(" }}")) {
                     //align right
-                } else {
-                    //no alignment info
-                    String imageName;
-                    if (internalImage) {
-                        imageName = imageArgument.substring(5, imageArgument.length() - 2);
-
-                    } else {
-                        imageName = imageArgument.substring(1, imageArgument.length() - 2);
-                    }
-                    ResourceReference reference = new ResourceReference(imageName, ResourceType.URL);
-                    reference.setTyped(false);
-                    listener.onImage(reference, false, Listener.EMPTY_PARAMETERS);
+                    param.put("align", "right");
                 }
+                if (internalImage) {
+                    imageName = imageArgument.substring(5, imageArgument.length() - 2);
+
+                } else {
+                    imageName = imageArgument.substring(1, imageArgument.length() - 2);
+                }
+                imageArgument = imageName.trim();
+                if (imageName.contains("|")) {
+                    //there's a caption
+                    String caption = imageName.substring(imageName.indexOf('|') + 1);
+                    imageName = imageName.substring(0, imageName.indexOf('|'));
+                    param.put("alt", caption);
+                    param.put("title", caption);
+                }
+                if (imageName.contains("?")) {
+                    //there's size information
+                    String size = imageName.substring(imageName.indexOf('?') + 1);
+                    imageName = imageName.substring(0, imageName.indexOf('?'));
+                    if (size.contains("x")) {
+                        param.put("height", size.substring(0, size.indexOf("x")) + "px");
+                        param.put("width", size.substring(size.indexOf("x") +1) + "px");
+                    } else {
+                        param.put("width",size + "px");
+                    }
+                }
+                ResourceReference reference = new ResourceReference(imageName, ResourceType.URL);
+                reference.setTyped(false);
+                listener.onImage(reference, false, param);
                 break;
             }
         }
