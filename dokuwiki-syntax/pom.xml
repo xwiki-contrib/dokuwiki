@@ -63,6 +63,11 @@
       <artifactId>xwiki-platform-model</artifactId>
       <version>${platform.version}</version>
     </dependency>
+    <dependency>
+      <groupId>xwiki-rendering-macros</groupId>
+      <artifactId>xwiki-rendering-macro-footnotes</artifactId>
+      <optional>true</optional>
+    </dependency>
 
 
     <!-- Test dependencies -->
