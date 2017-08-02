@@ -64,7 +64,7 @@
       <version>${platform.version}</version>
     </dependency>
     <dependency>
-      <groupId>xwiki-rendering-macros</groupId>
+      <groupId>org.xwiki.rendering</groupId>
       <artifactId>xwiki-rendering-macro-footnotes</artifactId>
       <optional>true</optional>
     </dependency>

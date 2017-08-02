@@ -74,17 +74,17 @@ class DokuWikiRecursiveParser {
             buffer.add((char) readCharacter);
             if (getStringRepresentation(buffer).endsWith("----")) {
                 //generate newline event
+                if (inParagraph){
+                    listener.endParagraph(Listener.EMPTY_PARAMETERS);
+                    inParagraph = false;
+                }
                 listener.onHorizontalLine(Listener.EMPTY_PARAMETERS);
-                //start paragraph
-                listener.beginParagraph(Listener.EMPTY_PARAMETERS);
-                inParagraph = true;
-                addNewParagraph = false;
-                horizontalLineAdded = true;
                 buffer.clear();
+                horizontalLineAdded = true;
                 continue;
             }
             //remove unnecessary new line characters.
-            if (buffer.size() > 0 && buffer.get(buffer.size() - 1) == '\n' && (addNewParagraph || horizontalLineAdded)) {
+            if (buffer.size() > 0 && buffer.get(buffer.size() - 1) == '\n' && (addNewParagraph)) {
                 buffer.subList(buffer.size() - 1, buffer.size()).clear();
                 continue;
             }
@@ -92,7 +92,7 @@ class DokuWikiRecursiveParser {
 
             if (!(buffer.size() > 0 && (buffer.get(buffer.size() - 1) == '-' || buffer.get(buffer.size() - 1) == '>' || (buffer.contains('<') && !buffer.contains('@')) ||
                     buffer.get(buffer.size() - 1) == ' ' || buffer.get(buffer.size() - 1) == '*' || buffer.get(buffer.size() - 1) == '='
-                    || buffer.get(buffer.size() - 1) == '<' || buffer.get(buffer.size() - 1) == '^' || !listEnded || inQuotation || inSectionEvent))) {
+                    || buffer.get(buffer.size() - 1) == '<' || buffer.get(buffer.size() - 1) == '^' || !listEnded || inQuotation || inSectionEvent || horizontalLineAdded))) {
                 if (!inParagraph) {
                     if (listSpaceidentation > -1 || quotationIdentation > -1) {
                         while (listSpaceidentation >= 0) {
