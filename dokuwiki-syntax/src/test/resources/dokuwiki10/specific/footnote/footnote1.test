@@ -1,7 +1,7 @@
 .#-----------------------------------------------------
 .input|dokuwiki/1.0
 .#-----------------------------------------------------
-This is '''''bold & italic'''''
+This is a ((footnote))
 .#-----------------------------------------------------
 .expect|event/1.0
 .#-----------------------------------------------------
@@ -11,14 +11,8 @@ onWord [This]
 onSpace
 onWord [is]
 onSpace
-beginFormat [ITALIC]
-beginFormat [BOLD]
-onWord [bold]
+onWord [a]
 onSpace
-onSpecialSymbol [&]
-onSpace
-onWord [italic]
-endFormat [BOLD]
-endFormat [ITALIC]
+onMacroInline [foootnote] [] [footnote]
 endParagraph
 endDocument

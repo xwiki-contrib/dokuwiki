@@ -180,6 +180,19 @@ class DokuWikiRecursiveParser {
                     }
                     continue;
                 }
+                if (buffer.get(buffer.size() - 1) == '(' && buffer.get(buffer.size() - 2) == '(') {
+                    //beginning of footnote
+                    processWords(2, buffer, listener);
+                    continue;
+                }
+                if (buffer.get(buffer.size() - 1) == ')' && buffer.get(buffer.size() - 2) == ')') {
+                    //ending of footnote
+                    buffer.subList(buffer.size() -2, buffer.size()).clear();
+                    listener.onMacro("foootnote",Listener.EMPTY_PARAMETERS, getStringRepresentation(buffer), true );
+                    buffer.clear();
+                    continue;
+                }
+
                 if (buffer.get(buffer.size() - 1) == ' ' && buffer.get(buffer.size() - 2) == '>') {
                     //process quotation.
                     if (buffer.size() - 2 > quotationIdentation) {
@@ -575,14 +588,19 @@ class DokuWikiRecursiveParser {
     private void processWords(int argumentTrimSize, ArrayList<Character> buffer, Listener listener) {
         buffer.subList(buffer.size() - argumentTrimSize, buffer.size()).clear();
         StringBuilder word = new StringBuilder();
+        boolean spaceAdded = false;
         for (char c : buffer) {
-            if (c == ' ' && word.length() == 0) {
-                listener.onSpace();
-            } else if (c == ' ') {
-                processWord(word, listener);
-                listener.onSpace();
+            if (c == ' ') {
+                if (!spaceAdded) {
+                    if (word.length() > 0) {
+                        processWord(word, listener);
+                    }
+                    listener.onSpace();
+                    spaceAdded = true;
+                }
             } else {
                 word.append(c);
+                spaceAdded = false;
             }
         }
         if (word.length() > 0) {
