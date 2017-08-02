@@ -349,7 +349,7 @@ class DokuWikiRecursiveParser {
             }
 
             if (getStringRepresentation(buffer).endsWith("[[")) {
-                //generate subscript event
+                //handle link
                 processWords(2, buffer, listener);
                 processLink(source, listener);
                 buffer.clear();
@@ -474,12 +474,7 @@ class DokuWikiRecursiveParser {
             if (getStringRepresentation(buffer).startsWith("<") && getStringRepresentation(buffer).endsWith(">")
                     && getStringRepresentation(buffer).contains("@")) {
                 //email address
-                buffer.remove(0);
-                buffer.remove(buffer.size() - 1);
-                ResourceReference reference = new ResourceReference(getStringRepresentation(buffer), ResourceType.MAILTO);
-                listener.beginLink(reference, true, Listener.EMPTY_PARAMETERS);
-                listener.endLink(reference, true, Listener.EMPTY_PARAMETERS);
-                buffer.clear();
+                processEmailAddressFromBuffer(buffer, listener);
                 break;
             }
 
@@ -612,8 +607,9 @@ class DokuWikiRecursiveParser {
 
     private void processWordsFromReader(Reader source, Listener listener, String endString) throws IOException {
         ArrayList<Character> buffer = new ArrayList<>();
-        while (source.ready()) {
-            buffer.add((char) source.read());
+        int c;
+        while (source.ready() && (c = source.read()) != -1) {
+            buffer.add((char) c);
             String readString = getStringRepresentation(buffer);
             if (readString.endsWith(endString)) {
                 buffer.subList(buffer.size() - endString.length(), buffer.size()).clear();
@@ -626,8 +622,9 @@ class DokuWikiRecursiveParser {
 
     private void processImage(Reader source, Listener listener) throws IOException {
         StringBuilder imageNameBuilder = new StringBuilder();
-        while (source.ready()) {
-            imageNameBuilder.append((char) source.read());
+        int c;
+        while (source.ready() && (c = source.read()) != -1) {
+            imageNameBuilder.append((char) c);
             String imageArgument = imageNameBuilder.toString();
             boolean internalImage = true;
             if (imageArgument.endsWith("}}")) {
@@ -663,27 +660,48 @@ class DokuWikiRecursiveParser {
     }
 
     private void processLink(Reader source, Listener listener) throws IOException {
-        StringBuilder LinkBuilder = new StringBuilder();
-        while (source.ready()) {
-            LinkBuilder.append((char) source.read());
-            String linkArgument = LinkBuilder.toString();
+        ArrayList<Character> functionBuffer = new ArrayList<>();
+        int c;
+        while (source.ready() && (c = source.read()) != -1) {
+            //String linkArgument = getStringRepresentation(functionBuffer);
             // boolean internalLink = true;
-            if (linkArgument.endsWith("|")) {
-                ResourceReference reference = new ResourceReference(linkArgument.substring(0, linkArgument.length() - 1), ResourceType.URL);
-                reference.setTyped(false);
+            functionBuffer.add((char) c);
+            if ((char)c == '|') {
+                ResourceReference reference;
+                if (functionBuffer.get(0) == '<' && functionBuffer.get(functionBuffer.size() -2) == '>'
+                        && functionBuffer.contains('@')) {
+                    //process mailto
+                    reference = new ResourceReference(getStringRepresentation(
+                            new ArrayList<>(functionBuffer.subList(1, functionBuffer.size() -2))), ResourceType.MAILTO);
+                    reference.setTyped(true);
+                } else {
+                    reference = new ResourceReference(getStringRepresentation(
+                            new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() -1))), ResourceType.URL);
+                    reference.setTyped(false);
+                }
                 listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
                 processWordsFromReader(source, listener, "]]");
                 listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
                 break;
             }
-            if (linkArgument.endsWith("]]")) {
-                ResourceReference reference = new ResourceReference(linkArgument.substring(0, linkArgument.length() - 2), ResourceType.URL);
+            if (getStringRepresentation(functionBuffer).endsWith("]]")) {
+                ResourceReference reference = new ResourceReference(getStringRepresentation(
+                        new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() -2))), ResourceType.URL);
                 reference.setTyped(false);
                 listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
                 listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
                 break;
             }
+
         }
+    }
+    private void processEmailAddressFromBuffer(ArrayList<Character> buffer, Listener listener) {
+        buffer.remove(0);
+        buffer.remove(buffer.size() - 1);
+        ResourceReference reference = new ResourceReference(getStringRepresentation(buffer), ResourceType.MAILTO);
+        listener.beginLink(reference, true, Listener.EMPTY_PARAMETERS);
+        listener.endLink(reference, true, Listener.EMPTY_PARAMETERS);
+        buffer.clear();
     }
 
     //generic helper methods
