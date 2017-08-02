@@ -491,6 +491,60 @@ class DokuWikiRecursiveParser {
                 processEmailAddressFromBuffer(buffer, listener);
                 break;
             }
+            if (getStringRepresentation(buffer).startsWith("<php>")) {
+                processWords(5, buffer, listener);
+                int c;
+                while (source.ready() && (c = source.read()) != -1) {
+                    buffer.add((char) c);
+                    if (getStringRepresentation(buffer).endsWith("</php>")) {
+                        buffer.subList(buffer.size() - 6, buffer.size()).clear();
+                        listener.onMacro("php", Listener.EMPTY_PARAMETERS, getStringRepresentation(buffer), true);
+                        break;
+                    }
+                }
+                buffer.clear();
+            }
+            if (getStringRepresentation(buffer).startsWith("<PHP>")) {
+                processWords(5, buffer, listener);
+                int c;
+                while (source.ready() && (c = source.read()) != -1) {
+                    buffer.add((char) c);
+                    if (getStringRepresentation(buffer).endsWith("</PHP>")) {
+                        buffer.subList(buffer.size() - 6, buffer.size()).clear();
+                        listener.onMacro("php", Listener.EMPTY_PARAMETERS, getStringRepresentation(buffer), false);
+                        break;
+                    }
+                }
+                buffer.clear();
+            }
+       if (getStringRepresentation(buffer).startsWith("<html>")) {
+                //html inline macro
+                processWords(6, buffer, listener);
+                int c;
+                while (source.ready() && (c = source.read()) != -1) {
+                    buffer.add((char) c);
+                    if (getStringRepresentation(buffer).endsWith("</html>")) {
+                        buffer.subList(buffer.size() - 7, buffer.size()).clear();
+                        listener.onMacro("html", Listener.EMPTY_PARAMETERS, getStringRepresentation(buffer), true);
+                        break;
+                    }
+                }
+                buffer.clear();
+            }
+            if (getStringRepresentation(buffer).startsWith("<HTML>")) {
+                //html block macro
+                processWords(6, buffer, listener);
+                int c;
+                while (source.ready() && (c = source.read()) != -1) {
+                    buffer.add((char) c);
+                    if (getStringRepresentation(buffer).endsWith("</HTML>")) {
+                        buffer.subList(buffer.size() - 7, buffer.size()).clear();
+                        listener.onMacro("html", Listener.EMPTY_PARAMETERS, getStringRepresentation(buffer), false);
+                        break;
+                    }
+                }
+                buffer.clear();
+            }
 
             if (getStringRepresentation(buffer).startsWith("<code ") ||getStringRepresentation(buffer).startsWith("<code>") ||
                     getStringRepresentation(buffer).startsWith("<file ") ||getStringRepresentation(buffer).startsWith("<file>")) {
