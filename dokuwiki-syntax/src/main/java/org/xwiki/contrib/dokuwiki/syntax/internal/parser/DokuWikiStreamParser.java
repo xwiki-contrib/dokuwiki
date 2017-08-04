@@ -19,31 +19,17 @@
  */
 package org.xwiki.contrib.dokuwiki.syntax.internal.parser;
 
-import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
-import java.nio.CharBuffer;
-import java.util.ArrayList;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.apache.commons.io.IOUtils;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties.ReferenceType;
-import org.xwiki.filter.FilterException;
-import org.xwiki.filter.input.BeanInputFilterStreamFactory;
-import org.xwiki.filter.input.DefaultReaderInputSource;
-import org.xwiki.filter.input.InputFilterStream;
-import org.xwiki.filter.input.InputFilterStreamFactory;
 import org.xwiki.rendering.listener.Listener;
 import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.parser.ParseException;
 import org.xwiki.rendering.parser.StreamParser;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.syntax.SyntaxType;
-
-import static org.xwiki.rendering.listener.Listener.EMPTY_PARAMETERS;
 
 /**
  * DokuWiki streamed parser
@@ -76,7 +62,7 @@ public class DokuWikiStreamParser implements StreamParser {
 
     @Override
     public void parse(Reader source, Listener listener) throws ParseException {
-        DokuWikiRecursiveParser parser = new DokuWikiRecursiveParser();
+        DokuWikiIterativeParser parser = new DokuWikiIterativeParser();
         MetaData metaData = new MetaData();
         metaData.addMetaData("syntax", SYNTAX);
         parser.parse(source, listener, metaData);

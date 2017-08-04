@@ -142,20 +142,16 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                         String documentName = pathArray[i].replace(TAG_TEXT_FILE_FORMAT, "");
                         proxyFilter.beginWikiDocument(documentName, FilterEventParameters.EMPTY);
                         String pageContents = org.apache.commons.io.IOUtils.toString(archiveInputStream, TAG_STRING_ENCODING_FORMAT);
-                        //TODO Parse pageContent
+                        //parse pageContent
                         DefaultWikiPrinter printer = new DefaultWikiPrinter();
                         PrintRenderer renderer = this.xwiki21Factory.createRenderer(printer);
-                        DokuWikiSyntaxInputProperties parserProperties = createDokuwikiInputProperties(pageContents);
-
                         // /Generate events
                         try {
                             dokuWikiStreamParser.parse(new StringReader(pageContents), renderer);
-                            //renderer = (PrintRenderer) dokuWikiParser.parse(new StringReader(pageContents));
-
                         } catch (Exception e) {
+                            e.printStackTrace();
                             throw new FilterException("Failed to convert content page", e);
                         }
-
                         proxyFilter.endWikiDocument(documentName, FilterEventParameters.EMPTY);
                         break;
                     }

@@ -19,7 +19,6 @@
  */
 package org.xwiki.contrib.dokuwiki.syntax.internal.parser;
 
-
 import org.xwiki.rendering.listener.*;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
@@ -34,9 +33,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.sin;
 
-class DokuWikiRecursiveParser {
+class DokuWikiIterativeParser {
     //private static String[] supportedTags = new String[]{"<del>", "</del>", "<sub>", "</sub>", "<sup>", "</sup>", "<nowiki>", "</nowiki>"};
     private static Character[] specialSymbols = new Character[]{
             '@', '#', '$', '*', '%', '\'', '(', '!', ')', '-', '_', '^', '`', '?', ',', ';', '.', '/', ':', '=', '+', '<', '|', '>'};
@@ -167,7 +165,7 @@ class DokuWikiRecursiveParser {
                     }
                     continue;
                 }
-                if (buffer.get(buffer.size() - 1) == '*' && buffer.get(buffer.size() - 2) == '*') {
+                if (buffer.size() >=2 && buffer.get(buffer.size() - 1) == '*' && buffer.get(buffer.size() - 2) == '*') {
                     //bold formatting parser
                     processWords(2, buffer, listener);
                     if (!boldOpen) {
@@ -180,7 +178,7 @@ class DokuWikiRecursiveParser {
                     }
                     continue;
                 }
-                if (buffer.get(buffer.size() - 1) == '(' && buffer.get(buffer.size() - 2) == '(') {
+                if (buffer.size() >=2 && buffer.get(buffer.size() - 1) == '(' && buffer.get(buffer.size() - 2) == '(') {
                     //beginning of footnote
                     processWords(2, buffer, listener);
                     continue;
@@ -193,7 +191,7 @@ class DokuWikiRecursiveParser {
                     continue;
                 }
 
-                if (buffer.get(buffer.size() - 1) == ' ' && buffer.get(buffer.size() - 2) == '>') {
+                if (buffer.size() >=2 && buffer.get(buffer.size() - 1) == ' ' && buffer.get(buffer.size() - 2) == '>') {
                     //process quotation.
                     if (buffer.size() - 2 > quotationIdentation) {
                         while (quotationIdentation < buffer.size() - 2) {
@@ -217,7 +215,7 @@ class DokuWikiRecursiveParser {
                     buffer.clear();
                     continue;
                 }
-                if (buffer.get(buffer.size() - 1) == ' ' && buffer.get(buffer.size() - 2) == '*') {
+                if (buffer.size() >=2 && buffer.get(buffer.size() - 1) == ' ' && buffer.get(buffer.size() - 2) == '*') {
                     buffer.subList(buffer.size() - 2, buffer.size()).clear();
                     boolean isUnorederedList = true;
                     for (Character c : buffer) {
@@ -255,7 +253,7 @@ class DokuWikiRecursiveParser {
                     }
                 }
 
-                if (buffer.get(buffer.size() - 1) == ' ' && buffer.get(buffer.size() - 2) == '-') {
+                if (buffer.size() >=2 && buffer.get(buffer.size() - 1) == ' ' && buffer.get(buffer.size() - 2) == '-') {
                     //Ordered list
                     buffer.subList(buffer.size() - 2, buffer.size()).clear();
                     boolean isOrederedList = true;
@@ -292,7 +290,7 @@ class DokuWikiRecursiveParser {
                     }
                 }
 
-                if (buffer.get(buffer.size() - 1) == '/' && buffer.get(buffer.size() - 2) == '/') {
+                if (buffer.size() >=2 && buffer.get(buffer.size() - 1) == '/' && buffer.get(buffer.size() - 2) == '/') {
                     //Italics format parser
                     if (!italicOpen && buffer.get(buffer.size() - 3) == ' ') {
                         processWords(2, buffer, listener);
@@ -309,9 +307,9 @@ class DokuWikiRecursiveParser {
                     }
                 }
 
-                if (buffer.get(buffer.size() - 1) == '_' && buffer.get(buffer.size() - 2) == '_') {
+                if (buffer.size() >=2 && buffer.get(buffer.size() - 1) == '_' && buffer.get(buffer.size() - 2) == '_') {
                     //underline format parser
-                    if (!underlineOpen && buffer.get(buffer.size() - 3) == ' ') {
+                    if (!underlineOpen) {
                         processWords(2, buffer, listener);
                         listener.beginFormat(Format.UNDERLINED, Listener.EMPTY_PARAMETERS);
                         underlineOpen = true;
@@ -325,7 +323,7 @@ class DokuWikiRecursiveParser {
                     }
                 }
 
-                if (buffer.get(buffer.size() - 1) == '\'' && buffer.get(buffer.size() - 2) == '\'') {
+                if (buffer.size() >=2 && buffer.get(buffer.size() - 1) == '\'' && buffer.get(buffer.size() - 2) == '\'') {
                     //monospace format parser
                     if (!monospaceOpen && buffer.get(buffer.size() - 3) == ' ') {
                         processWords(2, buffer, listener);
@@ -388,11 +386,13 @@ class DokuWikiRecursiveParser {
                 //handle table
                 boolean isTable = true;
                 boolean hasVerticalTableHeaders = false;
+                if (buffer.get(0) == '|') {
+                    hasVerticalTableHeaders = true;
+                    buffer.remove(0);
+                }
                 for (char c : buffer.subList(0, buffer.size() - 2)) {
                     if (c != ' ') {
                         isTable = false;
-                    } else {
-                        hasVerticalTableHeaders = true;
                     }
                 }
                 if (isTable) {
