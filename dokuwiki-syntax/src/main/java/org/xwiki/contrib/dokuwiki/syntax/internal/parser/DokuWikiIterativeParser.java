@@ -152,11 +152,13 @@ class DokuWikiIterativeParser {
                     int c;
                     boolean endOfLine = false;
                     while (source.ready() && (c = source.read()) != -1) {
-                        buffer.add((char) c);
                         if (((char) c ) == '\n') {
                             listener.onMacro("code", Listener.EMPTY_PARAMETERS,getStringRepresentation(buffer), false);
                             buffer.clear();
                             endOfLine = true;
+                            break;
+                        } else {
+                            buffer.add((char) c);
                         }
                     }
                     if (!endOfLine) {
@@ -500,7 +502,7 @@ class DokuWikiIterativeParser {
                     && getStringRepresentation(buffer).contains("@")) {
                 //email address
                 processEmailAddressFromBuffer(buffer, listener);
-                break;
+                continue;
             }
             if (getStringRepresentation(buffer).equals("~~NOTOC~~")) {
                 //disable table of content
@@ -625,7 +627,11 @@ class DokuWikiIterativeParser {
                     }
 
                     if (getStringRepresentation(buffer).endsWith("</code>") || getStringRepresentation(buffer).endsWith("</file>")) {
-                        buffer.subList(buffer.size() - 8, buffer.size()).clear();
+                        if (buffer.contains('\n')) {
+                            buffer.subList(buffer.size() - 8, buffer.size()).clear();
+                        } else {
+                            buffer.subList(buffer.size() - 7, buffer.size()).clear();
+                        }
                         listener.onMacro("code", param,getStringRepresentation(buffer), false);
                         buffer.clear();
                         //consume a newLine character.
