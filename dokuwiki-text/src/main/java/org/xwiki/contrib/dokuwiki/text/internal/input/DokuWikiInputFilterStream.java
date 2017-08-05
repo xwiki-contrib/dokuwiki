@@ -114,7 +114,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                     try {
                         CompressorInputStream input = new CompressorStreamFactory()
                                 .createCompressorInputStream(((InputStreamInputSource) inputSource).getInputStream());
-                        ////Implement readDataStream method for Compressor input stream
+                        //Implement readDataStream method for Compressor input stream
 
                     } catch (IOException | CompressorException e3) {
                         e3.printStackTrace();

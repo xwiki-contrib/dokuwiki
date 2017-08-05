@@ -290,15 +290,20 @@ class DokuWikiIterativeParser {
                     }
                 }
 
-                if (buffer.size() >=2 && buffer.get(buffer.size() - 1) == '/' && buffer.get(buffer.size() - 2) == '/') {
-                    //Italics format parser
-                    if (!italicOpen && buffer.get(buffer.size() - 3) == ' ') {
+                if (getStringRepresentation(buffer).endsWith(" //") || getStringRepresentation(buffer).equals("//")) {
+                    //handled separately to avoid collision with hyperlinks
+                    //italics format open
+                    if (!italicOpen ) {
                         processWords(2, buffer, listener);
                         listener.beginFormat(Format.ITALIC, Listener.EMPTY_PARAMETERS);
                         italicOpen = true;
                         continue;
                     }
-                    if (italicOpen && buffer.get(buffer.size() - 3) != ' ') {
+                }
+
+                if (buffer.size() >=2 && buffer.get(buffer.size() - 1) == '/' && buffer.get(buffer.size() - 2) == '/') {
+                    //Italics format parser close
+                    if (italicOpen) {
                         //generate italic close event
                         processWords(2, buffer, listener);
                         listener.endFormat(Format.ITALIC, Listener.EMPTY_PARAMETERS);
@@ -307,15 +312,19 @@ class DokuWikiIterativeParser {
                     }
                 }
 
-                if (buffer.size() >=2 && buffer.get(buffer.size() - 1) == '_' && buffer.get(buffer.size() - 2) == '_') {
-                    //underline format parser
+                if (getStringRepresentation(buffer).endsWith(" __") || getStringRepresentation(buffer).equals("__")) {
+                    //Underline open
                     if (!underlineOpen) {
                         processWords(2, buffer, listener);
                         listener.beginFormat(Format.UNDERLINED, Listener.EMPTY_PARAMETERS);
                         underlineOpen = true;
                         continue;
                     }
-                    if (buffer.get(buffer.size() - 3) != ' ') {
+                }
+
+                if (buffer.size() >=2 && buffer.get(buffer.size() - 1) == '_' && buffer.get(buffer.size() - 2) == '_') {
+                    //underline close
+                    if (underlineOpen) {
                         processWords(2, buffer, listener);
                         listener.endFormat(Format.UNDERLINED, Listener.EMPTY_PARAMETERS);
                         underlineOpen = false;
@@ -323,15 +332,19 @@ class DokuWikiIterativeParser {
                     }
                 }
 
-                if (buffer.size() >=2 && buffer.get(buffer.size() - 1) == '\'' && buffer.get(buffer.size() - 2) == '\'') {
-                    //monospace format parser
-                    if (!monospaceOpen && buffer.get(buffer.size() - 3) == ' ') {
+                if (getStringRepresentation(buffer).endsWith(" \'\'") || getStringRepresentation(buffer).equals("\'\'")) {
+                    //monospace open
+                    if (!monospaceOpen) {
                         processWords(2, buffer, listener);
                         listener.beginFormat(Format.MONOSPACE, Listener.EMPTY_PARAMETERS);
                         monospaceOpen = true;
                         continue;
                     }
-                    if (buffer.get(buffer.size() - 3) != ' ') {
+                }
+
+                if (buffer.size() >=2 && buffer.get(buffer.size() - 1) == '\'' && buffer.get(buffer.size() - 2) == '\'') {
+                    //monospace close
+                    if (monospaceOpen) {
                         processWords(2, buffer, listener);
                         listener.endFormat(Format.MONOSPACE, Listener.EMPTY_PARAMETERS);
                         monospaceOpen = false;
