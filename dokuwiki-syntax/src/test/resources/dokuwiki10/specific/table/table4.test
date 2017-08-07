@@ -1,19 +1,16 @@
 .#-----------------------------------------------------
 .input|dokuwiki/1.0
 .#-----------------------------------------------------
-|              ^ Heading 1            ^ Heading 2          ^
-^ Heading 3    | Row 1 Col 2          | Row 1 Col 3        |
-^ Heading 4    | no colspan this time |                    |
-^ Heading 5    | Row 2 Col 2          | Row 2 Col 3        |
+^ Heading 1      ^ Heading 2                  ^ Heading 3          ^
+| Row 1 Col 1    | this cell spans vertically | Row 1 Col 3        |
+| Row 2 Col 1    | :::                        | Row 2 Col 3        |
+| Row 3 Col 1    | :::                        | Row 2 Col 3        |
 .#-----------------------------------------------------
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-beginParagraph
 beginTable
 beginTableRow
-beginTableCell [[align]=[centre]]
-endTableCell [[align]=[centre]]
 beginTableHeadCell [[align]=[centre]]
 onWord [Heading]
 onSpace
@@ -24,13 +21,13 @@ onWord [Heading]
 onSpace
 onWord [2]
 endTableHeadCell [[align]=[centre]]
-endTableRow
-beginTableRow
 beginTableHeadCell [[align]=[centre]]
 onWord [Heading]
 onSpace
 onWord [3]
 endTableHeadCell [[align]=[centre]]
+endTableRow
+beginTableRow
 beginTableCell [[align]=[centre]]
 onWord [Row]
 onSpace
@@ -38,42 +35,28 @@ onWord [1]
 onSpace
 onWord [Col]
 onSpace
-onWord [2]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-onWord [Row]
-onSpace
 onWord [1]
-onSpace
-onWord [Col]
-onSpace
-onWord [3]
 endTableCell [[align]=[centre]]
-endTableRow
-beginTableRow
-beginTableHeadCell [[align]=[centre]]
-onWord [Heading]
-onSpace
-onWord [4]
-endTableHeadCell [[align]=[centre]]
 beginTableCell [[align]=[centre]]
-onWord [no]
-onSpace
-onWord [colspan]
-onSpace
 onWord [this]
 onSpace
-onWord [time]
+onWord [cell]
+onSpace
+onWord [spans]
+onSpace
+onWord [vertically]
 endTableCell [[align]=[centre]]
 beginTableCell [[align]=[centre]]
+onWord [Row]
+onSpace
+onWord [1]
+onSpace
+onWord [Col]
+onSpace
+onWord [3]
 endTableCell [[align]=[centre]]
 endTableRow
 beginTableRow
-beginTableHeadCell [[align]=[centre]]
-onWord [Heading]
-onSpace
-onWord [5]
-endTableHeadCell [[align]=[centre]]
 beginTableCell [[align]=[centre]]
 onWord [Row]
 onSpace
@@ -81,7 +64,33 @@ onWord [2]
 onSpace
 onWord [Col]
 onSpace
+onWord [1]
+endTableCell [[align]=[centre]]
+beginTableCell [[align]=[centre]]
+onWord [:::]
+endTableCell [[align]=[centre]]
+beginTableCell [[align]=[centre]]
+onWord [Row]
+onSpace
 onWord [2]
+onSpace
+onWord [Col]
+onSpace
+onWord [3]
+endTableCell [[align]=[centre]]
+endTableRow
+beginTableRow
+beginTableCell [[align]=[centre]]
+onWord [Row]
+onSpace
+onWord [3]
+onSpace
+onWord [Col]
+onSpace
+onWord [1]
+endTableCell [[align]=[centre]]
+beginTableCell [[align]=[centre]]
+onWord [:::]
 endTableCell [[align]=[centre]]
 beginTableCell [[align]=[centre]]
 onWord [Row]
@@ -94,5 +103,4 @@ onWord [3]
 endTableCell [[align]=[centre]]
 endTableRow
 endTable
-endParagraph
 endDocument

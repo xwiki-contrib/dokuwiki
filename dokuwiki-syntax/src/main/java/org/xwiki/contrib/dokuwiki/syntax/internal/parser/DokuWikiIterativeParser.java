@@ -67,6 +67,7 @@ class DokuWikiIterativeParser {
         boolean listEnded = true;
         boolean inSectionEvent = false;
         int headerLevel = 1;
+        boolean inCodeBlock = false;
 
         while (source.ready() && (readCharacter = source.read()) != -1) {
             buffer.add((char) readCharacter);
@@ -396,62 +397,55 @@ class DokuWikiIterativeParser {
                 //handle media input
                 processImage(buffer, source, listener);
             }
-
-            if (getStringRepresentation(buffer).endsWith("^ ")) {
-                //handle table
-                boolean isTable = true;
-                boolean hasVerticalTableHeaders = false;
-                if (buffer.get(0) == '|') {
-                    hasVerticalTableHeaders = true;
-                    buffer.remove(0);
-                }
-                for (char c : buffer.subList(0, buffer.size() - 2)) {
-                    if (c != ' ') {
-                        isTable = false;
-                    }
-                }
-                if (isTable) {
-                    listener.beginTable(Listener.EMPTY_PARAMETERS);
-                    buffer.clear();
-                    listener.beginTableRow(Listener.EMPTY_PARAMETERS);
-                    boolean inRow = true;
-                    if (!hasVerticalTableHeaders) {
-                        int cInt;
-                        while (source.ready() && (cInt = source.read()) != -1) {
-                            char c = (char) cInt;
-                            if (c == '^') {
-                                listener.beginTableHeadCell(Listener.EMPTY_PARAMETERS);
-                                trimBuffer(buffer);
-                                processWords(0, buffer, listener);
-                                listener.endTableHeadCell(Listener.EMPTY_PARAMETERS);
-
-                            } else if (c == '|') {
-                                listener.beginTableCell(Listener.EMPTY_PARAMETERS);
-                                trimBuffer(buffer);
-                                processWords(0, buffer, listener);
-                                listener.endTableCell(Listener.EMPTY_PARAMETERS);
-                            } else if (c == '\n') {
-                                buffer.clear();
-                                listener.endTableRow(Listener.EMPTY_PARAMETERS);
-                                inRow = false;
-                                c = (char) source.read();
-                                if (c == '|') {
-                                    listener.beginTableRow(Listener.EMPTY_PARAMETERS);
-                                    inRow = true;
-                                } else {
-                                    buffer.add(c);
-                                    break;
-                                }
-                            } else {
-                                buffer.add(c);
-                            }
+            if (buffer.size() > 0 && (buffer.get(0) == '|' || buffer.get(0) == '^')) {
+                boolean inCell = false;
+                boolean inHeadCell = false;
+                boolean inRow = false;
+                boolean inTable;
+                listener.beginTable(Listener.EMPTY_PARAMETERS);
+                inTable = true;
+                int cInt;
+                while (source.ready() && (cInt = source.read()) != -1) {
+                    if (buffer.get(buffer.size() - 1) == '|') {
+                        if (!inRow) {
+                            listener.beginTableRow(Listener.EMPTY_PARAMETERS);
+                            inRow = true;
                         }
-                    } else {
-                        //handle vertical table
-                    }
-                    if (inRow) {
+                        processTableCell(inCell, inHeadCell, buffer, listener);
+                        inHeadCell = false;
+                        inCell = true;
+                        buffer.clear();
+                    } else if (buffer.get(buffer.size() - 1) == '^') {
+                        if (!inRow) {
+                            listener.beginTableRow(Listener.EMPTY_PARAMETERS);
+                            inRow = true;
+                        }
+                        processTableCell(inCell, inHeadCell, buffer, listener);
+                        inCell = false;
+                        inHeadCell = true;
+                        buffer.clear();
+                    } else if (buffer.get(0) == '\n') {
                         listener.endTableRow(Listener.EMPTY_PARAMETERS);
+                        buffer.clear();
+                        inRow = false;
+                        inCell = false;
+                        inHeadCell = false;
+                        if (cInt != '|' && cInt != '^') {
+                            buffer.clear();
+                            listener.endTable(Listener.EMPTY_PARAMETERS);
+                            buffer.add((char) cInt);
+                            inTable = false;
+                            break;
+                        }
                     }
+                    buffer.add((char) cInt);
+                }
+                if (inTable) {
+                    if (inCell || inHeadCell) {
+                        processTableCell(inCell, inHeadCell, buffer, listener);
+                    }
+                    buffer.clear();
+                    listener.endTableRow(Listener.EMPTY_PARAMETERS);
                     listener.endTable(Listener.EMPTY_PARAMETERS);
                 }
             }
@@ -598,18 +592,19 @@ class DokuWikiIterativeParser {
                 continue;
             }
 
-            if (getStringRepresentation(buffer).startsWith("<code ") ||getStringRepresentation(buffer).startsWith("<code>") ||
-                    getStringRepresentation(buffer).startsWith("<file ") ||getStringRepresentation(buffer).startsWith("<file>")) {
+            if (getStringRepresentation(buffer).endsWith("<code ") ||getStringRepresentation(buffer).endsWith("<code>") ||
+                    getStringRepresentation(buffer).endsWith("<file ") ||getStringRepresentation(buffer).endsWith("<file>")) {
                 //handle code block
                 String language;
                 int c;
                 boolean readLangauge = false;
                 HashMap<String, String> param = new HashMap<>();
-                buffer.subList(0,5).clear();
-                if (buffer.get(0) != '>') {
+                inCodeBlock = true;
+                if (buffer.get(5) != '>') {
                     readLangauge = true;
-                    buffer.clear();
                 }
+                processWords(6, buffer, listener);
+
                 //read language and code
                 while (source.ready() && (c = source.read()) != -1) {
                     buffer.add((char) c);
@@ -632,10 +627,14 @@ class DokuWikiIterativeParser {
                         } else {
                             buffer.subList(buffer.size() - 7, buffer.size()).clear();
                         }
-                        listener.onMacro("code", param,getStringRepresentation(buffer), false);
+                        if (inCodeBlock) {
+                            listener.onMacro("code", param,getStringRepresentation(buffer), false);
+                            inCodeBlock = false;
+                        }
                         buffer.clear();
                         //consume a newLine character.
                         source.read();
+                        break;
                     }
                 }
                 continue;
@@ -844,6 +843,31 @@ class DokuWikiIterativeParser {
 
         }
     }
+
+    private void processTableCell(boolean inCell, boolean inHeadCell, ArrayList<Character> buffer, Listener listener) {
+        //call the cell events
+        buffer.remove(buffer.size() -1);
+        HashMap<String, String> param = new HashMap<>();
+        if (buffer.size() > 2 &&  buffer.get(0) == ' ' && buffer.get(buffer.size() -1) == ' ') {
+            param.put("align", "centre");
+        } else if (buffer.size() > 1 && buffer.get(0) == ' ') {
+            param.put("align", "right");
+        }else if (buffer.size() > 1 && buffer.get(buffer.size()-1) == ' ') {
+            param.put("align", "left");
+        }
+        if (inCell) {
+            trimBuffer(buffer);
+            listener.beginTableCell(param);
+            processWords(0, buffer, listener);
+            listener.endTableCell(param);
+        }
+        if (inHeadCell){
+            trimBuffer(buffer);
+            listener.beginTableHeadCell(param);
+            processWords(0, buffer, listener);
+            listener.endTableHeadCell(param);
+        }
+    }
     private void processEmailAddressFromBuffer(ArrayList<Character> buffer, Listener listener) {
         buffer.remove(0);
         buffer.remove(buffer.size() - 1);
@@ -874,10 +898,10 @@ class DokuWikiIterativeParser {
     }
 
     private void trimBuffer(ArrayList<Character> buffer) {
-        if (buffer.get(0) == ' ') {
+        while (buffer.size() > 0 && buffer.get(0) == ' ') {
             buffer.remove(0);
         }
-        if (buffer.get(buffer.size() - 1) == ' ') {
+        while (buffer.size() > 0 && buffer.get(buffer.size() - 1) == ' ') {
             buffer.remove(buffer.size() - 1);
         }
     }
