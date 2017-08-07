@@ -20,7 +20,6 @@
 package org.xwiki.contrib.dokuwiki.text.internal.input;
 
 import org.apache.commons.compress.archivers.ArchiveEntry;
-import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.compressors.CompressorException;
@@ -35,16 +34,22 @@ import org.xwiki.contrib.dokuwiki.text.input.DokuWikiInputProperties;
 import org.xwiki.contrib.dokuwiki.text.internal.DokuWikiFilter;
 import org.xwiki.filter.FilterEventParameters;
 import org.xwiki.filter.FilterException;
-import org.xwiki.filter.input.*;
+import org.xwiki.filter.input.AbstractBeanInputFilterStream;
+import org.xwiki.filter.input.FileInputSource;
+import org.xwiki.filter.input.InputSource;
+import org.xwiki.filter.input.InputStreamInputSource;
+import org.xwiki.filter.input.StringInputSource;
 import org.xwiki.rendering.parser.StreamParser;
 import org.xwiki.rendering.renderer.PrintRenderer;
 import org.xwiki.rendering.renderer.PrintRendererFactory;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
-import org.xwiki.rendering.parser.Parser;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 
@@ -107,10 +112,14 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             } catch (Exception e1) {
                 try {
                     ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
-                            .createArchiveInputStream(new BufferedInputStream((InputStream) ((InputStreamInputSource) inputSource).getInputStream()));
+                            .createArchiveInputStream(
+                                    new BufferedInputStream((InputStream) ((InputStreamInputSource) inputSource)
+                                            .getInputStream()));
                     readDataStream(archiveInputStream, filter, proxyFilter);
-                } catch (Exception e2) {
-                    try {
+                } catch (Exception e2)
+                {
+                    try
+                    {
                         CompressorInputStream input = new CompressorStreamFactory()
                                 .createCompressorInputStream(((InputStreamInputSource) inputSource).getInputStream());
                         //Implement readDataStream method for Compressor input stream
@@ -126,7 +135,8 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     }
 
     private void readDataStream(ArchiveInputStream archiveInputStream,
-                                Object filter, DokuWikiFilter proxyFilter) throws IOException, FilterException {
+                                Object filter, DokuWikiFilter proxyFilter)
+            throws IOException, FilterException {
         ArchiveEntry archiveEntry = archiveInputStream.getNextEntry();
         proxyFilter.beginWikiSpace(TAG_MAIN_SPACE, FilterEventParameters.EMPTY);
         while (archiveEntry != null) {
@@ -140,7 +150,8 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                     if (i == pathArray.length - 1 && pathArray[i].contains(TAG_TEXT_FILE_FORMAT)) {
                         String documentName = pathArray[i].replace(TAG_TEXT_FILE_FORMAT, "");
                         proxyFilter.beginWikiDocument(documentName, FilterEventParameters.EMPTY);
-                        String pageContents = org.apache.commons.io.IOUtils.toString(archiveInputStream, TAG_STRING_ENCODING_FORMAT);
+                        String pageContents = org.apache.commons.io.IOUtils
+                                .toString(archiveInputStream, TAG_STRING_ENCODING_FORMAT);
                         //parse pageContent
                         DefaultWikiPrinter printer = new DefaultWikiPrinter();
                         PrintRenderer renderer = this.xwiki21Factory.createRenderer(printer);
@@ -165,35 +176,6 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         }
         proxyFilter.endWikiSpace(TAG_MAIN_SPACE, FilterEventParameters.EMPTY);
     }
-
-//    private void readPageFolderStream(Folder pagesFolderTree, ArchiveInputStream archiveInputStream,
-//                                      Object filter, DokuWikiFilter proxyFilter) throws FilterException {
-//        for (Folder i : pagesFolderTree.getChilds()) {
-//            proxyFilter.beginWikiDocument(i.toString(),FilterEventParameters.EMPTY );
-//            readPageFolderStream(i, archiveInputStream, filter, proxyFilter);
-//            proxyFilter.endWikiSpace(i.toString(), FilterEventParameters.EMPTY);
-//        }
-//        for (Folder j : pagesFolderTree.getLeafs()) {
-//            if (j.toString().endsWith(TAG_TEXT_FILE_FORMAT)) {
-//                String leafName = j.toString().replace(TAG_TEXT_FILE_FORMAT, "");
-//                proxyFilter.beginWikiDocument(leafName, FilterEventParameters.EMPTY);
-//
-//                DefaultWikiPrinter printer = new DefaultWikiPrinter();
-//                PrintRenderer renderer = this.xwiki21Factory.createRenderer(printer);
-//                DokuWikiSyntaxInputProperties parserProperties = createDokuwikiInputProperties(j.getContents());
-//
-//                 Generate events
-//                try (BeanInputFilterStream<DokuWikiInputProperties> stream =
-//                             ((BeanInputFilterStreamFactory) this.parserFactory).createInputFilterStream(parserProperties)) {
-//                    stream.read();
-//                } catch (Exception e) {
-//                    throw new FilterException("Failed to convert content page", e);
-//                }
-//
-//                proxyFilter.endWikiDocument(leafName, FilterEventParameters.EMPTY);
-//            }
-//        }
-//    }
 
     DokuWikiSyntaxInputProperties createDokuwikiInputProperties(String content) {
         DokuWikiSyntaxInputProperties parserProperties = new DokuWikiSyntaxInputProperties();

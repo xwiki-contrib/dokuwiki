@@ -561,7 +561,7 @@ class DokuWikiIterativeParser
                 //handle RSS generation feeds
                 processWords(4, buffer, listener);
                 int c;
-                HashMap<String, String> param = new HashMap<>();
+                Map<String, String> param = new HashMap<>();
                 while (source.ready()) {
                     c = source.read();
                     if (c == -1) {

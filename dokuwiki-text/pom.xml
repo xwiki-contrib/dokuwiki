@@ -106,8 +106,7 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
           <excludes>
-              org/xwiki/contrib/dokuwiki/xml/internal/input/DokuWikiContextConverterListener.java,
-              org/xwiki/contrib/dokuwiki/xml/internal/input/DokuWikiInputFilterStream.java
+              org/xwiki/contrib/dokuwiki/text/internal/input/DokuWikiInputFilterStream.java
           </excludes>
         </configuration>
       </plugin>
