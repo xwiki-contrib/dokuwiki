@@ -26,7 +26,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
-import org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiStreamParser;
 import org.xwiki.rendering.block.XDOM;
 import org.xwiki.rendering.internal.parser.XDOMGeneratorListener;
 import org.xwiki.rendering.parser.ParseException;

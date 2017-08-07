@@ -21,7 +21,6 @@ package org.xwiki.contrib.dokuwiki.syntax;
 
 import org.xwiki.filter.DefaultFilterStreamProperties;
 import org.xwiki.filter.input.InputSource;
-import org.xwiki.filter.type.FilterStreamType;
 import org.xwiki.filter.type.SystemType;
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyMandatory;
@@ -39,32 +38,13 @@ public class DokuWikiSyntaxInputProperties extends DefaultFilterStreamProperties
      * 
      * @version $Id$
      */
-    public enum ReferenceType
-    {
-        /**
-         * Don't parse references.
-         */
-        NONE,
-
-        /**
-         * Parse as standard XWiki resource reference.
-         */
-        XWIKI,
-
-        /**
-         * Parse as standard DokuWiki references.
-         */
-        DOKUWIKI
-    }
-
-    // locally defined until updated in the framework
-    private static final SystemType DOKUWIKI = new SystemType("dokuwiki");
 
     /**
      * The DokuWiki Syntax format as String.
      */
     public static final String FILTER_STREAM_TYPE_STRING = "dokuwiki+text";
-
+    // locally defined until updated in the framework
+    private static final SystemType DOKUWIKI = new SystemType("dokuwiki");
     /**
      * @see #getSource()
      */
@@ -88,5 +68,4 @@ public class DokuWikiSyntaxInputProperties extends DefaultFilterStreamProperties
     {
         this.source = source;
     }
-
-  }
+}

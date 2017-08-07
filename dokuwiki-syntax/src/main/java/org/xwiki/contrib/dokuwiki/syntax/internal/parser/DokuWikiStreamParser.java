@@ -32,28 +32,30 @@ import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.syntax.SyntaxType;
 
 /**
- * DokuWiki streamed parser
+ * DokuWiki streamed parser.
  *
  * @version $Id: fcd59f6c7ae81ffec64f5df3ca333eca4eaf18b3 $
  */
 @Component
 @Named(org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiStreamParser.SYNTAX_STRING)
 @Singleton
-public class DokuWikiStreamParser implements StreamParser {
+public class DokuWikiStreamParser implements StreamParser
+{
     /**
      * The syntax type.
      */
-    private static final SyntaxType SYNTAX_TYPE = new SyntaxType("dokuwiki", "dokuwiki");
-
-    /**
-     * The syntax with version.
-     */
-    static final Syntax SYNTAX = new Syntax(SYNTAX_TYPE, "1.0");
+    private static final String TAG_DOKUWIKI = "dokuwiki";
+    private static final SyntaxType SYNTAX_TYPE = new SyntaxType(TAG_DOKUWIKI, TAG_DOKUWIKI);
 
     /**
      * The String version of the syntax.
      */
     public static final String SYNTAX_STRING = "dokuwiki/1.0";
+
+    /**
+     * The syntax with version.
+     */
+    static final Syntax SYNTAX = new Syntax(SYNTAX_TYPE, "1.0");
 
     @Override
     public Syntax getSyntax() {

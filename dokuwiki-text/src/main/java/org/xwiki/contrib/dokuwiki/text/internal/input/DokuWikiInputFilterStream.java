@@ -55,7 +55,6 @@ import java.util.regex.Matcher;
 @Named(DokuWikiInputProperties.FILTER_STREAM_TYPE_STRING)
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
 public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<DokuWikiInputProperties, DokuWikiFilter> {
-    private static final String TAG_ROOT_NODE = "root";
     private static final String TAG_PAGES = "pages";
     private static final String TAG_MAIN_SPACE = "Main";
     private static final String TAG_TEXT_FILE_FORMAT = ".txt";
