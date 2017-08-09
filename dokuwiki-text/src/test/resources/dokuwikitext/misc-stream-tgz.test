@@ -5,20 +5,20 @@
   <wikiSpace name="wiki">
     <wikiDocument name="syntax"></wikiDocument>
   </wikiSpace>
-  <wikiSpace name="wiki">
-    <wikiDocument name="welcome"></wikiDocument>
-  </wikiSpace>
   <wikiDocument name="start"></wikiDocument>
-  <wikiSpace name="wiki">
-    <wikiDocument name="dokuwiki"></wikiDocument>
+  <wikiSpace name="playground">
+    <wikiDocument name="playground"></wikiDocument>
   </wikiSpace>
   <wikiSpace name="playground"></wikiSpace>
   <wikiSpace name="wiki"></wikiSpace>
-  <wikiSpace name="playground">
-    <wikiDocument name="playground"></wikiDocument>
+  <wikiSpace name="wiki">
+    <wikiDocument name="welcome"></wikiDocument>
+  </wikiSpace>
+  <wikiSpace name="wiki">
+    <wikiDocument name="dokuwiki"></wikiDocument>
   </wikiSpace>
 </wikiSpace>
 .#------------------------------------------------------------------------------
 .input|dokuwiki+text
-.configuration.source=data-folder.tar.gz
+.configuration.source=dokuwiki-folder.tar.gz
 .#------------------------------------------------------------------------------

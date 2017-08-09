@@ -6,11 +6,13 @@
   <wikiSpace name="playground">
     <wikiDocument name="playground"></wikiDocument>
   </wikiSpace>
+  <wikiSpace name="playground"></wikiSpace>
   <wikiDocument name="start"></wikiDocument>
   <wikiSpace name="wiki"></wikiSpace>
   <wikiSpace name="wiki">
     <wikiDocument name="dokuwiki"></wikiDocument>
   </wikiSpace>
+  <wikiSpace name="wiki"></wikiSpace>
   <wikiSpace name="wiki">
     <wikiDocument name="syntax"></wikiDocument>
   </wikiSpace>
@@ -20,5 +22,5 @@
 </wikiSpace>
 .#------------------------------------------------------------------------------
 .input|dokuwiki+text
-.configuration.source=data-folder.zip
+.configuration.source=dokuwiki-folder.zip
 .#------------------------------------------------------------------------------

@@ -20,5 +20,5 @@
 </wikiSpace>
 .#------------------------------------------------------------------------------
 .input|dokuwiki+text
-.configuration.source=file:${{{xwiki.test.folder}}}/dokuwikitext/data-contents.tgz
+.configuration.source=file:${{{xwiki.test.folder}}}/dokuwikitext/dokuwiki-contents.tgz
 .#------------------------------------------------------------------------------

@@ -142,7 +142,8 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         while (archiveEntry != null) {
             String entryName = archiveEntry.getName();
             String[] pathArray = entryName.split(Matcher.quoteReplacement(System.getProperty("file.separator")));
-            if (Arrays.asList(pathArray).contains(TAG_PAGES)) {
+            if (Arrays.asList(pathArray).contains(TAG_PAGES)
+                    && !Arrays.asList(pathArray).get(pathArray.length -1).startsWith(".")) {
                 //Index of the 'pages' folder which contains the wiki documents and spaces.
                 int indexOfPages = ArrayUtils.indexOf(pathArray, TAG_PAGES);
                 int j = indexOfPages;
