@@ -120,10 +120,8 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                                     new BufferedInputStream((InputStream) ((InputStreamInputSource) inputSource)
                                             .getInputStream()));
                     readDataStream(archiveInputStream, filter, proxyFilter);
-                } catch (Exception e2)
-                {
-                    try
-                    {
+                } catch (Exception e2) {
+                    try {
                         CompressorInputStream input = new CompressorStreamFactory()
                                 .createCompressorInputStream(((InputStreamInputSource) inputSource).getInputStream());
                         //Implement readDataStream method for Compressor input stream
@@ -147,7 +145,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             String entryName = archiveEntry.getName();
             String[] pathArray = entryName.split(Matcher.quoteReplacement(System.getProperty("file.separator")));
             if (Arrays.asList(pathArray).contains(TAG_PAGES)
-                    && !Arrays.asList(pathArray).get(pathArray.length -1).startsWith(".")) {
+                    && !Arrays.asList(pathArray).get(pathArray.length - 1).startsWith(".")) {
                 //Index of the 'pages' folder which contains the wiki documents and spaces.
                 int indexOfPages = ArrayUtils.indexOf(pathArray, TAG_PAGES);
                 int j = indexOfPages;
@@ -180,12 +178,12 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                 //TODO find the reason why only streamed input are being parsed.
                 List<String> lines = org.apache.commons.io.IOUtils.readLines(archiveInputStream, TAG_STRING_ENCODING_FORMAT);
 
-                for (String line: lines) {
+                for (String line : lines) {
                     if (!(line.length() == 0 || line.startsWith("#"))) {
                         String[] parameters = line.split(":");
                         FilterEventParameters userParameters = new FilterEventParameters();
                         userParameters.put(UserFilter.PARAMETER_FIRSTNAME, parameters[2].split(" ")[0]);
-                        userParameters.put(UserFilter.PARAMETER_LASTNAME,parameters[2].split(" ")[1]);
+                        userParameters.put(UserFilter.PARAMETER_LASTNAME, parameters[2].split(" ")[1]);
                         userParameters.put(UserFilter.PARAMETER_EMAIL, parameters[3]);
 
                         proxyFilter.beginUser(parameters[0], userParameters);
@@ -194,10 +192,6 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
                     }
                 }
-
-
-
-
             }
             archiveEntry = archiveInputStream.getNextEntry();
         }
