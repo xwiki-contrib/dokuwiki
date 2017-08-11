@@ -30,6 +30,7 @@ import org.xwiki.filter.event.model.WikiObjectFilter;
 import org.xwiki.filter.event.model.WikiObjectPropertyFilter;
 import org.xwiki.filter.event.model.WikiSpaceFilter;
 import org.xwiki.filter.event.user.GroupFilter;
+import org.xwiki.filter.event.user.UserFilter;
 import org.xwiki.rendering.listener.Listener;
 
 /**
@@ -39,6 +40,7 @@ import org.xwiki.rendering.listener.Listener;
  */
 public interface DokuWikiFilter
     extends WikiFarmFilter, WikiFilter, WikiSpaceFilter, WikiDocumentFilter, WikiAttachmentFilter, WikiClassFilter,
-    WikiClassPropertyFilter, WikiObjectFilter, WikiObjectPropertyFilter, GroupFilter, Listener, UnknownFilter
+    WikiClassPropertyFilter, WikiObjectFilter, WikiObjectPropertyFilter, GroupFilter,
+        Listener, UnknownFilter, UserFilter
 {
 }

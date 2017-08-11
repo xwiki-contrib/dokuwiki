@@ -25,6 +25,7 @@ import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
@@ -34,6 +35,7 @@ import org.xwiki.contrib.dokuwiki.text.input.DokuWikiInputProperties;
 import org.xwiki.contrib.dokuwiki.text.internal.DokuWikiFilter;
 import org.xwiki.filter.FilterEventParameters;
 import org.xwiki.filter.FilterException;
+import org.xwiki.filter.event.user.UserFilter;
 import org.xwiki.filter.input.AbstractBeanInputFilterStream;
 import org.xwiki.filter.input.FileInputSource;
 import org.xwiki.filter.input.InputSource;
@@ -43,6 +45,7 @@ import org.xwiki.rendering.parser.StreamParser;
 import org.xwiki.rendering.renderer.PrintRenderer;
 import org.xwiki.rendering.renderer.PrintRendererFactory;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
+import sun.nio.ch.IOUtil;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -51,6 +54,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 
 /**
@@ -172,6 +176,28 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                     proxyFilter.endWikiSpace(pathArray[j], FilterEventParameters.EMPTY);
                     j--;
                 }
+            } else if (entryName.endsWith("/conf/users.auth.php")) {
+                //TODO find the reason why only streamed input are being parsed.
+                List<String> lines = org.apache.commons.io.IOUtils.readLines(archiveInputStream, TAG_STRING_ENCODING_FORMAT);
+
+                for (String line: lines) {
+                    if (!(line.length() == 0 || line.startsWith("#"))) {
+                        String[] parameters = line.split(":");
+                        FilterEventParameters userParameters = new FilterEventParameters();
+                        userParameters.put(UserFilter.PARAMETER_FIRSTNAME, parameters[2].split(" ")[0]);
+                        userParameters.put(UserFilter.PARAMETER_LASTNAME,parameters[2].split(" ")[1]);
+                        userParameters.put(UserFilter.PARAMETER_EMAIL, parameters[3]);
+
+                        proxyFilter.beginUser(parameters[0], userParameters);
+                        proxyFilter.endUser(parameters[0], userParameters);
+
+
+                    }
+                }
+
+
+
+
             }
             archiveEntry = archiveInputStream.getNextEntry();
         }
