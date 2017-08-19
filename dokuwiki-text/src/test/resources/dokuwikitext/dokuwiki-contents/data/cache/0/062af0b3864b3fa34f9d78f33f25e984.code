@@ -1,1 +1,0 @@
-<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">out</span>.<span class="me1">println</span><span class="br0">&#40;</span><span class="st0">&quot;hello&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
