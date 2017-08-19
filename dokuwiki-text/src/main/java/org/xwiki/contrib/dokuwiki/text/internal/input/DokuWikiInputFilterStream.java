@@ -25,12 +25,10 @@ import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
-import org.apache.commons.compress.utils.IOUtils;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.io.FileUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
-import org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxInputProperties;
 import org.xwiki.contrib.dokuwiki.text.input.DokuWikiInputProperties;
 import org.xwiki.contrib.dokuwiki.text.internal.DokuWikiFilter;
 import org.xwiki.filter.FilterEventParameters;
@@ -40,20 +38,21 @@ import org.xwiki.filter.input.AbstractBeanInputFilterStream;
 import org.xwiki.filter.input.FileInputSource;
 import org.xwiki.filter.input.InputSource;
 import org.xwiki.filter.input.InputStreamInputSource;
-import org.xwiki.filter.input.StringInputSource;
+import org.xwiki.rendering.parser.ParseException;
 import org.xwiki.rendering.parser.StreamParser;
 import org.xwiki.rendering.renderer.PrintRenderer;
 import org.xwiki.rendering.renderer.PrintRendererFactory;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
-import sun.nio.ch.IOUtil;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.Arrays;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -127,6 +126,8 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                         //Implement readDataStream method for Compressor input stream
 
                     } catch (IOException | CompressorException e3) {
+                        e1.printStackTrace();
+                        e2.printStackTrace();
                         e3.printStackTrace();
                     }
                 }
@@ -138,73 +139,187 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
     private void readDataStream(ArchiveInputStream archiveInputStream,
                                 Object filter, DokuWikiFilter proxyFilter)
-            throws IOException, FilterException {
-        ArchiveEntry archiveEntry = archiveInputStream.getNextEntry();
-        proxyFilter.beginWikiSpace(TAG_MAIN_SPACE, FilterEventParameters.EMPTY);
+            throws FilterException {
+
+
+        ArchiveEntry archiveEntry = null;
+        //dokuwiki directory
+        File dokuwikiDirectory = new File(
+                FileUtils.getUserDirectoryPath() + System.getProperty("file.separator") + "dokuwiki");
+        //Dokuwiki's data directory
+        File dokuwikiDataDirectory = new File(
+                dokuwikiDirectory.getAbsolutePath() + System.getProperty("file.separator") + "data");
+        //delete folder is exists.
+        try {
+            FileUtils.deleteDirectory(dokuwikiDirectory);
+            archiveEntry = archiveInputStream.getNextEntry();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         while (archiveEntry != null) {
-            String entryName = archiveEntry.getName();
-            String[] pathArray = entryName.split(Matcher.quoteReplacement(System.getProperty("file.separator")));
-            if (Arrays.asList(pathArray).contains(TAG_PAGES)
-                    && !Arrays.asList(pathArray).get(pathArray.length - 1).startsWith(".")) {
-                //Index of the 'pages' folder which contains the wiki documents and spaces.
-                int indexOfPages = ArrayUtils.indexOf(pathArray, TAG_PAGES);
-                int j = indexOfPages;
-                for (int i = indexOfPages + 1; i < pathArray.length; j++, i++) {
-                    if (i == pathArray.length - 1 && pathArray[i].contains(TAG_TEXT_FILE_FORMAT)) {
-                        String documentName = pathArray[i].replace(TAG_TEXT_FILE_FORMAT, "");
-                        proxyFilter.beginWikiDocument(documentName, FilterEventParameters.EMPTY);
-                        String pageContents = org.apache.commons.io.IOUtils
+            //read users
+            if (archiveEntry.getName().endsWith("/conf/users.auth.php")) {
+                readUsers(archiveInputStream, proxyFilter);
+            }
+
+            /*
+            All filters parsing any file will make the respecting entry file blank,
+            the file is saved in dokuwiki temporary folder now.
+            */
+            saveEntryToDisk(archiveInputStream, archiveEntry, "dokuwiki");
+
+            //get next file from archive stream
+            try {
+                archiveEntry = archiveInputStream.getNextEntry();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //recursively parse documents
+        proxyFilter.beginWikiSpace("Main", FilterEventParameters.EMPTY);
+        readDocument(new File(
+                dokuwikiDataDirectory.getAbsolutePath() + System.getProperty("file.separator") + "pages"), archiveInputStream, proxyFilter);
+        proxyFilter.endWikiSpace("Main", FilterEventParameters.EMPTY);
+        //delete the folder
+        try {
+            FileUtils.deleteDirectory(dokuwikiDirectory);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+//        proxyFilter.beginWikiSpace(TAG_MAIN_SPACE, FilterEventParameters.EMPTY);
+//        while (archiveEntry != null) {
+//            String entryName = archiveEntry.getName();
+//            String[] pathArray = entryName.split(Matcher.quoteReplacement(System.getProperty("file.separator")));
+//            if (Arrays.asList(pathArray).contains(TAG_PAGES)
+//                    && !Arrays.asList(pathArray).get(pathArray.length - 1).startsWith(".")) {
+//                //Index of the 'pages' folder which contains the wiki documents and spaces.
+//                int indexOfPages = ArrayUtils.indexOf(pathArray, TAG_PAGES);
+//                int j = indexOfPages;
+//                for (int i = indexOfPages + 1; i < pathArray.length; j++, i++) {
+//                    if (i == pathArray.length - 1 && pathArray[i].contains(TAG_TEXT_FILE_FORMAT)) {
+//                        String documentName = pathArray[i].replace(TAG_TEXT_FILE_FORMAT, "");
+//                        proxyFilter.beginWikiDocument(documentName, FilterEventParameters.EMPTY);
+//                        String pageContents = null;
+//                        try {
+//                            pageContents = org.apache.commons.io.IOUtils
+//                                    .toString(archiveInputStream, TAG_STRING_ENCODING_FORMAT);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        //parse pageContent
+//                        DefaultWikiPrinter printer = new DefaultWikiPrinter();
+//                        PrintRenderer renderer = this.xwiki21Factory.createRenderer(printer);
+//                        // /Generate events
+//                        try {
+//                            dokuWikiStreamParser.parse(new StringReader(pageContents), renderer);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            throw new FilterException("Failed to convert content page", e);
+//                        }
+//                        proxyFilter.endWikiDocument(documentName, FilterEventParameters.EMPTY);
+//                        break;
+//                    }
+//                    proxyFilter.beginWikiSpace(pathArray[i], FilterEventParameters.EMPTY);
+//                }
+//                while (j > indexOfPages) {
+//                    proxyFilter.endWikiSpace(pathArray[j], FilterEventParameters.EMPTY);
+//                    j--;
+//                }
+//            } else if (entryName.endsWith("/conf/users.auth.php")) {
+//            }
+//            try {
+//                archiveEntry = archiveInputStream.getNextEntry();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        proxyFilter.endWikiSpace(TAG_MAIN_SPACE, FilterEventParameters.EMPTY);
+    }
+
+    private void readUsers(ArchiveInputStream archiveInputStream, DokuWikiFilter proxyFilter) throws FilterException {
+        //TODO find the reason why only streamed input are being parsed.
+        List<String> lines = null;
+        try {
+            lines = org.apache.commons.io.IOUtils.readLines(archiveInputStream, TAG_STRING_ENCODING_FORMAT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for (String line : lines) {
+            if (!(line.length() == 0 || line.startsWith("#"))) {
+                String[] parameters = line.split(":");
+                FilterEventParameters userParameters = new FilterEventParameters();
+                userParameters.put(UserFilter.PARAMETER_FIRSTNAME, parameters[2].split(" ")[0]);
+                userParameters.put(UserFilter.PARAMETER_LASTNAME, parameters[2].split(" ")[1]);
+                userParameters.put(UserFilter.PARAMETER_EMAIL, parameters[3]);
+                proxyFilter.beginUser(parameters[0], userParameters);
+                proxyFilter.endUser(parameters[0], userParameters);
+            }
+        }
+    }
+
+    private void readDocument(File directory, ArchiveInputStream archiveInputStream, DokuWikiFilter proxyFilter) throws FilterException {
+        if (directory.isDirectory()) {
+            for (File file : directory.listFiles()) {
+                if (file.isDirectory()) {
+                    proxyFilter.beginWikiSpace(file.getName(), FilterEventParameters.EMPTY);
+                    readDocument(file, archiveInputStream, proxyFilter);
+                    proxyFilter.endWikiSpace(file.getName(), FilterEventParameters.EMPTY);
+                } else if (file.getName().endsWith(".txt") && !file.getName().startsWith(".")) {
+                    String[] pathArray = file.getName()
+                            .split(Matcher.quoteReplacement(System.getProperty("file.separator")));
+                    String documentName = pathArray[pathArray.length - 1].replace(".txt", "");
+                    proxyFilter.beginWikiDocument(documentName, FilterEventParameters.EMPTY);
+                    String pageContents = null;
+                    try {
+                        pageContents = org.apache.commons.io.IOUtils
                                 .toString(archiveInputStream, TAG_STRING_ENCODING_FORMAT);
                         //parse pageContent
                         DefaultWikiPrinter printer = new DefaultWikiPrinter();
                         PrintRenderer renderer = this.xwiki21Factory.createRenderer(printer);
-                        // /Generate events
-                        try {
-                            dokuWikiStreamParser.parse(new StringReader(pageContents), renderer);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            throw new FilterException("Failed to convert content page", e);
-                        }
-                        proxyFilter.endWikiDocument(documentName, FilterEventParameters.EMPTY);
-                        break;
+                        dokuWikiStreamParser.parse(new StringReader(pageContents), renderer);
+                    } catch (IOException | ParseException e) {
+                        e.printStackTrace();
                     }
-                    proxyFilter.beginWikiSpace(pathArray[i], FilterEventParameters.EMPTY);
+                    proxyFilter.endWikiDocument(documentName, FilterEventParameters.EMPTY);
                 }
-                while (j > indexOfPages) {
-                    proxyFilter.endWikiSpace(pathArray[j], FilterEventParameters.EMPTY);
-                    j--;
+            }
+        }
+    }
+
+    private void saveEntryToDisk(ArchiveInputStream archiveInputStream, ArchiveEntry archiveEntry, String folder) {
+        String entryName = archiveEntry.getName();
+        if (!entryName.startsWith(folder)) {
+            entryName = folder + System.getProperty("file.separator") + entryName;
+        }
+        entryName = FileUtils.getUserDirectoryPath() + System.getProperty("file.separator") + entryName;
+        if (!archiveEntry.isDirectory()) {
+            BufferedOutputStream fos = null;
+            try {
+                File entryFile = new File(entryName);
+                entryFile.getParentFile().mkdirs();
+                fos = new BufferedOutputStream(new FileOutputStream(entryFile));
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = archiveInputStream.read(buffer)) > 0) {
+                    fos.write(buffer, 0, length);
                 }
-            } else if (entryName.endsWith("/conf/users.auth.php")) {
-                //TODO find the reason why only streamed input are being parsed.
-                List<String> lines = org.apache.commons.io.IOUtils.readLines(archiveInputStream, TAG_STRING_ENCODING_FORMAT);
-
-                for (String line : lines) {
-                    if (!(line.length() == 0 || line.startsWith("#"))) {
-                        String[] parameters = line.split(":");
-                        FilterEventParameters userParameters = new FilterEventParameters();
-                        userParameters.put(UserFilter.PARAMETER_FIRSTNAME, parameters[2].split(" ")[0]);
-                        userParameters.put(UserFilter.PARAMETER_LASTNAME, parameters[2].split(" ")[1]);
-                        userParameters.put(UserFilter.PARAMETER_EMAIL, parameters[3]);
-
-                        proxyFilter.beginUser(parameters[0], userParameters);
-                        proxyFilter.endUser(parameters[0], userParameters);
-
-
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
             }
-            archiveEntry = archiveInputStream.getNextEntry();
         }
-        proxyFilter.endWikiSpace(TAG_MAIN_SPACE, FilterEventParameters.EMPTY);
-    }
-
-    DokuWikiSyntaxInputProperties createDokuwikiInputProperties(String content) {
-        DokuWikiSyntaxInputProperties parserProperties = new DokuWikiSyntaxInputProperties();
-
-        // Set Source
-        parserProperties.setSource(new StringInputSource(content));
-
-        return parserProperties;
     }
 
     @Override
