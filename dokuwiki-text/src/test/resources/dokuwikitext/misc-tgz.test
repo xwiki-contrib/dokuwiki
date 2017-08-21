@@ -1,21 +1,69 @@
 .#------------------------------------------------------------------------------
 .expect|filter+xml
 .#------------------------------------------------------------------------------
+<user name="slayerjain">
+  <p>
+    <parameters>
+      <entry>
+        <string>firstname</string>
+        <string>Shubham</string>
+      </entry>
+      <entry>
+        <string>lastname</string>
+        <string>Jain</string>
+      </entry>
+      <entry>
+        <string>email</string>
+        <string>shubhamkjain@outlook.com</string>
+      </entry>
+    </parameters>
+  </p>
+</user>
+<user name="demouser">
+  <p>
+    <parameters>
+      <entry>
+        <string>firstname</string>
+        <string>Demo</string>
+      </entry>
+      <entry>
+        <string>lastname</string>
+        <string>User</string>
+      </entry>
+      <entry>
+        <string>email</string>
+        <string>demo.user@domain.com</string>
+      </entry>
+    </parameters>
+  </p>
+</user>
+<user name="ani">
+  <p>
+    <parameters>
+      <entry>
+        <string>firstname</string>
+        <string>Anirudh</string>
+      </entry>
+      <entry>
+        <string>lastname</string>
+        <string>Jain</string>
+      </entry>
+      <entry>
+        <string>email</string>
+        <string>jainshubham78@gmail.com</string>
+      </entry>
+    </parameters>
+  </p>
+</user>
 <wikiSpace name="Main">
-  <wikiSpace name="playground"></wikiSpace>
-  <wikiDocument name="start"></wikiDocument>
-  <wikiSpace name="wiki"></wikiSpace>
-  <wikiSpace name="wiki">
-    <wikiDocument name="dokuwiki"></wikiDocument>
-  </wikiSpace>
-  <wikiSpace name="wiki">
-    <wikiDocument name="syntax"></wikiDocument>
-  </wikiSpace>
-  <wikiSpace name="wiki">
-    <wikiDocument name="welcome"></wikiDocument>
-  </wikiSpace>
   <wikiSpace name="playground">
     <wikiDocument name="playground"></wikiDocument>
+  </wikiSpace>
+  <wikiDocument name="start"></wikiDocument>
+  <wikiSpace name="wiki">
+    <wikiDocument name="dokuwiki"></wikiDocument>
+    <wikiDocument name="syntax"></wikiDocument>
+    <wikiDocument name="welcome"></wikiDocument>
   </wikiSpace>
 </wikiSpace>
 .#------------------------------------------------------------------------------
