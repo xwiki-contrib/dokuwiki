@@ -38,7 +38,19 @@
 
     <xwiki.extension.category>filter</xwiki.extension.category>
   </properties>
+  <repositories>
+    <repository>
+      <id>ailis-releases</id>
+      <name>Ailis Maven Releases</name>
+      <url>http://nexus.ailis.de/content/groups/public/</url>
+    </repository>
+  </repositories>
   <dependencies>
+    <dependency>
+      <groupId>de.ailis.pherialize</groupId>
+      <artifactId>pherialize</artifactId>
+      <version>1.2.1</version>
+    </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
