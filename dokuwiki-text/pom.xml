@@ -20,108 +20,109 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.xwiki.contrib.dokuwiki</groupId>
-    <artifactId>dokuwiki</artifactId>
-    <version>1.0-milestone-3-SNAPSHOT</version>
-  </parent>
-  <artifactId>dokuwiki-text</artifactId>
-  <name>DokuWiki - Text Input Filter</name>
-  <description>Filter stream extension to parse a DokuWiki TEXT package</description>
-  <properties>
-    <xwiki.jacoco.instructionRatio>0.58</xwiki.jacoco.instructionRatio>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.xwiki.contrib.dokuwiki</groupId>
+        <artifactId>dokuwiki</artifactId>
+        <version>1.0-milestone-3-SNAPSHOT</version>
+    </parent>
+    <artifactId>dokuwiki-text</artifactId>
+    <name>DokuWiki - Text Input Filter</name>
+    <description>Filter stream extension to parse a DokuWiki TEXT package</description>
+    <properties>
+        <xwiki.jacoco.instructionRatio>0.58</xwiki.jacoco.instructionRatio>
 
-    <!-- Name to display by the Extension Manager -->
-    <xwiki.extension.name>DokuWiki Text</xwiki.extension.name>
+        <!-- Name to display by the Extension Manager -->
+        <xwiki.extension.name>DokuWiki Text</xwiki.extension.name>
 
-    <xwiki.extension.category>filter</xwiki.extension.category>
-  </properties>
-  <repositories>
-    <repository>
-      <id>ailis-releases</id>
-      <name>Ailis Maven Releases</name>
-      <url>http://nexus.ailis.de/content/groups/public/</url>
-    </repository>
-  </repositories>
-  <dependencies>
-    <dependency>
-      <groupId>de.ailis.pherialize</groupId>
-      <artifactId>pherialize</artifactId>
-      <version>1.2.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-compress</artifactId>
-    </dependency>
-      <dependency>
-          <groupId>commons-codec</groupId>
-          <artifactId>commons-codec</artifactId>
-      </dependency>
-    <dependency>
-      <groupId>commons-configuration</groupId>
-      <artifactId>commons-configuration</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-filter-event-model</artifactId>
-      <version>${platform.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-filter-event-user</artifactId>
-      <version>${platform.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-model</artifactId>
-      <version>${platform.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.contrib.dokuwiki</groupId>
-      <artifactId>dokuwiki-syntax</artifactId>
-        <version>${project.version}</version>
-    </dependency>
+        <xwiki.extension.category>filter</xwiki.extension.category>
+    </properties>
+    <repositories>
+        <repository>
+            <id>ailis-releases</id>
+            <name>Ailis Maven Releases</name>
+            <url>http://nexus.ailis.de/content/groups/public/</url>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>de.ailis.pherialize</groupId>
+            <artifactId>pherialize</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.xwiki.platform</groupId>
+            <artifactId>xwiki-platform-filter-event-model</artifactId>
+            <version>${platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xwiki.platform</groupId>
+            <artifactId>xwiki-platform-filter-event-user</artifactId>
+            <version>${platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xwiki.platform</groupId>
+            <artifactId>xwiki-platform-model</artifactId>
+            <version>${platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xwiki.contrib.dokuwiki</groupId>
+            <artifactId>dokuwiki-syntax</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-    <!-- Convert to XWiki syntax -->
-    <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-syntax-xwiki21</artifactId>
-      <version>${rendering.version}</version>
-    </dependency>
+        <!-- Convert to XWiki syntax -->
+        <dependency>
+            <groupId>org.xwiki.rendering</groupId>
+            <artifactId>xwiki-rendering-syntax-xwiki21</artifactId>
+            <version>${rendering.version}</version>
+        </dependency>
 
-    <!-- Test dependencies -->
-    <dependency>
-      <groupId>org.xwiki.commons</groupId>
-      <artifactId>xwiki-commons-filter-test</artifactId>
-      <version>${commons.version}</version>
-      <scope>test</scope>
-    </dependency>
-      <dependency>
-          <groupId>org.xwiki.commons</groupId>
-          <artifactId>xwiki-commons-filter-stream-xml</artifactId>
-          <version>${commons.version}</version>
-          <scope>test</scope>
-      </dependency>
-      <dependency>
-          <groupId>xerces</groupId>
-          <artifactId>xercesImpl</artifactId>
-      </dependency>
-  </dependencies>
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.xwiki.commons</groupId>
+            <artifactId>xwiki-commons-filter-test</artifactId>
+            <version>${commons.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xwiki.commons</groupId>
+            <artifactId>xwiki-commons-filter-stream-xml</artifactId>
+            <version>${commons.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+        </dependency>
+    </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <!-- Apply the Checkstyle configurations defined in the top level text.xml file -->
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <excludes>
-              org/xwiki/contrib/dokuwiki/text/internal/input/DokuWikiInputFilterStream.java
-          </excludes>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+    <build>
+        <plugins>
+            <plugin>
+                <!-- Apply the Checkstyle configurations defined in the top level text.xml file -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        org/xwiki/contrib/dokuwiki/text/internal/input/DokuWikiInputFilterStream.java
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -29,14 +29,14 @@ import org.xwiki.filter.input.AbstractBeanInputFilterStreamFactory;
 
 /**
  * Create DokuWiki XML format input filters.
- * 
+ *
  * @version $Id: 20ffe2c38296482590f986268a1b87f547beebae $
  */
 @Component
 @Named(DokuWikiInputProperties.FILTER_STREAM_TYPE_STRING)
 @Singleton
 public class DokuWikiInputFilterStreamFactory
-    extends AbstractBeanInputFilterStreamFactory<DokuWikiInputProperties, DokuWikiFilter>
+        extends AbstractBeanInputFilterStreamFactory<DokuWikiInputProperties, DokuWikiFilter>
 {
     /**
      * The default constructor.

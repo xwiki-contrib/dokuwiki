@@ -29,9 +29,9 @@ import org.xwiki.filter.test.integration.FilterTestSuite;
 import org.xwiki.test.annotation.AllComponents;
 
 /**
- * Run all tests found in the classpath. These {@code *.test} files must follow the conventions described in
- * {@link org.xwiki.filter.test.integration.TestDataParser}.
- * 
+ * Run all tests found in the classpath. These {@code *.test} files must follow the conventions described in {@link
+ * org.xwiki.filter.test.integration.TestDataParser}.
+ *
  * @version $Id: 581bf6e732682b62158c05eb20237d6a13043d2d $
  */
 @RunWith(FilterTestSuite.class)

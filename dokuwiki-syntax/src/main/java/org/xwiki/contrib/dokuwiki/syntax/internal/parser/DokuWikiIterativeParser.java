@@ -19,15 +19,6 @@
  */
 package org.xwiki.contrib.dokuwiki.syntax.internal.parser;
 
-import org.xwiki.rendering.listener.Format;
-import org.xwiki.rendering.listener.HeaderLevel;
-import org.xwiki.rendering.listener.Listener;
-import org.xwiki.rendering.listener.MetaData;
-import org.xwiki.rendering.listener.ListType;
-import org.xwiki.rendering.listener.reference.ResourceReference;
-import org.xwiki.rendering.listener.reference.ResourceType;
-import org.xwiki.rendering.parser.ParseException;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -37,37 +28,66 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.xwiki.rendering.listener.Format;
+import org.xwiki.rendering.listener.HeaderLevel;
+import org.xwiki.rendering.listener.ListType;
+import org.xwiki.rendering.listener.Listener;
+import org.xwiki.rendering.listener.MetaData;
+import org.xwiki.rendering.listener.reference.ResourceReference;
+import org.xwiki.rendering.listener.reference.ResourceType;
+import org.xwiki.rendering.parser.ParseException;
+
 import static java.lang.Math.abs;
 
 class DokuWikiIterativeParser
 {
     private static final String TAG_ALIGN = "align";
-    private static final String TAG_DOUBLE_CLOSING_SQUARE_BRACKETS = "]]";
-    private static final String TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS = " }}";
-    private static final String TAG_WIDTH = "width";
-    private static final String TAG_PX = "px";
-    private static final String TAG_X = "x";
-    private static final String TAG_RIGHT = "right";
-    private static final String TAG_LEFT = "left";
-    private static final String TAG_HTML = "html";
-    private static final String TAG_PHP = "php";
-    private static final String TAG_RSS_GREATER_THAN_SYMBOL = "rss>";
-    private static final String TAG_CODE = "code";
-    private static Character[] specialSymbols =
-            new Character[]{'@', '#', '$', '*', '%', '\'', '(', '!', ')', '-', '_', '^', '`', '?', ',', ';',
-                            '.', '/', ':', '=', '+', '<', '|', '>'};
 
-    void parse(Reader source, Listener listener, MetaData metaData) throws ParseException {
+    private static final String TAG_DOUBLE_CLOSING_SQUARE_BRACKETS = "]]";
+
+    private static final String TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS = " }}";
+
+    private static final String TAG_WIDTH = "width";
+
+    private static final String TAG_PX = "px";
+
+    private static final String TAG_X = "x";
+
+    private static final String TAG_RIGHT = "right";
+
+    private static final String TAG_LEFT = "left";
+
+    private static final String TAG_HTML = "html";
+
+    private static final String TAG_PHP = "php";
+
+    private static final String TAG_RSS_GREATER_THAN_SYMBOL = "rss>";
+
+    private static final String TAG_CODE = "code";
+
+    private static Character[] specialSymbols =
+            new Character[]{ '@', '#', '$', '*', '%', '\'', '(', '!', ')', '-', '_', '^', '`', '?', ',', ';',
+                    '.', '/', ':', '=', '+', '<', '|', '>' };
+
+    @Inject
+    private Logger logger;
+
+    void parse(Reader source, Listener listener, MetaData metaData) throws ParseException
+    {
         try {
             listener.beginDocument(metaData);
             parseRecursive(source, listener);
             listener.endDocument(metaData);
         } catch (IOException e) {
-            e.printStackTrace();
+            this.logger.error("Failed parsing the input", e);
         }
     }
 
-    private void parseRecursive(Reader source, Listener listener) throws IOException {
+    private void parseRecursive(Reader source, Listener listener) throws IOException
+    {
         ArrayList<Character> buffer = new ArrayList<>();
         boolean inParagraph = false;
         boolean addNewParagraph = false;
@@ -109,13 +129,13 @@ class DokuWikiIterativeParser
                 continue;
             }
 
-
             if (!(buffer.size() > 0 && (buffer.get(buffer.size() - 1) == '-' || buffer.get(buffer.size() - 1) == '>'
                     || (buffer.contains('<') && !buffer.contains('@'))
                     || buffer.get(buffer.size() - 1) == ' ' || buffer.get(buffer.size() - 1) == '*'
                     || buffer.get(buffer.size() - 1) == '=' || buffer.get(buffer.size() - 1) == '<'
                     || buffer.get(buffer.size() - 1) == '^' || !listEnded || inQuotation
-                    || inSectionEvent || horizontalLineAdded))) {
+                    || inSectionEvent || horizontalLineAdded)))
+            {
                 if (!inParagraph) {
                     if (listSpaceidentation > -1 || quotationIdentation > -1) {
                         while (listSpaceidentation >= 0) {
@@ -200,13 +220,13 @@ class DokuWikiIterativeParser
                     continue;
                 }
                 if (buffer.size() >= 2 && buffer.get(buffer.size() - 1) == '*'
-                        && buffer.get(buffer.size() - 2) == '*') {
+                        && buffer.get(buffer.size() - 2) == '*')
+                {
                     //bold formatting parser
                     processWords(2, buffer, listener);
                     if (!boldOpen) {
                         listener.beginFormat(Format.BOLD, Listener.EMPTY_PARAMETERS);
                         boldOpen = true;
-
                     } else {
                         listener.endFormat(Format.BOLD, Listener.EMPTY_PARAMETERS);
                         boldOpen = false;
@@ -214,7 +234,8 @@ class DokuWikiIterativeParser
                     continue;
                 }
                 if (buffer.size() >= 2 && buffer.get(buffer.size() - 1) == '('
-                        && buffer.get(buffer.size() - 2) == '(') {
+                        && buffer.get(buffer.size() - 2) == '(')
+                {
                     //beginning of footnote
                     processWords(2, buffer, listener);
                     continue;
@@ -229,7 +250,8 @@ class DokuWikiIterativeParser
                 }
 
                 if (buffer.size() >= 2 && buffer.get(buffer.size() - 1) == ' '
-                        && buffer.get(buffer.size() - 2) == '>') {
+                        && buffer.get(buffer.size() - 2) == '>')
+                {
                     //process quotation.
                     if (buffer.size() - 2 > quotationIdentation) {
                         while (quotationIdentation < buffer.size() - 2) {
@@ -254,7 +276,8 @@ class DokuWikiIterativeParser
                     continue;
                 }
                 if (buffer.size() >= 2 && buffer.get(buffer.size() - 1) == ' '
-                        && buffer.get(buffer.size() - 2) == '*') {
+                        && buffer.get(buffer.size() - 2) == '*')
+                {
                     buffer.subList(buffer.size() - 2, buffer.size()).clear();
                     boolean isUnorederedList = true;
                     for (Character c : buffer) {
@@ -293,7 +316,8 @@ class DokuWikiIterativeParser
                 }
 
                 if (buffer.size() >= 2 && buffer.get(buffer.size() - 1) == ' '
-                        && buffer.get(buffer.size() - 2) == '-') {
+                        && buffer.get(buffer.size() - 2) == '-')
+                {
                     //Ordered list
                     buffer.subList(buffer.size() - 2, buffer.size()).clear();
                     boolean isOrederedList = true;
@@ -342,7 +366,8 @@ class DokuWikiIterativeParser
                 }
 
                 if (buffer.size() >= 2 && buffer.get(buffer.size() - 1) == '/'
-                        && buffer.get(buffer.size() - 2) == '/') {
+                        && buffer.get(buffer.size() - 2) == '/')
+                {
                     //Italics format parser close
                     if (italicOpen) {
                         //generate italic close event
@@ -354,7 +379,8 @@ class DokuWikiIterativeParser
                 }
 
                 if (getStringRepresentation(buffer).endsWith(" __")
-                        || getStringRepresentation(buffer).equals("__")) {
+                        || getStringRepresentation(buffer).equals("__"))
+                {
                     //Underline open
                     if (!underlineOpen) {
                         processWords(2, buffer, listener);
@@ -365,7 +391,8 @@ class DokuWikiIterativeParser
                 }
 
                 if (buffer.size() >= 2 && buffer.get(buffer.size() - 1) == '_'
-                        && buffer.get(buffer.size() - 2) == '_') {
+                        && buffer.get(buffer.size() - 2) == '_')
+                {
                     //underline close
                     if (underlineOpen) {
                         processWords(2, buffer, listener);
@@ -376,7 +403,8 @@ class DokuWikiIterativeParser
                 }
 
                 if (getStringRepresentation(buffer).endsWith(" \'\'")
-                        || getStringRepresentation(buffer).equals("\'\'")) {
+                        || getStringRepresentation(buffer).equals("\'\'"))
+                {
                     //monospace open
                     if (!monospaceOpen) {
                         processWords(2, buffer, listener);
@@ -387,7 +415,8 @@ class DokuWikiIterativeParser
                 }
 
                 if (buffer.size() >= 2 && buffer.get(buffer.size() - 1) == '\''
-                        && buffer.get(buffer.size() - 2) == '\'') {
+                        && buffer.get(buffer.size() - 2) == '\'')
+                {
                     //monospace close
                     if (monospaceOpen) {
                         processWords(2, buffer, listener);
@@ -502,7 +531,7 @@ class DokuWikiIterativeParser
                     buffer.add('<');
                 }
                 boolean inNoWikiTag = true;
-                char[] noWikiTag = new char[]{'n', 'o', 'w', 'i', 'k', 'i', '>'};
+                char[] noWikiTag = new char[]{ 'n', 'o', 'w', 'i', 'k', 'i', '>' };
                 for (int i = 0; source.ready() && i < 7; i++) {
                     buffer.add((char) source.read());
                     if (noWikiTag[i] != buffer.get(buffer.size() - 1)) {
@@ -541,7 +570,8 @@ class DokuWikiIterativeParser
             }
 
             if (getStringRepresentation(buffer).startsWith("<") && getStringRepresentation(buffer).endsWith(">")
-                    && getStringRepresentation(buffer).contains("@")) {
+                    && getStringRepresentation(buffer).contains("@"))
+            {
                 //email address
                 processEmailAddressFromBuffer(buffer, listener);
                 continue;
@@ -661,7 +691,8 @@ class DokuWikiIterativeParser
             if (getStringRepresentation(buffer).endsWith("<code ")
                     || getStringRepresentation(buffer).endsWith("<code>")
                     || getStringRepresentation(buffer).endsWith("<file ")
-                    || getStringRepresentation(buffer).endsWith("<file>")) {
+                    || getStringRepresentation(buffer).endsWith("<file>"))
+            {
                 //handle code block
                 String language;
                 int c;
@@ -691,7 +722,8 @@ class DokuWikiIterativeParser
                     }
 
                     if (getStringRepresentation(buffer).endsWith("</code>")
-                            || getStringRepresentation(buffer).endsWith("</file>")) {
+                            || getStringRepresentation(buffer).endsWith("</file>"))
+                    {
                         if (buffer.contains('\n')) {
                             buffer.subList(buffer.size() - 8, buffer.size()).clear();
                         } else {
@@ -710,7 +742,6 @@ class DokuWikiIterativeParser
                 }
                 continue;
             }
-
 
             if (getStringRepresentation(buffer).endsWith("<sub>")) {
                 //generate subscript open event
@@ -765,7 +796,8 @@ class DokuWikiIterativeParser
         }
     }
 
-    private void processWords(int argumentTrimSize, ArrayList<Character> buffer, Listener listener) {
+    private void processWords(int argumentTrimSize, ArrayList<Character> buffer, Listener listener)
+    {
         buffer.subList(buffer.size() - argumentTrimSize, buffer.size()).clear();
         StringBuilder word = new StringBuilder();
         boolean spaceAdded = false;
@@ -789,7 +821,8 @@ class DokuWikiIterativeParser
         buffer.clear();
     }
 
-    private void processWord(StringBuilder word, Listener listener) {
+    private void processWord(StringBuilder word, Listener listener)
+    {
         if (Arrays.asList(specialSymbols).contains(word.charAt(0)) && word.length() == 1) {
             //check if special symbol
             listener.onSpecialSymbol(word.charAt(0));
@@ -804,7 +837,8 @@ class DokuWikiIterativeParser
         word.setLength(0);
     }
 
-    private void processWordsFromReader(Reader source, Listener listener, String endString) throws IOException {
+    private void processWordsFromReader(Reader source, Listener listener, String endString) throws IOException
+    {
         ArrayList<Character> buffer = new ArrayList<>();
         int c = source.read();
         while (source.ready() && c != -1) {
@@ -822,7 +856,8 @@ class DokuWikiIterativeParser
 
     private void processImage(
             ArrayList<Character> buffer, Reader source, Listener listener)
-            throws IOException {
+            throws IOException
+    {
         int c = source.read();
         while (source.ready() && c != -1) {
             buffer.add((char) c);
@@ -838,7 +873,8 @@ class DokuWikiIterativeParser
                     internalImage = false;
                 }
                 if (imageArgument.startsWith("{{ ")
-                        && imageArgument.endsWith(TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS)) {
+                        && imageArgument.endsWith(TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS))
+                {
                     //align centre
                     param.put(TAG_ALIGN, "middle");
                 } else if (imageArgument.startsWith(" ")) {
@@ -850,7 +886,6 @@ class DokuWikiIterativeParser
                 }
                 if (internalImage) {
                     imageName = imageArgument.substring(5, imageArgument.length() - 2);
-
                 } else {
                     imageName = imageArgument.substring(1, imageArgument.length() - 2);
                 }
@@ -883,7 +918,8 @@ class DokuWikiIterativeParser
         }
     }
 
-    private void processLink(Reader source, Listener listener) throws IOException {
+    private void processLink(Reader source, Listener listener) throws IOException
+    {
         int c;
         ArrayList<Character> functionBuffer = new ArrayList<>();
         c = source.read();
@@ -894,7 +930,8 @@ class DokuWikiIterativeParser
             if ((char) c == '|') {
                 ResourceReference reference;
                 if (functionBuffer.get(0) == '<' && functionBuffer.get(functionBuffer.size() - 2) == '>'
-                        && functionBuffer.contains('@')) {
+                        && functionBuffer.contains('@'))
+                {
                     //process mailto
                     reference = new ResourceReference(getStringRepresentation(
                             new ArrayList<>(functionBuffer
@@ -922,7 +959,8 @@ class DokuWikiIterativeParser
         }
     }
 
-    private void processTableCell(boolean inCell, boolean inHeadCell, ArrayList<Character> buffer, Listener listener) {
+    private void processTableCell(boolean inCell, boolean inHeadCell, ArrayList<Character> buffer, Listener listener)
+    {
         //call the cell events
         buffer.remove(buffer.size() - 1);
         Map<String, String> param = new HashMap<>();
@@ -947,7 +985,8 @@ class DokuWikiIterativeParser
         }
     }
 
-    private void processEmailAddressFromBuffer(ArrayList<Character> buffer, Listener listener) {
+    private void processEmailAddressFromBuffer(ArrayList<Character> buffer, Listener listener)
+    {
         buffer.remove(0);
         buffer.remove(buffer.size() - 1);
         ResourceReference reference = new ResourceReference(getStringRepresentation(buffer), ResourceType.MAILTO);
@@ -957,7 +996,8 @@ class DokuWikiIterativeParser
     }
 
     //generic helper methods
-    private String getStringRepresentation(ArrayList<Character> list) {
+    private String getStringRepresentation(ArrayList<Character> list)
+    {
         StringBuilder builder = new StringBuilder(list.size());
         for (Character ch : list) {
             builder.append(ch);
@@ -965,14 +1005,16 @@ class DokuWikiIterativeParser
         return builder.toString();
     }
 
-    private boolean checkURL(String string) {
+    private boolean checkURL(String string)
+    {
         String urlRegex = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
         Pattern p = Pattern.compile(urlRegex);
         Matcher m = p.matcher(string);
         return m.find();
     }
 
-    private void trimBuffer(ArrayList<Character> buffer) {
+    private void trimBuffer(ArrayList<Character> buffer)
+    {
         while (buffer.size() > 0 && buffer.get(0) == ' ') {
             buffer.remove(0);
         }

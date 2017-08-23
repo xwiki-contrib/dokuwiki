@@ -28,23 +28,24 @@ import org.xwiki.properties.annotation.PropertyName;
 
 /**
  * DokuWiki Syntax input properties.
- * 
+ *
  * @version $Id: 408d9389abed98e4ab2fa6f528557e5d2c032b24 $
  */
 public class DokuWikiSyntaxInputProperties extends DefaultFilterStreamProperties
 {
     /**
      * The way link/image references should be understood.
-     * 
+     *
      * @version $Id$
      */
-
     /**
      * The DokuWiki Syntax format as String.
      */
     public static final String FILTER_STREAM_TYPE_STRING = "dokuwiki+text";
+
     // locally defined until updated in the framework
     private static final SystemType DOKUWIKI = new SystemType("dokuwiki");
+
     /**
      * @see #getSource()
      */

@@ -20,41 +20,42 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.xwiki.contrib</groupId>
-    <artifactId>parent-platform</artifactId>
-    <version>8.4-7</version>
-  </parent>
-  <groupId>org.xwiki.contrib.dokuwiki</groupId>
-  <artifactId>dokuwiki</artifactId>
-  <version>1.0-milestone-3-SNAPSHOT</version>
-  <name>DokuWiki - Parent POM</name>
-  <description>Parent POM for DokuWiki modules</description>
-  <packaging>pom</packaging>
-  <properties>
-    <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
-    <xwiki.issueManagement.jira.id>DOKUWIKI</xwiki.issueManagement.jira.id>
-  </properties>
-  <scm>
-    <connection>scm:git:git://github.com/xwiki-contrib/dokuwiki.git</connection>
-    <developerConnection>scm:git:git@github.com:xwiki-contrib/dokuwiki.git</developerConnection>
-    <url>https://github.com/xwiki-contrib/dokuwiki/tree/master</url>
-    <tag>HEAD</tag>
-  </scm>
-  <developers>
-    <developer>
-      <id>tmortagne</id>
-      <name>Thomas Mortagne</name>
-    </developer>
-    <developer>
-      <id>slayerjain</id>
-      <name>Shubham Jain</name>
-    </developer>
-  </developers>
-  <modules>
-    <module>dokuwiki-text</module>
-    <module>dokuwiki-syntax</module>
-  </modules>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.xwiki.contrib</groupId>
+        <artifactId>parent-platform</artifactId>
+        <version>8.4-7</version>
+    </parent>
+    <groupId>org.xwiki.contrib.dokuwiki</groupId>
+    <artifactId>dokuwiki</artifactId>
+    <version>1.0-milestone-3-SNAPSHOT</version>
+    <name>DokuWiki - Parent POM</name>
+    <description>Parent POM for DokuWiki modules</description>
+    <packaging>pom</packaging>
+    <properties>
+        <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
+        <xwiki.issueManagement.jira.id>DOKUWIKI</xwiki.issueManagement.jira.id>
+    </properties>
+    <scm>
+        <connection>scm:git:git://github.com/xwiki-contrib/dokuwiki.git</connection>
+        <developerConnection>scm:git:git@github.com:xwiki-contrib/dokuwiki.git</developerConnection>
+        <url>https://github.com/xwiki-contrib/dokuwiki/tree/master</url>
+        <tag>HEAD</tag>
+    </scm>
+    <developers>
+        <developer>
+            <id>tmortagne</id>
+            <name>Thomas Mortagne</name>
+        </developer>
+        <developer>
+            <id>slayerjain</id>
+            <name>Shubham Jain</name>
+        </developer>
+    </developers>
+    <modules>
+        <module>dokuwiki-text</module>
+        <module>dokuwiki-syntax</module>
+    </modules>
 </project>

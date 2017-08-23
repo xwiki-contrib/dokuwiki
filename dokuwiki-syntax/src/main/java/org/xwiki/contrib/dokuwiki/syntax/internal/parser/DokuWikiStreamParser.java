@@ -20,6 +20,7 @@
 package org.xwiki.contrib.dokuwiki.syntax.internal.parser;
 
 import java.io.Reader;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -45,6 +46,7 @@ public class DokuWikiStreamParser implements StreamParser
      * The syntax type.
      */
     private static final String TAG_DOKUWIKI = "dokuwiki";
+
     private static final SyntaxType SYNTAX_TYPE = new SyntaxType(TAG_DOKUWIKI, TAG_DOKUWIKI);
 
     /**
@@ -58,12 +60,14 @@ public class DokuWikiStreamParser implements StreamParser
     static final Syntax SYNTAX = new Syntax(SYNTAX_TYPE, "1.0");
 
     @Override
-    public Syntax getSyntax() {
+    public Syntax getSyntax()
+    {
         return SYNTAX;
     }
 
     @Override
-    public void parse(Reader source, Listener listener) throws ParseException {
+    public void parse(Reader source, Listener listener) throws ParseException
+    {
         DokuWikiIterativeParser parser = new DokuWikiIterativeParser();
         MetaData metaData = new MetaData();
         metaData.addMetaData("syntax", SYNTAX);

@@ -35,12 +35,12 @@ import org.xwiki.rendering.listener.Listener;
 
 /**
  * All events supported by DokuWiki module.
- * 
+ *
  * @version $Id: 4da6f0cd1681b8a25952e7705a1b4c78c6497bff $
  */
 public interface DokuWikiFilter
-    extends WikiFarmFilter, WikiFilter, WikiSpaceFilter, WikiDocumentFilter, WikiAttachmentFilter, WikiClassFilter,
-    WikiClassPropertyFilter, WikiObjectFilter, WikiObjectPropertyFilter, GroupFilter,
+        extends WikiFarmFilter, WikiFilter, WikiSpaceFilter, WikiDocumentFilter, WikiAttachmentFilter, WikiClassFilter,
+        WikiClassPropertyFilter, WikiObjectFilter, WikiObjectPropertyFilter, GroupFilter,
         Listener, UnknownFilter, UserFilter
 {
 }

@@ -29,7 +29,7 @@ import org.xwiki.properties.annotation.PropertyName;
 
 /**
  * DokuWiki TEXT input properties.
- * 
+ *
  * @version $Id: 408d9389abed98e4ab2fa6f528557e5d2c032b24 $
  */
 public class DokuWikiInputProperties extends DefaultFilterStreamProperties
@@ -47,11 +47,9 @@ public class DokuWikiInputProperties extends DefaultFilterStreamProperties
 
     private static final String DATA_TEXT = "text";
 
-
     /**
      * The TexT Filter type for Dokuwiki.
      */
-
     public static final FilterStreamType FILTER_STREAM_TYPE = new FilterStreamType(DOKUWIKI, DATA_TEXT);
 
     /**
@@ -65,14 +63,16 @@ public class DokuWikiInputProperties extends DefaultFilterStreamProperties
     @PropertyName("Source")
     @PropertyDescription("The source to load the wiki from")
     @PropertyMandatory
-    public InputSource getSource() {
+    public InputSource getSource()
+    {
         return this.source;
     }
 
     /**
      * @param source is set by the Extension manager or test suite, pointing to the Dokuwiki's Data folder.
      */
-    public void setSource(InputSource source) {
+    public void setSource(InputSource source)
+    {
         this.source = source;
     }
 }
