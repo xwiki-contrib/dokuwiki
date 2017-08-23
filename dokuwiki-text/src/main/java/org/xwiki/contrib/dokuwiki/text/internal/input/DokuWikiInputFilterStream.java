@@ -54,9 +54,7 @@ import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.zip.GZIPInputStream;
 
@@ -228,7 +226,9 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
     private void readDocument(File directory, String dokuwikiDataDirectory, DokuWikiFilter proxyFilter) throws FilterException, IOException {
         File[] directoryFiles = directory.listFiles();
-        if (directory != null) {
+        //Maintain order across file systems
+        if (directoryFiles != null) {
+            Arrays.sort(directoryFiles);
             for (File file : directoryFiles) {
                 if (file.isDirectory()) {
                     proxyFilter.beginWikiSpace(file.getName(), FilterEventParameters.EMPTY);
@@ -296,6 +296,8 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             }
         });
         if (revisionFiles != null) {
+            //Maintain the order of files
+            Arrays.sort(revisionFiles);
             for (File revisionFile : revisionFiles) {
                 String revision = revisionFile.getName().replace(fileName + ".", "")
                         .replace(".txt.gz", "");
