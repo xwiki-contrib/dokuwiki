@@ -42,7 +42,10 @@ import org.xwiki.filter.input.AbstractBeanInputFilterStream;
 import org.xwiki.filter.input.FileInputSource;
 import org.xwiki.filter.input.InputSource;
 import org.xwiki.filter.input.InputStreamInputSource;
+import org.xwiki.rendering.block.XDOM;
+import org.xwiki.rendering.listener.WrappingListener;
 import org.xwiki.rendering.parser.ParseException;
+import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.parser.StreamParser;
 import org.xwiki.rendering.renderer.PrintRenderer;
 import org.xwiki.rendering.renderer.PrintRendererFactory;
@@ -76,7 +79,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
     @Inject
     @Named(org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiStreamParser.SYNTAX_STRING)
-    private StreamParser dokuWikiStreamParser;
+    private StreamParser dokuWikiParser;
 
     @Override
     protected void read(Object filter, DokuWikiFilter proxyFilter) throws FilterException {
@@ -250,22 +253,24 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                     MixedArray documentMetadata = Pherialize.unserialize(metadataFileContents).toArray();
                     readDocumentParametersFromMetadata(documentMetadata, documentLocaleParameters);
 
-                    //Wiki Document Locale
-                    proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
-
                     //Wiki document revision
 
                     if ((documentMetadata.getArray("current").getArray("date").containsKey("created")
                             && documentMetadata.getArray("current").getArray("date").containsKey("modified"))
                             && documentMetadata.getArray("current").getArray("date").getLong("created")
                             < documentMetadata.getArray("current").getArray("date").getLong("modified")) {
-                        //read attachments
+                        //Wiki Document Locale
+                        proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
                         //read revisions
                         readPageRevision(file, dokuwikiDataDirectory, proxyFilter);
                     } else {
+
                         String pageContents = FileUtils.readFileToString(file, "UTF-8");
+                        String convertedContent = parseContent(pageContents);
+                        documentLocaleParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertedContent);
+                        //Wiki Document Locale
+                        proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
                         readAttachments(pageContents, file, dokuwikiDataDirectory, proxyFilter);
-                        parseContent(pageContents);
                     }
 
                     proxyFilter.endWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
@@ -295,11 +300,14 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                 String revision = revisionFile.getName().replace(fileName + ".", "")
                         .replace(".txt.gz", "");
                 try {
-                    proxyFilter.beginWikiDocumentRevision(revision, FilterEventParameters.EMPTY);
+
                     String documentContent = extractGZip(revisionFile);
+                    String convertedContent = parseContent(documentContent);
+                    FilterEventParameters revisionParameters = new FilterEventParameters();
+                    revisionParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertedContent);
+                    proxyFilter.beginWikiDocumentRevision(revision, revisionParameters);
                     readAttachments(documentContent, revisionFile, dokuwikiDataDirectory, proxyFilter);
-                    parseContent(documentContent);
-                    proxyFilter.endWikiDocumentRevision(revision, FilterEventParameters.EMPTY);
+                    proxyFilter.endWikiDocumentRevision(revision, revisionParameters);
                 } catch (FilterException | IOException e) {
                     e.printStackTrace();
                 }
@@ -307,15 +315,18 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         }
     }
 
-    private void parseContent(String pageContents) {
+    private String parseContent(String pageContents) {
+        String content = "";
         try {
             //parse pageContent
             DefaultWikiPrinter printer = new DefaultWikiPrinter();
             PrintRenderer renderer = this.xwiki21Factory.createRenderer(printer);
-            dokuWikiStreamParser.parse(new StringReader(pageContents), renderer);
+            dokuWikiParser.parse(new StringReader(pageContents), renderer);
+            content = renderer.getPrinter().toString();
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        return content;
     }
 
     private void readAttachments(String content, File document, String dokuwikiDataDirectory, DokuWikiFilter proxyFilter) {

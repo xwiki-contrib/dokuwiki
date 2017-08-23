@@ -68,6 +68,5 @@ public class DokuWikiStreamParser implements StreamParser
         MetaData metaData = new MetaData();
         metaData.addMetaData("syntax", SYNTAX);
         parser.parse(source, listener, metaData);
-
     }
 }
