@@ -531,13 +531,13 @@ DokuWiki's syntax can be extended by [[doku>plugins|Plugins]]. How the installed
 .#-----------------------------------------------------
 beginDocument
 beginSection
-beginHeader [5, ]
+beginHeader [1, ]
 onSpace
 onWord [Formatting]
 onSpace
 onWord [Syntax]
 onSpace
-endHeader [5, ]
+endHeader [1, ]
 endSection
 beginParagraph
 beginLink [Typed = [false] Type = [url] Reference = [doku>DokuWiki]] [false]
@@ -679,7 +679,7 @@ onSpace
 onWord [too.]
 endParagraph
 beginSection
-beginHeader [4, ]
+beginHeader [2, ]
 onSpace
 onWord [Basic]
 onSpace
@@ -687,7 +687,7 @@ onWord [Text]
 onSpace
 onWord [Formatting]
 onSpace
-endHeader [4, ]
+endHeader [2, ]
 endSection
 beginParagraph
 onWord [DokuWiki]
@@ -930,11 +930,11 @@ onSpace
 onWord [needed.]
 endParagraph
 beginSection
-beginHeader [4, ]
+beginHeader [2, ]
 onSpace
 onWord [Links]
 onSpace
-endHeader [4, ]
+endHeader [2, ]
 endSection
 beginParagraph
 onWord [DokuWiki]
@@ -1503,11 +1503,11 @@ onSpace
 onWord [links).]
 endParagraph
 beginSection
-beginHeader [4, ]
+beginHeader [2, ]
 onSpace
 onWord [Footnotes]
 onSpace
-endHeader [4, ]
+endHeader [2, ]
 endSection
 beginParagraph
 onWord [You]
@@ -1531,11 +1531,11 @@ endParagraph
 onMacroStandalone [code] [] [You can add footnotes ((This is a footnote)) by using double parentheses.]
 beginParagraph
 beginSection
-beginHeader [4, ]
+beginHeader [2, ]
 onSpace
 onWord [Sectioning]
 onSpace
-endHeader [4, ]
+endHeader [2, ]
 endSection
 endParagraph
 beginParagraph
@@ -1635,7 +1635,7 @@ onSpace
 endHeader [3, ]
 endSection
 beginSection
-beginHeader [2, ]
+beginHeader [4, ]
 onSpace
 onWord [Headline]
 onSpace
@@ -1643,10 +1643,10 @@ onWord [Level]
 onSpace
 onWord [4]
 onSpace
-endHeader [2, ]
+endHeader [4, ]
 endSection
 beginSection
-beginHeader [1, ]
+beginHeader [5, ]
 onSpace
 onWord [Headline]
 onSpace
@@ -1654,7 +1654,7 @@ onWord [Level]
 onSpace
 onWord [5]
 onSpace
-endHeader [1, ]
+endHeader [5, ]
 endSection
 beginParagraph
 onMacroStandalone [code] [] [==== Headline Level 3 ====]
@@ -1690,13 +1690,13 @@ onHorizontalLine
 beginParagraph
 endParagraph
 beginSection
-beginHeader [4, ]
+beginHeader [2, ]
 onSpace
 onWord [Media]
 onSpace
 onWord [Files]
 onSpace
-endHeader [4, ]
+endHeader [2, ]
 endSection
 beginParagraph
 onWord [You]
@@ -2298,11 +2298,11 @@ onSpace
 onWord [work.]
 endParagraph
 beginSection
-beginHeader [4, ]
+beginHeader [2, ]
 onSpace
 onWord [Lists]
 onSpace
-endHeader [4, ]
+endHeader [2, ]
 endSection
 beginParagraph
 onWord [Dokuwiki]
@@ -2414,13 +2414,13 @@ endLink [Typed = [false] Type = [url] Reference = [doku>faq:lists]] [false]
 onSpecialSymbol [.]
 endParagraph
 beginSection
-beginHeader [4, ]
+beginHeader [2, ]
 onSpace
 onWord [Text]
 onSpace
 onWord [Conversions]
 onSpace
-endHeader [4, ]
+endHeader [2, ]
 endSection
 beginParagraph
 onWord [DokuWiki]
@@ -2844,11 +2844,11 @@ endLink [Typed = [false] Type = [url] Reference = [doku>config:typography]] [fal
 onSpecialSymbol [.]
 endParagraph
 beginSection
-beginHeader [4, ]
+beginHeader [2, ]
 onSpace
 onWord [Quoting]
 onSpace
-endHeader [4, ]
+endHeader [2, ]
 endSection
 beginParagraph
 onWord [Some]
@@ -2978,11 +2978,11 @@ endQuotation
 endQuotationLine
 endQuotation
 beginSection
-beginHeader [4, ]
+beginHeader [2, ]
 onSpace
 onWord [Tables]
 onSpace
-endHeader [4, ]
+endHeader [2, ]
 endSection
 beginParagraph
 endParagraph
@@ -3706,13 +3706,13 @@ onSpace
 onWord [supported.]
 endParagraph
 beginSection
-beginHeader [4, ]
+beginHeader [2, ]
 onSpace
 onWord [No]
 onSpace
 onWord [Formatting]
 onSpace
-endHeader [4, ]
+endHeader [2, ]
 endSection
 beginFormat [MONOSPACE]
 onWord [If]
@@ -3801,13 +3801,13 @@ onMacroStandalone [code] [] [</nowiki>]
 onMacroStandalone [code] [] [The same is true for %%//__this__ text// with a smiley ;-)%%.]
 beginParagraph
 beginSection
-beginHeader [4, ]
+beginHeader [2, ]
 onSpace
 onWord [Code]
 onSpace
 onWord [Blocks]
 onSpace
-endHeader [4, ]
+endHeader [2, ]
 endSection
 endParagraph
 beginFormat [MONOSPACE]
@@ -4622,7 +4622,7 @@ endFormat [MONOSPACE]
 onSpecialSymbol [.]
 endParagraph
 beginSection
-beginHeader [4, ]
+beginHeader [2, ]
 onSpace
 onWord [Embedding]
 onSpace
@@ -4632,7 +4632,7 @@ onWord [and]
 onSpace
 onWord [PHP]
 onSpace
-endHeader [4, ]
+endHeader [2, ]
 endSection
 beginParagraph
 onWord [You]
@@ -4798,7 +4798,7 @@ onSpace
 onWord [executed.]
 endParagraph
 beginSection
-beginHeader [4, ]
+beginHeader [2, ]
 onSpace
 onWord [RSS/ATOM]
 onSpace
@@ -4806,7 +4806,7 @@ onWord [Feed]
 onSpace
 onWord [Aggregation]
 onSpace
-endHeader [4, ]
+endHeader [2, ]
 endSection
 beginParagraph
 beginLink [Typed = [false] Type = [url] Reference = [DokuWiki]] [false]
@@ -5273,13 +5273,13 @@ beginParagraph
 onMacroInline [rss] [feed=http://slashdot.org/index.rss|count=8]
 endParagraph
 beginSection
-beginHeader [4, ]
+beginHeader [2, ]
 onSpace
 onWord [Control]
 onSpace
 onWord [Macros]
 onSpace
-endHeader [4, ]
+endHeader [2, ]
 endSection
 beginParagraph
 onWord [Some]
@@ -5441,13 +5441,13 @@ endTableCell [[align]=[centre]]
 endTableRow
 endTable
 beginSection
-beginHeader [4, ]
+beginHeader [2, ]
 onSpace
 onWord [Syntax]
 onSpace
 onWord [Plugins]
 onSpace
-endHeader [4, ]
+endHeader [2, ]
 endSection
 beginParagraph
 onWord [DokuWiki's]

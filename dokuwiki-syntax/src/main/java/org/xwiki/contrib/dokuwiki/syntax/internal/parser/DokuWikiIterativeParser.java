@@ -176,12 +176,17 @@ class DokuWikiIterativeParser
                         inSectionEvent = true;
                         buffer.clear();
                     } else if (inSectionEvent) {
+                        int headerLevelAdjusted = headerLevel;
                         listener.beginSection(Listener.EMPTY_PARAMETERS);
+                        //Above 5 isn't supported.
+                        if (headerLevelAdjusted > 5 ) {
+                             headerLevelAdjusted = 5;
+                        }
                         //Dokuwiki doesn't use ids in headers
-                        listener.beginHeader(HeaderLevel.parseInt(abs(7 - headerLevel)), "",
+                        listener.beginHeader(HeaderLevel.parseInt(abs(6 - headerLevelAdjusted)), "",
                                 Listener.EMPTY_PARAMETERS);
                         processWords(2, buffer, listener);
-                        listener.endHeader(HeaderLevel.parseInt(headerLevel), "", Listener.EMPTY_PARAMETERS);
+                        listener.endHeader(HeaderLevel.parseInt(abs(6 - headerLevelAdjusted)), "", Listener.EMPTY_PARAMETERS);
                         listener.endSection(Listener.EMPTY_PARAMETERS);
                         while (source.ready() && headerLevel > 1) {
                             source.read();

@@ -1,6 +1,8 @@
+.streaming
 .#-----------------------------------------------------
 .input|dokuwiki/1.0
 .#-----------------------------------------------------
+======= Headline Level 1 =======
 ==== Headline Level 3 ====
 === Headline Level 4 ===
 == Headline Level 5 ==
@@ -8,6 +10,17 @@
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
+beginSection
+beginHeader [1, ]
+onSpace
+onWord [Headline]
+onSpace
+onWord [Level]
+onSpace
+onWord [1]
+onSpace
+endHeader [1, ]
+endSection
 beginSection
 beginHeader [3, ]
 onSpace
@@ -20,7 +33,7 @@ onSpace
 endHeader [3, ]
 endSection
 beginSection
-beginHeader [2, ]
+beginHeader [4, ]
 onSpace
 onWord [Headline]
 onSpace
@@ -28,10 +41,10 @@ onWord [Level]
 onSpace
 onWord [4]
 onSpace
-endHeader [2, ]
+endHeader [4, ]
 endSection
 beginSection
-beginHeader [1, ]
+beginHeader [5, ]
 onSpace
 onWord [Headline]
 onSpace
@@ -39,6 +52,16 @@ onWord [Level]
 onSpace
 onWord [5]
 onSpace
-endHeader [1, ]
+endHeader [5, ]
 endSection
 endDocument
+.#-----------------------------------------------------
+.expect|xwiki/2.1
+.#-----------------------------------------------------
+=  Headline Level 1  =
+
+===  Headline Level 3  ===
+
+====  Headline Level 4  ====
+
+=====  Headline Level 5  =====

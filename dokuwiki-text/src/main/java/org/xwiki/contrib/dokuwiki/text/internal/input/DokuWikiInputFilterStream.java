@@ -183,7 +183,6 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         }
         dokuwikiDirectory.delete();
         dokuwikiDirectory.mkdir();
-        dokuwikiDirectory.deleteOnExit();
 
         //Dokuwiki's data directory
         File dokuwikiDataDirectory = new File(dokuwikiDirectory, "data");
@@ -218,6 +217,12 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             this.logger.error("couldn't read document", e);
         }
         proxyFilter.endWikiSpace(KEY_MAIN_SPACE, FilterEventParameters.EMPTY);
+
+        try {
+            FileUtils.deleteDirectory(dokuwikiDirectory);
+        } catch (IOException e) {
+            this.logger.error("Could not delete dokuwiki folder after completion", e);
+        }
     }
 
     private void readUsers(File userInformation, DokuWikiFilter proxyFilter) throws FilterException
