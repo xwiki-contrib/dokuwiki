@@ -20,10 +20,8 @@
 package org.xwiki.contrib.dokuwiki.text.internal.input;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,11 +76,11 @@ import de.ailis.pherialize.Pherialize;
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
 public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<DokuWikiInputProperties, DokuWikiFilter>
 {
-    private static final String TAG_PAGES = "pages";
+    private static final String KEY_PAGES_DIRECTORY = "pages";
 
-    private static final String TAG_MAIN_SPACE = "Main";
+    private static final String KEY_MAIN_SPACE = "Main";
 
-    private static final String TAG_TEXT_FILE_FORMAT = ".txt";
+    private static final String KEY_TEXT_FILE_FORMAT = ".txt";
 
     @Inject
     @Named("xwiki/2.1")
@@ -107,12 +105,14 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                 ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
                         .createArchiveInputStream(new BufferedInputStream(input));
                 readDataStream(archiveInputStream, filter, proxyFilter);
+                input.close();
             } catch (Exception e1) {
                 try {
                     ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
                             .createArchiveInputStream(new BufferedInputStream(
                                     ((InputStreamInputSource) inputSource).getInputStream()));
                     readDataStream(archiveInputStream, filter, proxyFilter);
+                    archiveInputStream.close();
                 } catch (IOException | ArchiveException e2) {
                     this.logger.error("Failed to read/unarchive or unknown format from file input type", e1, e2);
                 }
@@ -124,6 +124,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                 ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
                         .createArchiveInputStream(new BufferedInputStream(input));
                 readDataStream(archiveInputStream, filter, proxyFilter);
+                input.close();
             } catch (Exception e1) {
                 try {
                     ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
@@ -131,6 +132,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                                     new BufferedInputStream((InputStream) ((InputStreamInputSource) inputSource)
                                             .getInputStream()));
                     readDataStream(archiveInputStream, filter, proxyFilter);
+                    archiveInputStream.close();
                 } catch (IOException | ArchiveException e2) {
                     this.logger.error("Failed to read/unarchive or unknown format from stream input", e1, e2);
                 }
@@ -146,12 +148,11 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     {
 
         ArchiveEntry archiveEntry = null;
+        File tempFolder = FileUtils.getTempDirectory();
         //dokuwiki directory
-        File dokuwikiDirectory = new File(
-                FileUtils.getUserDirectoryPath() + System.getProperty("file.separator") + "dokuwiki");
+        File dokuwikiDirectory = new File(tempFolder, "dokuwiki");
         //Dokuwiki's data directory
-        File dokuwikiDataDirectory = new File(
-                dokuwikiDirectory.getAbsolutePath() + System.getProperty("file.separator") + "data");
+        File dokuwikiDataDirectory = new File(dokuwikiDirectory, "data");
         //delete folder is exists.
         try {
             FileUtils.deleteDirectory(dokuwikiDirectory);
@@ -165,7 +166,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             All filters parsing any file will make the respecting entry file blank,
             the file is saved in dokuwiki temporary folder now.
             */
-            saveEntryToDisk(archiveInputStream, archiveEntry, "dokuwiki");
+            saveEntryToDisk(archiveInputStream, archiveEntry, tempFolder);
 
             //get next file from archive stream
             try {
@@ -176,18 +177,15 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         }
 
         //readUsers
-        readUsers(new File(
-                        dokuwikiDirectory.getAbsolutePath()
-                                + System.getProperty("file.separator")
-                                + "conf" + System.getProperty("file.separator")
-                                + "users.auth.php"),
+        readUsers(new File(dokuwikiDirectory, "conf"
+                        + System.getProperty("file.separator")
+                        + "users.auth.php"),
                 proxyFilter);
 
         //recursively parse documents
         proxyFilter.beginWikiSpace("Main", FilterEventParameters.EMPTY);
         try {
-            readDocument(new File(
-                            dokuwikiDataDirectory.getAbsolutePath() + System.getProperty("file.separator") + "pages"),
+            readDocument(new File(dokuwikiDataDirectory, KEY_PAGES_DIRECTORY),
                     dokuwikiDataDirectory.getAbsolutePath(), proxyFilter);
         } catch (IOException e) {
             this.logger.error("couldn't read document", e);
@@ -195,7 +193,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         proxyFilter.endWikiSpace("Main", FilterEventParameters.EMPTY);
         //delete the folder
         try {
-            FileUtils.deleteDirectory(dokuwikiDirectory);
+            FileUtils.deleteDirectory(tempFolder);
         } catch (IOException e) {
             this.logger.error("Could not delete dokuwiki folder after completion", e);
         }
@@ -242,7 +240,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                             .split(Matcher.quoteReplacement(System.getProperty("file.separator")));
                     String documentName = pathArray[pathArray.length - 1].replace(".txt", "");
                     String fileMetadataPath = file.getAbsolutePath()
-                            .replace(dokuwikiDataDirectory + System.getProperty("file.separator") + "pages",
+                            .replace(dokuwikiDataDirectory + System.getProperty("file.separator") + KEY_PAGES_DIRECTORY,
                                     dokuwikiDataDirectory + System.getProperty("file.separator") + "meta")
                             .replace(".txt", ".meta");
 //                    FilterEventParameters documentParameters = new FilterEventParameters();
@@ -289,7 +287,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         //check revision exists, check the attic, parse attic files.
         String fileName = file.getName().replace(".txt", "");
         String fileRevisionDirectory = file.getAbsolutePath()
-                .replace(dokuwikiDataDirectory + System.getProperty("file.separator") + "pages",
+                .replace(dokuwikiDataDirectory + System.getProperty("file.separator") + KEY_PAGES_DIRECTORY,
                         dokuwikiDataDirectory + System.getProperty("file.separator") + "attic")
                 .replace(System.getProperty("file.separator") + file.getName(), "");
 
@@ -343,7 +341,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             DokuWikiFilter proxyFilter)
     {
         String mediaNameSpaceDirectoryPath = document.getAbsolutePath()
-                .replace(dokuwikiDataDirectory + System.getProperty("file.separator") + "pages",
+                .replace(dokuwikiDataDirectory + System.getProperty("file.separator") + KEY_PAGES_DIRECTORY,
                         dokuwikiDataDirectory + System.getProperty("file.separator") + "media")
                 .replace(dokuwikiDataDirectory + System.getProperty("file.separator") + "attic",
                         dokuwikiDataDirectory + System.getProperty("file.separator") + "media")
@@ -361,9 +359,11 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                             && !attachment.isDirectory())
                     {
                         try {
+                            FileInputStream attachmentStream = FileUtils.openInputStream(attachment);
                             proxyFilter.onWikiAttachment(attachment.getName(),
-                                    FileUtils.openInputStream(attachment),
+                                    attachmentStream,
                                     FileUtils.sizeOf(attachment), FilterEventParameters.EMPTY);
+                            attachmentStream.close();
                         } catch (FilterException | IOException e) {
                             this.logger.error("Failed to process attachment", e);
                         }
@@ -400,34 +400,19 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         }
     }
 
-    private void saveEntryToDisk(ArchiveInputStream archiveInputStream, ArchiveEntry archiveEntry, String folder)
+    private void saveEntryToDisk(
+            ArchiveInputStream archiveInputStream, ArchiveEntry archiveEntry, File folderToSave)
     {
         String entryName = archiveEntry.getName();
-        if (!entryName.startsWith(folder)) {
-            entryName = folder + System.getProperty("file.separator") + entryName;
+        if (!entryName.startsWith("dokuwiki")) {
+            entryName = "dokuwiki" + System.getProperty("file.separator") + entryName;
         }
-        entryName = FileUtils.getUserDirectoryPath() + System.getProperty("file.separator") + entryName;
         if (!archiveEntry.isDirectory()) {
-            BufferedOutputStream fos = null;
+
             try {
-                File entryFile = new File(entryName);
-                entryFile.getParentFile().mkdirs();
-                fos = new BufferedOutputStream(new FileOutputStream(entryFile));
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = archiveInputStream.read(buffer)) > 0) {
-                    fos.write(buffer, 0, length);
-                }
+                FileUtils.copyToFile(archiveInputStream, new File(folderToSave, entryName));
             } catch (IOException e) {
-                this.logger.error("could not save a file to disk", e);
-            } finally {
-                if (fos != null) {
-                    try {
-                        fos.close();
-                    } catch (IOException e) {
-                        this.logger.error("could not close file output stream", e);
-                    }
-                }
+                this.logger.error("failed to write stream to file", e);
             }
         }
     }
@@ -435,7 +420,9 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     private String extractGZip(File file) throws IOException
     {
         GZIPInputStream gzipInputStream = new GZIPInputStream(new FileInputStream(file));
-        return IOUtils.toString(gzipInputStream, StandardCharsets.UTF_8);
+        String content = IOUtils.toString(gzipInputStream, StandardCharsets.UTF_8);
+        gzipInputStream.close();
+        return content;
     }
 
     @Override
