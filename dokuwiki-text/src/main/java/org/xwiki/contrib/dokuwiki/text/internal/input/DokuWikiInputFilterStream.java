@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -82,6 +81,32 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
     private static final String KEY_TEXT_FILE_FORMAT = ".txt";
 
+    private static final String KEY_DOKUWIKI = "dokuwiki";
+
+    private static final String KEY_FILE_SEPERATOR = "file.separator";
+
+    private static final String KEY_FULL_STOP = ".";
+
+    private static final String KEY_CURRENT = "current";
+
+    private static final String KEY_DATE = "date";
+
+    private static final String KEY_CREATED = "created";
+
+    private static final String KEY_MODIFIED = "modified";
+
+    private static final String KEY_ATTIC_FOLDER = "attic";
+
+    private static final String KEY_MEDIA_FOLDER = "media";
+
+    private static final String KEY_PERSISTENT = "persistent";
+
+    private static final String KEY_CREATOR = "creator";
+
+    private static final String KEY_LAST_CHANGE = "last_change";
+
+    private static final String KEY_USER = "user";
+
     @Inject
     @Named("xwiki/2.1")
     private PrintRendererFactory xwiki21Factory;
@@ -129,7 +154,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                 try {
                     ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
                             .createArchiveInputStream(
-                                    new BufferedInputStream((InputStream) ((InputStreamInputSource) inputSource)
+                                    new BufferedInputStream(((InputStreamInputSource) inputSource)
                                             .getInputStream()));
                     readDataStream(archiveInputStream, filter, proxyFilter);
                     archiveInputStream.close();
@@ -150,7 +175,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         ArchiveEntry archiveEntry = null;
         File tempFolder = FileUtils.getTempDirectory();
         //dokuwiki directory
-        File dokuwikiDirectory = new File(tempFolder, "dokuwiki");
+        File dokuwikiDirectory = new File(tempFolder, KEY_DOKUWIKI);
         //Dokuwiki's data directory
         File dokuwikiDataDirectory = new File(dokuwikiDirectory, "data");
         //delete folder is exists.
@@ -178,19 +203,19 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
         //readUsers
         readUsers(new File(dokuwikiDirectory, "conf"
-                        + System.getProperty("file.separator")
+                        + System.getProperty(KEY_FILE_SEPERATOR)
                         + "users.auth.php"),
                 proxyFilter);
 
         //recursively parse documents
-        proxyFilter.beginWikiSpace("Main", FilterEventParameters.EMPTY);
+        proxyFilter.beginWikiSpace(KEY_MAIN_SPACE, FilterEventParameters.EMPTY);
         try {
             readDocument(new File(dokuwikiDataDirectory, KEY_PAGES_DIRECTORY),
                     dokuwikiDataDirectory.getAbsolutePath(), proxyFilter);
         } catch (IOException e) {
             this.logger.error("couldn't read document", e);
         }
-        proxyFilter.endWikiSpace("Main", FilterEventParameters.EMPTY);
+        proxyFilter.endWikiSpace(KEY_MAIN_SPACE, FilterEventParameters.EMPTY);
         //delete the folder
         try {
             FileUtils.deleteDirectory(tempFolder);
@@ -235,14 +260,15 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                     proxyFilter.beginWikiSpace(file.getName(), FilterEventParameters.EMPTY);
                     readDocument(file, dokuwikiDataDirectory, proxyFilter);
                     proxyFilter.endWikiSpace(file.getName(), FilterEventParameters.EMPTY);
-                } else if (file.getName().endsWith(".txt") && !file.getName().startsWith(".")) {
+                } else if (file.getName().endsWith(KEY_TEXT_FILE_FORMAT) && !file.getName().startsWith(KEY_FULL_STOP)) {
                     String[] pathArray = file.getName()
-                            .split(Matcher.quoteReplacement(System.getProperty("file.separator")));
-                    String documentName = pathArray[pathArray.length - 1].replace(".txt", "");
+                            .split(Matcher.quoteReplacement(System.getProperty(KEY_FILE_SEPERATOR)));
+                    String documentName = pathArray[pathArray.length - 1].replace(KEY_TEXT_FILE_FORMAT, "");
                     String fileMetadataPath = file.getAbsolutePath()
-                            .replace(dokuwikiDataDirectory + System.getProperty("file.separator") + KEY_PAGES_DIRECTORY,
-                                    dokuwikiDataDirectory + System.getProperty("file.separator") + "meta")
-                            .replace(".txt", ".meta");
+                            .replace(dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR)
+                                            + KEY_PAGES_DIRECTORY,
+                                    dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + "meta")
+                            .replace(KEY_TEXT_FILE_FORMAT, ".meta");
 //                    FilterEventParameters documentParameters = new FilterEventParameters();
 //                    documentParameters.put(WikiDocumentFilter.PARAMETER_LOCALE, Locale.ROOT);
 
@@ -256,10 +282,10 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
                     //Wiki document revision
 
-                    if ((documentMetadata.getArray("current").getArray("date").containsKey("created")
-                            && documentMetadata.getArray("current").getArray("date").containsKey("modified"))
-                            && documentMetadata.getArray("current").getArray("date").getLong("created")
-                            < documentMetadata.getArray("current").getArray("date").getLong("modified"))
+                    if ((documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).containsKey(KEY_CREATED)
+                            && documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).containsKey(KEY_MODIFIED))
+                            && documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).getLong(KEY_CREATED)
+                            < documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).getLong(KEY_MODIFIED))
                     {
                         //Wiki Document Locale
                         proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
@@ -285,11 +311,11 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     private void readPageRevision(File file, String dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
     {
         //check revision exists, check the attic, parse attic files.
-        String fileName = file.getName().replace(".txt", "");
+        String fileName = file.getName().replace(KEY_TEXT_FILE_FORMAT, "");
         String fileRevisionDirectory = file.getAbsolutePath()
-                .replace(dokuwikiDataDirectory + System.getProperty("file.separator") + KEY_PAGES_DIRECTORY,
-                        dokuwikiDataDirectory + System.getProperty("file.separator") + "attic")
-                .replace(System.getProperty("file.separator") + file.getName(), "");
+                .replace(dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + KEY_PAGES_DIRECTORY,
+                        dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + KEY_ATTIC_FOLDER)
+                .replace(System.getProperty(KEY_FILE_SEPERATOR) + file.getName(), "");
 
         File atticDirectoryForFile = new File(fileRevisionDirectory);
         File[] revisionFiles = atticDirectoryForFile.listFiles(new FilenameFilter()
@@ -304,7 +330,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             //Maintain the order of files
             Arrays.sort(revisionFiles);
             for (File revisionFile : revisionFiles) {
-                String revision = revisionFile.getName().replace(fileName + ".", "")
+                String revision = revisionFile.getName().replace(fileName + KEY_FULL_STOP, "")
                         .replace(".txt.gz", "");
                 try {
 
@@ -341,10 +367,10 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             DokuWikiFilter proxyFilter)
     {
         String mediaNameSpaceDirectoryPath = document.getAbsolutePath()
-                .replace(dokuwikiDataDirectory + System.getProperty("file.separator") + KEY_PAGES_DIRECTORY,
-                        dokuwikiDataDirectory + System.getProperty("file.separator") + "media")
-                .replace(dokuwikiDataDirectory + System.getProperty("file.separator") + "attic",
-                        dokuwikiDataDirectory + System.getProperty("file.separator") + "media")
+                .replace(dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + KEY_PAGES_DIRECTORY,
+                        dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + KEY_MEDIA_FOLDER)
+                .replace(dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + KEY_ATTIC_FOLDER,
+                        dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + KEY_MEDIA_FOLDER)
                 .replace(document.getName(), "");
 
         File mediaSpace = new File(mediaNameSpaceDirectoryPath);
@@ -353,7 +379,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             if (mediaFiles != null) {
                 for (File attachment : mediaFiles) {
                     String attachmentName = attachment.getName();
-                    if (!attachmentName.startsWith(".")
+                    if (!attachmentName.startsWith(KEY_FULL_STOP)
                             && !attachmentName.startsWith("_")
                             && content.contains(attachmentName)
                             && !attachment.isDirectory())
@@ -376,27 +402,27 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     private void readDocumentParametersFromMetadata(
             MixedArray documentMetadata, FilterEventParameters documentParameters)
     {
-        if (documentMetadata.getArray("persistent").containsKey("creator") &&
-                !documentMetadata.getArray("persistent").get("creator").equals(""))
+        if (documentMetadata.getArray(KEY_PERSISTENT).containsKey(KEY_CREATOR)
+                && !documentMetadata.getArray(KEY_PERSISTENT).get(KEY_CREATOR).equals(""))
         {
             documentParameters.put(WikiDocumentFilter.PARAMETER_CREATION_AUTHOR,
-                    documentMetadata.getArray("persistent").getString("creator"));
+                    documentMetadata.getArray(KEY_PERSISTENT).getString(KEY_CREATOR));
         }
         documentParameters.put(WikiDocumentFilter.PARAMETER_CREATION_DATE,
-                new Date(1000 * documentMetadata.getArray("persistent").getArray("date").getLong("created")));
-        if (documentMetadata.getArray("current").getArray("date").containsKey("modified") &&
-                !documentMetadata.getArray("current").getArray("date").getString("modified").equals(""))
+                new Date(1000 * documentMetadata.getArray(KEY_PERSISTENT).getArray(KEY_DATE).getLong(KEY_CREATED)));
+        if (documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).containsKey(KEY_MODIFIED)
+                && !documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).getString(KEY_MODIFIED).equals(""))
         {
             documentParameters.put(WikiDocumentFilter.PARAMETER_LASTREVISION,
-                    documentMetadata.getArray("current").getArray("date").getString("modified"));
+                    documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).getString(KEY_MODIFIED));
             documentParameters.put(WikiDocumentFilter.PARAMETER_REVISION_DATE,
-                    new Date(1000 * documentMetadata.getArray("current").getArray("date").getLong("modified")));
+                    new Date(1000 * documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).getLong(KEY_MODIFIED)));
         }
-        if (documentMetadata.getArray("current").containsKey("last_change") &&
-                !documentMetadata.getArray("current").getString("user").equals(""))
+        if (documentMetadata.getArray(KEY_CURRENT).containsKey(KEY_LAST_CHANGE)
+                && !documentMetadata.getArray(KEY_CURRENT).getString(KEY_USER).equals(""))
         {
             documentParameters.put(WikiDocumentFilter.PARAMETER_REVISION_AUTHOR,
-                    documentMetadata.getArray("current").getArray("last_change").getString("user"));
+                    documentMetadata.getArray(KEY_CURRENT).getArray(KEY_LAST_CHANGE).getString(KEY_USER));
         }
     }
 
@@ -404,8 +430,8 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             ArchiveInputStream archiveInputStream, ArchiveEntry archiveEntry, File folderToSave)
     {
         String entryName = archiveEntry.getName();
-        if (!entryName.startsWith("dokuwiki")) {
-            entryName = "dokuwiki" + System.getProperty("file.separator") + entryName;
+        if (!entryName.startsWith(KEY_DOKUWIKI)) {
+            entryName = KEY_DOKUWIKI + System.getProperty(KEY_FILE_SEPERATOR) + entryName;
         }
         if (!archiveEntry.isDirectory()) {
 
