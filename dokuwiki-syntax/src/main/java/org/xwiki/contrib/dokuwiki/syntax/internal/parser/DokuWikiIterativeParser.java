@@ -39,9 +39,6 @@ import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.parser.ParseException;
-import org.xwiki.rendering.parser.Parser;
-
-import jdk.nashorn.internal.runtime.ParserException;
 
 import static java.lang.Math.abs;
 

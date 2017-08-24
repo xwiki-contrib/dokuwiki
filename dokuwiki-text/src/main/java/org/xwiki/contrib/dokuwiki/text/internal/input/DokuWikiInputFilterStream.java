@@ -173,25 +173,27 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     {
 
         ArchiveEntry archiveEntry = null;
-        File tempFolder = FileUtils.getTempDirectory();
-        //dokuwiki directory
-        File dokuwikiDirectory = new File(tempFolder, KEY_DOKUWIKI);
+        //create dokuwiki temporary  directory
+        File dokuwikiDirectory = null;
+        try {
+            archiveEntry = archiveInputStream.getNextEntry();
+            dokuwikiDirectory = File.createTempFile("dokuwiki", "");
+        } catch (IOException e) {
+            this.logger.error("Couldn't create temporary folder for dokuwiki", e);
+        }
+        dokuwikiDirectory.delete();
+        dokuwikiDirectory.mkdir();
+        dokuwikiDirectory.deleteOnExit();
+
         //Dokuwiki's data directory
         File dokuwikiDataDirectory = new File(dokuwikiDirectory, "data");
-        //delete folder is exists.
-        try {
-            FileUtils.deleteDirectory(dokuwikiDirectory);
-            archiveEntry = archiveInputStream.getNextEntry();
-        } catch (IOException e) {
-            this.logger.error("could not delete dokuwiki folder", e);
-        }
 
         while (archiveEntry != null) {
             /*
             All filters parsing any file will make the respecting entry file blank,
             the file is saved in dokuwiki temporary folder now.
             */
-            saveEntryToDisk(archiveInputStream, archiveEntry, tempFolder);
+            saveEntryToDisk(archiveInputStream, archiveEntry, dokuwikiDirectory);
 
             //get next file from archive stream
             try {
@@ -216,12 +218,6 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             this.logger.error("couldn't read document", e);
         }
         proxyFilter.endWikiSpace(KEY_MAIN_SPACE, FilterEventParameters.EMPTY);
-        //delete the folder
-        try {
-            FileUtils.deleteDirectory(tempFolder);
-        } catch (IOException e) {
-            this.logger.error("Could not delete dokuwiki folder after completion", e);
-        }
     }
 
     private void readUsers(File userInformation, DokuWikiFilter proxyFilter) throws FilterException
@@ -430,8 +426,8 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             ArchiveInputStream archiveInputStream, ArchiveEntry archiveEntry, File folderToSave)
     {
         String entryName = archiveEntry.getName();
-        if (!entryName.startsWith(KEY_DOKUWIKI)) {
-            entryName = KEY_DOKUWIKI + System.getProperty(KEY_FILE_SEPERATOR) + entryName;
+        if (entryName.startsWith(KEY_DOKUWIKI)) {
+            entryName = entryName.replaceFirst(KEY_DOKUWIKI + System.getProperty(KEY_FILE_SEPERATOR), "");
         }
         if (!archiveEntry.isDirectory()) {
 
