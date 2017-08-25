@@ -133,9 +133,10 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                 input.close();
             } catch (Exception e1) {
                 try {
+                    FileInputSource fileInputSource = (FileInputSource) this.properties.getSource();
+                    FileInputStream fileInputStream = FileUtils.openInputStream(fileInputSource.getFile());
                     ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
-                            .createArchiveInputStream(new BufferedInputStream(
-                                    ((InputStreamInputSource) inputSource).getInputStream()));
+                            .createArchiveInputStream(new BufferedInputStream(fileInputStream));
                     readDataStream(archiveInputStream, filter, proxyFilter);
                     archiveInputStream.close();
                 } catch (IOException | ArchiveException e2) {
