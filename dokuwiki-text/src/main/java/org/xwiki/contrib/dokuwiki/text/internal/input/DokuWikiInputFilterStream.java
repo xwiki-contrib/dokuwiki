@@ -138,6 +138,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                     ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
                             .createArchiveInputStream(new BufferedInputStream(fileInputStream));
                     readDataStream(archiveInputStream, filter, proxyFilter);
+                    fileInputStream.close();
                     archiveInputStream.close();
                 } catch (IOException | ArchiveException e2) {
                     this.logger.error("Failed to read/unarchive or unknown format from file input type", e1, e2);
