@@ -655,6 +655,7 @@ beginLink [Typed = [false] Type = [url] Reference = [playground:playground]] [fa
 onWord [playground]
 endLink [Typed = [false] Type = [url] Reference = [playground:playground]] [false]
 onSpace
+onSpace
 onWord [page.]
 onSpace
 onWord [The]
@@ -695,6 +696,7 @@ onSpace
 onWord [supports]
 onSpace
 beginFormat [BOLD]
+onSpace
 onWord [bold]
 endFormat [BOLD]
 onSpecialSymbol [,]
@@ -748,6 +750,7 @@ onSpace
 onWord [use]
 onSpace
 beginFormat [SUBSCRIPT]
+onSpace
 onWord [subscript]
 endFormat [SUBSCRIPT]
 onSpace
@@ -773,6 +776,7 @@ onSpace
 onWord [as]
 onSpace
 beginFormat [STRIKEDOUT]
+onSpace
 onWord [deleted]
 endFormat [STRIKEDOUT]
 onSpace
@@ -785,6 +789,7 @@ beginParagraph
 beginFormat [BOLD]
 onWord [Paragraphs]
 endFormat [BOLD]
+onSpace
 onSpace
 onWord [are]
 onSpace
@@ -866,6 +871,7 @@ onSpace
 onWord [that]
 onSpace
 onWord [the]
+onSpace
 onWord [two]
 onSpace
 onWord [backslashes]
@@ -886,9 +892,8 @@ onWord [of]
 onSpace
 onWord [a]
 onSpace
-onWord [line\\]
-endParagraph
-beginParagraph
+onWord [line]
+onNewLine
 onWord [or]
 onSpace
 onWord [followed]
@@ -1008,6 +1013,7 @@ onWord [to]
 onSpace
 onWord [google]
 endLink [Typed = [false] Type = [url] Reference = [http://www.google.com]] [false]
+onSpace
 onSpecialSymbol [.]
 onSpace
 onWord [Email]
@@ -1098,6 +1104,7 @@ onSpace
 onWord [pagenames]
 endLink [Typed = [false] Type = [url] Reference = [doku>pagename]] [false]
 onSpace
+onSpace
 onWord [are]
 onSpace
 onWord [converted]
@@ -1156,6 +1163,7 @@ onWord [see]
 onSpace
 beginLink [Typed = [false] Type = [url] Reference = [doku>namespaces]] [false]
 endLink [Typed = [false] Type = [url] Reference = [doku>namespaces]] [false]
+onSpace
 onSpecialSymbol [.]
 endParagraph
 beginParagraph
@@ -1414,6 +1422,7 @@ beginLink [Typed = [false] Type = [url] Reference = [#images_and_other_files]] [
 onWord [images]
 endLink [Typed = [false] Type = [url] Reference = [#images_and_other_files]] [false]
 onSpace
+onSpace
 onWord [(see]
 onSpace
 onWord [below)]
@@ -1517,6 +1526,7 @@ onSpace
 onWord [add]
 onSpace
 onWord [footnotes]
+onSpace
 onSpace
 onMacroInline [foootnote] [] [This is a footnote]
 onSpace
@@ -1723,6 +1733,7 @@ onSpace
 onWord [files]
 endLink [Typed = [false] Type = [url] Reference = [doku>images]] [false]
 onSpace
+onSpace
 onWord [with]
 onSpace
 onWord [curly]
@@ -1884,6 +1895,7 @@ onWord [see]
 onSpace
 beginLink [Typed = [false] Type = [url] Reference = [#Image Links]] [false]
 endLink [Typed = [false] Type = [url] Reference = [#Image Links]] [false]
+onSpace
 onSpace
 onWord [above.]
 endParagraph
@@ -2144,6 +2156,7 @@ onSpace
 onWord [a]
 onSpace
 beginFormat [MONOSPACE]
+onSpace
 beginLink [Typed = [false] Type = [url] Reference = [video.webm]] [true]
 endLink [Typed = [false] Type = [url] Reference = [video.webm]] [true]
 endFormat [MONOSPACE]
@@ -2346,6 +2359,7 @@ onSpace
 onWord [a]
 onSpace
 beginFormat [MONOSPACE]
+onSpace
 onSpecialSymbol [*]
 endFormat [MONOSPACE]
 onSpace
@@ -2411,6 +2425,7 @@ onWord [list]
 onSpace
 onWord [items]
 endLink [Typed = [false] Type = [url] Reference = [doku>faq:lists]] [false]
+onSpace
 onSpecialSymbol [.]
 endParagraph
 beginSection
@@ -2540,6 +2555,7 @@ onWord [used]
 onSpace
 beginLink [Typed = [false] Type = [url] Reference = [wp>emoticon]] [false]
 endLink [Typed = [false] Type = [url] Reference = [wp>emoticon]] [false]
+onSpace
 onWord [s]
 onSpace
 onWord [to]
@@ -2781,6 +2797,7 @@ onWord [pattern]
 onSpace
 onWord [file]
 endLink [Typed = [false] Type = [url] Reference = [doku>entities]] [false]
+onSpace
 onSpecialSymbol [.]
 endParagraph
 beginParagraph
@@ -3173,6 +3190,7 @@ endTable
 onMacroStandalone [code] [] [| Row 1 Col 1    | Row 1 Col 2     | Row 1 Col 3        |]
 onMacroStandalone [code] [] [| Row 2 Col 1    | some colspan (note the double pipe) ||]
 onMacroStandalone [code] [] [| Row 3 Col 1    | Row 3 Col 2     | Row 3 Col 3        |]
+onSpace
 onWord [To]
 onSpace
 onWord [connect]
@@ -3376,6 +3394,7 @@ onSpace
 onWord [adding]
 onSpace
 endFormat [MONOSPACE]
+onSpace
 onVerbatim [:::] [true]
 beginParagraph
 onSpace
@@ -3754,6 +3773,7 @@ onSpace
 onWord [with]
 onSpace
 endFormat [MONOSPACE]
+onSpace
 onVerbatim [<nowiki>] [true]
 beginFormat [MONOSPACE]
 onSpace
@@ -3793,6 +3813,7 @@ onSpace
 onWord [for]
 onSpace
 onVerbatim [//__this__ text// with a smiley ;-)] [true]
+onSpace
 onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [<nowiki>]
@@ -4077,6 +4098,7 @@ onSpace
 onWord [recognized:]
 onSpace
 beginFormat [ITALIC]
+onSpace
 onWord [4cs,]
 onSpace
 onWord [6502acme,]
@@ -4501,6 +4523,7 @@ onSpace
 onWord [the]
 onSpace
 beginFormat [MONOSPACE]
+onSpace
 onVerbatim [<code>] [true]
 endFormat [MONOSPACE]
 onSpace
@@ -4617,6 +4640,7 @@ onSpace
 onWord [code:]
 onSpace
 beginFormat [MONOSPACE]
+onSpace
 onVerbatim [<code - myfile.foo>] [true]
 endFormat [MONOSPACE]
 onSpecialSymbol [.]
@@ -4664,6 +4688,7 @@ onSpace
 onWord [the]
 onSpace
 beginFormat [MONOSPACE]
+onSpace
 onVerbatim [<html>] [true]
 endFormat [MONOSPACE]
 onSpace
@@ -5465,6 +5490,7 @@ onSpace
 beginLink [Typed = [false] Type = [url] Reference = [doku>plugins]] [false]
 onWord [Plugins]
 endLink [Typed = [false] Type = [url] Reference = [doku>plugins]] [false]
+onSpace
 onSpecialSymbol [.]
 onSpace
 onWord [How]

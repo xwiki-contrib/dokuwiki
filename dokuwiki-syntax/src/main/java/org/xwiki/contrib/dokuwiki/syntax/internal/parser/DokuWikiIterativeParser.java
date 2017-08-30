@@ -72,6 +72,9 @@ class DokuWikiIterativeParser
             new Character[]{ '@', '#', '$', '*', '%', '\'', '(', '!', ')', '-', '_', '^', '`', '?', ',', ';',
                     '.', '/', ':', '=', '+', '<', '|', '>' };
 
+    //Paragraph event just called, but no word in it
+    private boolean paragraphJustOpened = false;
+
     @Inject
     private Logger logger;
 
@@ -98,7 +101,6 @@ class DokuWikiIterativeParser
         boolean italicOpen = false;
         boolean underlineOpen = false;
         boolean monospaceOpen = false;
-        boolean linkOpen = true;
         int listSpaceidentation = -1;
         int quotationIdentation = -1;
         boolean inQuotation = false;
@@ -150,13 +152,21 @@ class DokuWikiIterativeParser
                         }
                     } else {
                         listener.beginParagraph(Listener.EMPTY_PARAMETERS);
+                        this.paragraphJustOpened = true;
                         inParagraph = true;
                     }
                     addNewParagraph = false;
                 } else if (addNewParagraph) {
                     listener.endParagraph(Listener.EMPTY_PARAMETERS);
                     listener.beginParagraph(Listener.EMPTY_PARAMETERS);
+                    this.paragraphJustOpened = true;
                     addNewParagraph = false;
+                } else if (onNewLineCharacter && (((char) readCharacter) != '\n')
+                        && !this.paragraphJustOpened)
+                {
+                    //add space after single new line character
+                    listener.onSpace();
+                    onNewLineCharacter = false;
                 }
             } else {
                 if (addNewParagraph && inParagraph) {
@@ -179,14 +189,15 @@ class DokuWikiIterativeParser
                         int headerLevelAdjusted = headerLevel;
                         listener.beginSection(Listener.EMPTY_PARAMETERS);
                         //Above 5 isn't supported.
-                        if (headerLevelAdjusted > 5 ) {
-                             headerLevelAdjusted = 5;
+                        if (headerLevelAdjusted > 5) {
+                            headerLevelAdjusted = 5;
                         }
                         //Dokuwiki doesn't use ids in headers
                         listener.beginHeader(HeaderLevel.parseInt(abs(6 - headerLevelAdjusted)), "",
                                 Listener.EMPTY_PARAMETERS);
                         processWords(2, buffer, listener);
-                        listener.endHeader(HeaderLevel.parseInt(abs(6 - headerLevelAdjusted)), "", Listener.EMPTY_PARAMETERS);
+                        listener.endHeader(HeaderLevel.parseInt(abs(6 - headerLevelAdjusted)), "",
+                                Listener.EMPTY_PARAMETERS);
                         listener.endSection(Listener.EMPTY_PARAMETERS);
                         while (source.ready() && headerLevel > 1) {
                             source.read();
@@ -432,6 +443,15 @@ class DokuWikiIterativeParser
                 }
             }
 
+            if (getStringRepresentation(buffer).endsWith("\\ ")
+                    || getStringRepresentation(buffer).endsWith("\\\n"))
+            {
+                //generate newline event
+                processWords(3, buffer, listener);
+                listener.onNewLine();
+                continue;
+            }
+
             if (buffer.size() > 0 && buffer.get(buffer.size() - 1) == '\n') {
                 //handle lists
                 if (!listEnded || inQuotation) {
@@ -457,13 +477,6 @@ class DokuWikiIterativeParser
                 processWords(2, buffer, listener);
                 processLink(source, listener);
                 buffer.clear();
-                continue;
-            }
-
-            if (getStringRepresentation(buffer).endsWith("\\ ")) {
-                //generate newline event
-                processWords(3, buffer, listener);
-                listener.onNewLine();
                 continue;
             }
 
@@ -828,6 +841,9 @@ class DokuWikiIterativeParser
 
     private void processWord(StringBuilder word, Listener listener)
     {
+        if (this.paragraphJustOpened) {
+            this.paragraphJustOpened = false;
+        }
         if (Arrays.asList(specialSymbols).contains(word.charAt(0)) && word.length() == 1) {
             //check if special symbol
             listener.onSpecialSymbol(word.charAt(0));
