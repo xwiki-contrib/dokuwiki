@@ -242,7 +242,10 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                     String[] parameters = line.split(":");
                     FilterEventParameters userParameters = new FilterEventParameters();
                     userParameters.put(UserFilter.PARAMETER_FIRSTNAME, parameters[2].split(" ")[0]);
-                    userParameters.put(UserFilter.PARAMETER_LASTNAME, parameters[2].split(" ")[1]);
+                    // User may not have a second name in Dokuwiki
+                    if (parameters[2].split(" ").length > 1) {
+                        userParameters.put(UserFilter.PARAMETER_LASTNAME, parameters[2].split(" ")[1]);
+                    }
                     userParameters.put(UserFilter.PARAMETER_EMAIL, parameters[3]);
                     proxyFilter.beginUser(parameters[0], userParameters);
                     proxyFilter.endUser(parameters[0], userParameters);

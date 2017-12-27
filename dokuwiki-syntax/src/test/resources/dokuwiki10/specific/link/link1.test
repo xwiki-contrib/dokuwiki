@@ -1,8 +1,14 @@
 .#-----------------------------------------------------
 .input|dokuwiki/1.0
-.#-----------------------------------------------------
 [[doku>Interwiki]]
 .#-----------------------------------------------------
+.#-----------------------------------------------------
 .expect|event/1.0
+beginDocument
+beginParagraph
+beginLink [Typed = [false] Type = [url] Reference = [doku>Interwiki]] [false]
+endLink [Typed = [false] Type = [url] Reference = [doku>Interwiki]] [false]
+endParagraph
+endDocument
 .#-----------------------------------------------------
 .expect|xwiki/2.1
