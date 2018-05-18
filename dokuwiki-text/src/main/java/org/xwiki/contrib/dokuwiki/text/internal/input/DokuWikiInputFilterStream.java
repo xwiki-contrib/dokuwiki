@@ -282,29 +282,28 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                     proxyFilter.beginWikiDocument(documentName, FilterEventParameters.EMPTY);
 
                     FilterEventParameters documentLocaleParameters = new FilterEventParameters();
-                    String metadataFileContents = FileUtils.readFileToString(new File(fileMetadataPath), "UTF-8");
-                    MixedArray documentMetadata = Pherialize.unserialize(metadataFileContents).toArray();
-                    readDocumentParametersFromMetadata(documentMetadata, documentLocaleParameters);
 
-                    //Wiki document revision
+                    try{
+                        String metadataFileContents = FileUtils.readFileToString(new File(fileMetadataPath), "UTF-8");
+                        MixedArray documentMetadata = Pherialize.unserialize(metadataFileContents).toArray();
+                        readDocumentParametersFromMetadata(documentMetadata, documentLocaleParameters);
 
-                    if ((documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).containsKey(KEY_CREATED)
-                            && documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).containsKey(KEY_MODIFIED))
-                            && documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).getLong(KEY_CREATED)
-                            < documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).getLong(KEY_MODIFIED))
-                    {
-                        //Wiki Document Locale
-                        proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
-                        //read revisions
-                        readPageRevision(file, dokuwikiDataDirectory, proxyFilter);
-                    } else {
+                        //Wiki document revision
 
-                        String pageContents = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-                        String convertedContent = parseContent(pageContents);
-                        documentLocaleParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertedContent);
-                        //Wiki Document Locale
-                        proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
-                        readAttachments(pageContents, file, dokuwikiDataDirectory, proxyFilter);
+                        if ((documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).containsKey(KEY_CREATED)
+                                && documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).containsKey(KEY_MODIFIED))
+                                && documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).getLong(KEY_CREATED)
+                                < documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).getLong(KEY_MODIFIED))
+                        {
+                            //Wiki Document Locale
+                            proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
+                            //read revisions
+                            readPageRevision(file, dokuwikiDataDirectory, proxyFilter);
+                        } else {
+                            documentLocaleParameters = readDocument(file,documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
+                        }
+                    } catch (Exception e ){
+                        documentLocaleParameters = readDocument(file,documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
                     }
 
                     proxyFilter.endWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
@@ -312,6 +311,25 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                 }
             }
         }
+    }
+
+    private FilterEventParameters readDocument( File file ,FilterEventParameters documentLocaleParameters,
+                                                String dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
+    {
+        try {
+            String pageContents = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+            String convertedContent = parseContent(pageContents);
+            documentLocaleParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertedContent);
+            //Wiki Document Locale
+            proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
+            readAttachments(pageContents, file, dokuwikiDataDirectory, proxyFilter);
+            return documentLocaleParameters;
+        }  catch (IOException e) {
+            this.logger.error("Could not read file", e);
+        } catch (FilterException e) {
+            this.logger.error("",e);
+        }
+        return documentLocaleParameters;
     }
 
     private void readPageRevision(File file, String dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
