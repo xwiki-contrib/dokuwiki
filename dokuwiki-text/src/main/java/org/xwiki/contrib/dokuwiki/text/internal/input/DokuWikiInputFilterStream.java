@@ -283,8 +283,10 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
                     FilterEventParameters documentLocaleParameters = new FilterEventParameters();
 
-                    try{
-                        String metadataFileContents = FileUtils.readFileToString(new File(fileMetadataPath), "UTF-8");
+                    File f = new File(fileMetadataPath);
+                    if(f.exists() && !f.isDirectory()) {
+                        String metadataFileContents = FileUtils.readFileToString
+                                (new File(fileMetadataPath), "UTF-8");
                         MixedArray documentMetadata = Pherialize.unserialize(metadataFileContents).toArray();
                         readDocumentParametersFromMetadata(documentMetadata, documentLocaleParameters);
 
@@ -300,10 +302,14 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                             //read revisions
                             readPageRevision(file, dokuwikiDataDirectory, proxyFilter);
                         } else {
-                            documentLocaleParameters = readDocument(file,documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
+                            documentLocaleParameters = readDocument(file,documentLocaleParameters,
+                                    dokuwikiDataDirectory, proxyFilter);
                         }
-                    } catch (Exception e ){
-                        documentLocaleParameters = readDocument(file,documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
+                    }
+                    else {
+                        this.logger.warn("File" + f + "not found (Ignoring)");
+                        documentLocaleParameters = readDocument(file,documentLocaleParameters,
+                                dokuwikiDataDirectory, proxyFilter);
                     }
 
                     proxyFilter.endWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
@@ -314,7 +320,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     }
 
     private FilterEventParameters readDocument( File file ,FilterEventParameters documentLocaleParameters,
-                                                String dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
+                                        String dokuwikiDataDirectory, DokuWikiFilter proxyFilter) throws FilterException
     {
         try {
             String pageContents = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
@@ -326,8 +332,6 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             return documentLocaleParameters;
         }  catch (IOException e) {
             this.logger.error("Could not read file", e);
-        } catch (FilterException e) {
-            this.logger.error("",e);
         }
         return documentLocaleParameters;
     }
