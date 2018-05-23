@@ -307,7 +307,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                         }
                     }
                     else {
-                        this.logger.warn("File" + f + "not found (Ignoring)");
+                        this.logger.warn("File [{}] not found (Ignoring)", f);
                         documentLocaleParameters = readDocument(file,documentLocaleParameters,
                                 dokuwikiDataDirectory, proxyFilter);
                     }
