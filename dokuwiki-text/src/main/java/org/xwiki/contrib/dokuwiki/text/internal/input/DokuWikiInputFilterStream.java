@@ -307,7 +307,9 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                         }
                     }
                     else {
-                        this.logger.warn("File [{}] not found (Ignoring)", f);
+                        this.logger.warn("File [{}] not found (Some datafile's properties (eg. filesize, " +
+                                "last modified date) are not imported. Details can be found on " +
+                                "https://www.dokuwiki.org/devel:metadata)", f);
                         documentLocaleParameters = readDocument(file,documentLocaleParameters,
                                 dokuwikiDataDirectory, proxyFilter);
                     }
