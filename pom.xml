@@ -36,6 +36,7 @@
     <properties>
         <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
         <xwiki.issueManagement.jira.id>DOKUWIKI</xwiki.issueManagement.jira.id>
+        <xwiki.surefire.captureconsole.skip>true</xwiki.surefire.captureconsole.skip>
     </properties>
     <scm>
         <connection>scm:git:git://github.com/xwiki-contrib/dokuwiki.git</connection>
