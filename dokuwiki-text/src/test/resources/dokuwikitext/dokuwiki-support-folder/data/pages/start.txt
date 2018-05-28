@@ -1,0 +1,1 @@
+This is my first wiki page. It'll be converted to xwiki using filter input stream with dokuwiki importer.

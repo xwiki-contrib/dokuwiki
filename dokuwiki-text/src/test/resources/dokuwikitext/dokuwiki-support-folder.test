@@ -2106,5 +2106,5 @@ Of course we'd be more than happy to have you [[getting involved&gt;&gt;doku&gt;
 </wikiSpace>
 .#------------------------------------------------------------------------------
 .input|dokuwiki+text
-.configuration.source=file:${{{xwiki.test.folder}}}/dokuwikitext/dokuwiki-meta-missing.zip
+.configuration.source=file:${{{xwiki.test.folder}}}/dokuwikitext/dokuwiki-support-folder
 .#------------------------------------------------------------------------------
