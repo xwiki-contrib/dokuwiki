@@ -123,26 +123,48 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     {
         InputSource inputSource = this.properties.getSource();
         if (inputSource instanceof FileInputSource) {
-            try {
-                CompressorInputStream input = new CompressorStreamFactory()
-                        .createCompressorInputStream(new BufferedInputStream(
-                                ((InputStreamInputSource) inputSource).getInputStream()));
-                ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
-                        .createArchiveInputStream(new BufferedInputStream(input));
-                readDataStream(archiveInputStream, filter, proxyFilter);
-                input.close();
-            } catch (Exception e1) {
-                try {
-                    FileInputSource fileInputSource = (FileInputSource) this.properties.getSource();
-                    FileInputStream fileInputStream = FileUtils.openInputStream(fileInputSource.getFile());
-                    ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
-                            .createArchiveInputStream(new BufferedInputStream(fileInputStream));
-                    readDataStream(archiveInputStream, filter, proxyFilter);
-                    fileInputStream.close();
-                    archiveInputStream.close();
-                } catch (IOException | ArchiveException e2) {
-                    this.logger.error("Failed to read/unarchive or unknown format from file input type", e1, e2);
+            File f = ((FileInputSource) inputSource).getFile();
+            if (f.exists())
+            {
+                if (f.isDirectory()) {
+                    File dokuwikiDataDirectory = new File(f, "data");
+                    readUsers(new File(f, "conf" + System.getProperty(KEY_FILE_SEPERATOR)
+                            + "users.auth.php"), proxyFilter);
+
+                    //recursively parse documents
+                    proxyFilter.beginWikiSpace(KEY_MAIN_SPACE, FilterEventParameters.EMPTY);
+                    try {
+                        readDocument(new File(dokuwikiDataDirectory, KEY_PAGES_DIRECTORY),
+                                dokuwikiDataDirectory.getAbsolutePath(), proxyFilter);
+                    } catch (IOException e) {
+                        this.logger.error("couldn't read document", e);
+                    }
+                    proxyFilter.endWikiSpace(KEY_MAIN_SPACE, FilterEventParameters.EMPTY);
+                } else {
+                    try {
+                        CompressorInputStream input = new CompressorStreamFactory()
+                                .createCompressorInputStream(new BufferedInputStream(
+                                        ((InputStreamInputSource) inputSource).getInputStream()));
+                        ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
+                                .createArchiveInputStream(new BufferedInputStream(input));
+                        readDataStream(archiveInputStream, filter, proxyFilter);
+                        input.close();
+                    } catch (Exception e1) {
+                        try {
+                            FileInputSource fileInputSource = (FileInputSource) this.properties.getSource();
+                            FileInputStream fileInputStream = FileUtils.openInputStream(fileInputSource.getFile());
+                            ArchiveInputStream archiveInputStream = new ArchiveStreamFactory()
+                                    .createArchiveInputStream(new BufferedInputStream(fileInputStream));
+                            readDataStream(archiveInputStream, filter, proxyFilter);
+                            fileInputStream.close();
+                            archiveInputStream.close();
+                        } catch (IOException | ArchiveException e2) {
+                            this.logger.error("Failed to read/unarchive or unknown format from file input type", e1, e2);
+                        }
+                    }
                 }
+            } else {
+                this.logger.error("File doesn't exists.");
             }
         } else if (inputSource instanceof InputStreamInputSource) {
             try {
