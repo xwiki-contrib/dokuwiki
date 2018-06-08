@@ -44,6 +44,7 @@ import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.CloseShieldInputStream;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
@@ -486,9 +487,16 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             entryName = entryName.replaceFirst(KEY_DOKUWIKI + System.getProperty(KEY_FILE_SEPERATOR), "");
         }
         if (!archiveEntry.isDirectory()) {
-
             try {
-                FileUtils.copyToFile(archiveInputStream, new File(folderToSave, entryName));
+                /**
+                 * FileUtils.copyToFile closes the input stream, so,
+                 * Proxy stream prevents the archiveInputStream from being closed.
+                 * This is a workaround for a bug at commons-io side.
+                 * (https://issues.apache.org/jira/browse/IO-554).
+                 * If fixed on commons-io side, pass archiveInputStream to FileUtils.copyToFile() directly.
+                 */
+                CloseShieldInputStream proxy = new CloseShieldInputStream(archiveInputStream);
+                FileUtils.copyToFile(proxy, new File(folderToSave, entryName));
             } catch (IOException e) {
                 this.logger.error("failed to write stream to file", e);
             }
