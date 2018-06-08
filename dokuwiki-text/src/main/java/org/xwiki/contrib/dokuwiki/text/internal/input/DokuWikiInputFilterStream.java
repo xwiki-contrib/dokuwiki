@@ -491,6 +491,9 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                 /**
                  * FileUtils.copyToFile closes the input stream, so,
                  * Proxy stream prevents the archiveInputStream from being closed.
+                 * This is a workaround for a bug at commons-io side.
+                 * (https://issues.apache.org/jira/browse/IO-554).
+                 * If fixed on commons-io side, pass archiveInputStream to FileUtils.copyToFile() directly.
                  */
                 CloseShieldInputStream proxy = new CloseShieldInputStream(archiveInputStream);
                 FileUtils.copyToFile(proxy, new File(folderToSave, entryName));
