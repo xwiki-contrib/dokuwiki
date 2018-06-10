@@ -53,6 +53,10 @@
             <id>slayerjain</id>
             <name>Shubham Jain</name>
         </developer>
+        <developer>
+            <id>nehagup</id>
+            <name>Neha Gupta</name>
+        </developer>
     </developers>
     <modules>
         <module>dokuwiki-text</module>
