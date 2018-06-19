@@ -1434,7 +1434,7 @@ endParagraph
 onMacroStandalone [code] [] [[[http://php.net|{{wiki:dokuwiki-128.png}}]]]
 beginParagraph
 beginLink [Typed = [false] Type = [url] Reference = [http://php.net]] [false]
-onWord [{{wiki:dokuwiki-128.png}}]
+onImage [Typed = [false] Type = [url] Reference = [dokuwiki-128.png]] [false]
 endLink [Typed = [false] Type = [url] Reference = [http://php.net]] [false]
 endParagraph
 beginParagraph
