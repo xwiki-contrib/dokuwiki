@@ -930,7 +930,7 @@ class DokuWikiIterativeParser
                         param.put(TAG_WIDTH, size + TAG_PX);
                     }
                 }
-                ResourceReference reference = new ResourceReference(imageName, ResourceType.URL);
+                ResourceReference reference = new ResourceReference(imageName, ResourceType.ATTACHMENT);
                 reference.setTyped(false);
                 listener.onImage(reference, false, param);
                 buffer.clear();
