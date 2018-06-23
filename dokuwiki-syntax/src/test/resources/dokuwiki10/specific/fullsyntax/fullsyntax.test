@@ -1434,7 +1434,7 @@ endParagraph
 onMacroStandalone [code] [] [[[http://php.net|{{wiki:dokuwiki-128.png}}]]]
 beginParagraph
 beginLink [Typed = [false] Type = [url] Reference = [http://php.net]] [false]
-onWord [{{wiki:dokuwiki-128.png}}]
+onImage [Typed = [false] Type = [attach] Reference = [dokuwiki-128.png]] [false]
 endLink [Typed = [false] Type = [url] Reference = [http://php.net]] [false]
 endParagraph
 beginParagraph
@@ -1761,7 +1761,7 @@ onWord [Real]
 onSpace
 onWord [size:]
 onSpace
-onImage [Typed = [false] Type = [url] Reference = [dokuwiki-128.png]] [false]
+onImage [Typed = [false] Type = [attach] Reference = [dokuwiki-128.png]] [false]
 endParagraph
 beginParagraph
 onWord [Resize]
@@ -1772,7 +1772,7 @@ onWord [given]
 onSpace
 onWord [width:]
 onSpace
-onImage [Typed = [false] Type = [url] Reference = [dokuwiki-128.png]] [false] [[width]=[50px]]
+onImage [Typed = [false] Type = [attach] Reference = [dokuwiki-128.png]] [false] [[width]=[50px]]
 endParagraph
 beginParagraph
 onWord [Resize]
@@ -1789,7 +1789,7 @@ onWord [height]
 onMacroInline [foootnote] [] [when the aspect ratio of the given width and height doesn't match that of the image, it will be cropped to the new ratio before resizing]
 onSpecialSymbol [:]
 onSpace
-onImage [Typed = [false] Type = [url] Reference = [dokuwiki-128.png]] [false] [[height]=[200px][width]=[50px]]
+onImage [Typed = [false] Type = [attach] Reference = [dokuwiki-128.png]] [false] [[height]=[200px][width]=[50px]]
 endParagraph
 beginParagraph
 onWord [Resized]
@@ -1798,7 +1798,7 @@ onWord [external]
 onSpace
 onWord [image:]
 onSpace
-onImage [Typed = [false] Type = [url] Reference = [ttp://php.net/images/php.gif]] [false] [[height]=[200px][width]=[50px]]
+onImage [Typed = [false] Type = [attach] Reference = [ttp://php.net/images/php.gif]] [false] [[height]=[200px][width]=[50px]]
 endParagraph
 onMacroStandalone [code] [] [Real size:                        {{wiki:dokuwiki-128.png}}]
 onMacroStandalone [code] [] [Resize to given width:            {{wiki:dokuwiki-128.png?50}}]
@@ -1830,13 +1830,13 @@ onSpace
 onWord [alignment.]
 endParagraph
 beginParagraph
-onImage [Typed = [false] Type = [url] Reference = [:dokuwiki-128.png]] [false] [[align]=[left]]
+onImage [Typed = [false] Type = [attach] Reference = [:dokuwiki-128.png]] [false] [[align]=[left]]
 endParagraph
 beginParagraph
-onImage [Typed = [false] Type = [url] Reference = [dokuwiki-128.png ]] [false] [[align]=[right]]
+onImage [Typed = [false] Type = [attach] Reference = [dokuwiki-128.png ]] [false] [[align]=[right]]
 endParagraph
 beginParagraph
-onImage [Typed = [false] Type = [url] Reference = [:dokuwiki-128.png ]] [false] [[align]=[left]]
+onImage [Typed = [false] Type = [attach] Reference = [:dokuwiki-128.png ]] [false] [[align]=[left]]
 endParagraph
 onMacroStandalone [code] [] [{{ wiki:dokuwiki-128.png}}]
 onMacroStandalone [code] [] [{{wiki:dokuwiki-128.png }}]
@@ -1873,7 +1873,7 @@ onSpace
 onWord [too.]
 endParagraph
 beginParagraph
-onImage [Typed = [false] Type = [url] Reference = [:dokuwiki-128.png ]] [false] [[align]=[left][alt]=[This is the caption][title]=[This is the caption]]
+onImage [Typed = [false] Type = [attach] Reference = [:dokuwiki-128.png ]] [false] [[align]=[left][alt]=[This is the caption][title]=[This is the caption]]
 endParagraph
 onMacroStandalone [code] [] [{{ wiki:dokuwiki-128.png |This is the caption}}]
 beginParagraph
@@ -2050,7 +2050,7 @@ onWord [inline]
 endParagraph
 onMacroStandalone [code] [] [{{wiki:dokuwiki-128.png?linkonly}}]
 beginParagraph
-onImage [Typed = [false] Type = [url] Reference = [dokuwiki-128.png]] [false] [[width]=[linkonlypx]]
+onImage [Typed = [false] Type = [attach] Reference = [dokuwiki-128.png]] [false] [[width]=[linkonlypx]]
 onSpace
 onWord [This]
 onSpace

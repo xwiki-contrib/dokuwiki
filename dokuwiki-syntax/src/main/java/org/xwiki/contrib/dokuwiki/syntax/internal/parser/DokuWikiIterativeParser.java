@@ -858,9 +858,10 @@ class DokuWikiIterativeParser
         word.setLength(0);
     }
 
-    private void processWordsFromReader(Reader source, Listener listener, String endString) throws IOException
+    private void processWordsFromReader(char ch, Reader source, Listener listener, String endString) throws IOException
     {
         ArrayList<Character> buffer = new ArrayList<>();
+        buffer.add(ch);
         int c = source.read();
         while (source.ready() && c != -1) {
             buffer.add((char) c);
@@ -929,7 +930,7 @@ class DokuWikiIterativeParser
                         param.put(TAG_WIDTH, size + TAG_PX);
                     }
                 }
-                ResourceReference reference = new ResourceReference(imageName, ResourceType.URL);
+                ResourceReference reference = new ResourceReference(imageName, ResourceType.ATTACHMENT);
                 reference.setTyped(false);
                 listener.onImage(reference, false, param);
                 buffer.clear();
@@ -945,11 +946,10 @@ class DokuWikiIterativeParser
         ArrayList<Character> functionBuffer = new ArrayList<>();
         c = source.read();
         while (source.ready() && c != -1) {
-            //String linkArgument = getStringRepresentation(functionBuffer);
-            // boolean internalLink = true;
+            ResourceReference reference;
             functionBuffer.add((char) c);
             if ((char) c == '|') {
-                ResourceReference reference;
+                c = (char) source.read();
                 if (functionBuffer.get(0) == '<' && functionBuffer.get(functionBuffer.size() - 2) == '>'
                         && functionBuffer.contains('@'))
                 {
@@ -958,18 +958,40 @@ class DokuWikiIterativeParser
                             new ArrayList<>(functionBuffer
                                     .subList(1, functionBuffer.size() - 2))), ResourceType.MAILTO);
                     reference.setTyped(true);
-                } else {
-                    reference = new ResourceReference(getStringRepresentation(
-                            new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() - 1))), ResourceType.URL);
-                    reference.setTyped(false);
+                    listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
+                    processWordsFromReader((char) c, source, listener, TAG_DOUBLE_CLOSING_SQUARE_BRACKETS);
+                    listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
+                    break;
                 }
+                else {
+                    if (c != '{'){
+                        reference = new ResourceReference(getStringRepresentation(
+                                new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() - 1))), ResourceType.URL);
+                        reference.setTyped(false);
+                        listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
+                        functionBuffer.add((char) c);
+                        processWordsFromReader((char) c, source, listener, TAG_DOUBLE_CLOSING_SQUARE_BRACKETS);
+                        listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
+                        break;
+                    } else {
+                        functionBuffer.add((char) c);
+                    }
+                }
+            }
+
+            if (getStringRepresentation(functionBuffer).endsWith("{{")) {
+                reference = new ResourceReference(getStringRepresentation(new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() - 3))), ResourceType.URL);
+                reference.setTyped(false);
                 listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
-                processWordsFromReader(source, listener, TAG_DOUBLE_CLOSING_SQUARE_BRACKETS);
+                functionBuffer.clear();
+                processImage(functionBuffer, source, listener);
+                source.skip(2);
                 listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
                 break;
             }
+
             if (getStringRepresentation(functionBuffer).endsWith(TAG_DOUBLE_CLOSING_SQUARE_BRACKETS)) {
-                ResourceReference reference = new ResourceReference(getStringRepresentation(
+                reference = new ResourceReference(getStringRepresentation(
                         new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() - 2))), ResourceType.URL);
                 reference.setTyped(false);
                 listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);

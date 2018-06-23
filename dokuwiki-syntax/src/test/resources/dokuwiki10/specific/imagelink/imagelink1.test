@@ -1,0 +1,18 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.0
+.#-----------------------------------------------------
+[[http://php.net|{{wiki:dokuwiki-128.png}}]]
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+beginLink [Typed = [false] Type = [url] Reference = [http://php.net]] [false]
+onImage [Typed = [false] Type = [attach] Reference = [dokuwiki-128.png]] [false]
+endLink [Typed = [false] Type = [url] Reference = [http://php.net]] [false]
+endParagraph
+endDocument
+.#-----------------------------------------------------
+.expect|xwiki/2.1
+.#-----------------------------------------------------
+[[[[image:dokuwiki-128.png]]>>http://php.net]]
