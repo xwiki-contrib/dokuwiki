@@ -1,3 +1,6 @@
+.#------------------------------------------------------------------------------
+.expect|filter+xml
+.#------------------------------------------------------------------------------
 <user name="slayerjain">
   <p>
     <parameters>
@@ -2282,3 +2285,7 @@ Of course we'd be more than happy to have you [[interwiki:doku:teams:getting_inv
     </wikiDocument>
   </wikiSpace>
 </wikiSpace>
+.#------------------------------------------------------------------------------
+.input|dokuwiki+text
+.configuration.source=dokuwiki-folder.tar.gz
+.#------------------------------------------------------------------------------
