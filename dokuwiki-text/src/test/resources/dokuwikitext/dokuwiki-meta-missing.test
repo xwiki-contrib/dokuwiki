@@ -1,6 +1,3 @@
-.#------------------------------------------------------------------------------
-.expect|filter+xml
-.#------------------------------------------------------------------------------
 <user name="neha">
   <p>
     <parameters>
@@ -63,9 +60,9 @@
               <string>content</string>
               <string>=  DokuWiki  =
 
-[[[[image:dokuwiki-128.png ||align="right"]]&gt;&gt;doku&gt;wiki:dokuwiki]] DokuWiki is a simple to use and highly versatile Open Source [[wp&gt;wiki]]  software that doesn't require a database. It is loved by users for its clean and readable [[wiki:syntax]]. The ease of maintenance, backup and integration makes it an administrator's favorite. Built in [[access controls&gt;&gt;doku&gt;acl]] and [[authentication connectors&gt;&gt;doku&gt;auth]] make DokuWiki especially useful in the enterprise context and the large number of [[doku&gt;plugins]] contributed by its vibrant community allow for a broad range of use cases beyond a traditional wiki.
+[[interwiki:doku:wiki:dokuwiki|{{wiki:dokuwiki-128.png }}]] DokuWiki is a simple to use and highly versatile Open Source [[interwiki:wp:wiki]]  software that doesn't require a database. It is loved by users for its clean and readable [[wiki:syntax]]. The ease of maintenance, backup and integration makes it an administrator's favorite. Built in [[interwiki:doku:acl|access controls]] and [[interwiki:doku:auth|authentication connectors]] make DokuWiki especially useful in the enterprise context and the large number of [[interwiki:doku:plugins]] contributed by its vibrant community allow for a broad range of use cases beyond a traditional wiki.
 
-Read the [[DokuWiki Manual&gt;&gt;doku&gt;manual]] to unleash the full power of DokuWiki.
+Read the [[interwiki:doku:manual|DokuWiki Manual]] to unleash the full power of DokuWiki.
 
 ==  Download  ==
 
@@ -73,7 +70,7 @@ DokuWiki is available at http://download.dokuwiki.org/
 
 ==  Read More  ==
 
-All documentation and additional information besides the [[syntax description&gt;&gt;syntax]]  is maintained in the DokuWiki at [[www.dokuwiki.org&gt;&gt;doku&gt;]].**
+All documentation and additional information besides the [[syntax description&gt;&gt;syntax]]  is maintained in the DokuWiki at [[interwiki:doku:|www.dokuwiki.org]].**
 
 About DokuWiki**
 
@@ -193,11 +190,11 @@ About DokuWiki**
 
 ==  Copyright  ==
 
-2004-2015 (c) Andreas Gohr  mailto:andi@splitbrain.orgPlease do not contact me for help and support ~-~- use the [[doku&gt;mailinglist]] or [[forum&gt;&gt;http://forum.dokuwiki.org]]{{foootnote}} instead{{/foootnote}} and the DokuWiki Community
+2004-2015 (c) Andreas Gohr  mailto:andi@splitbrain.orgPlease do not contact me for help and support ~-~- use the [[interwiki:doku:mailinglist]] or [[forum&gt;&gt;http://forum.dokuwiki.org]]{{foootnote}} instead{{/foootnote}} and the DokuWiki Community
 
-The DokuWiki engine is licensed under [[GNU General Public License&gt;&gt;http://www.gnu.org/licenses/gpl.html]] Version 2. If you use DokuWiki in your company, consider [[donating&gt;&gt;doku&gt;donate]] a few bucks ;-).
+The DokuWiki engine is licensed under [[GNU General Public License&gt;&gt;http://www.gnu.org/licenses/gpl.html]] Version 2. If you use DokuWiki in your company, consider [[interwiki:doku:donate|donating]] a few bucks ;-).
 
-Not sure what this means? See the [[FAQ on the Licenses&gt;&gt;doku&gt;faq:license]].</string>
+Not sure what this means? See the [[interwiki:doku:faq:license|FAQ on the Licenses]].</string>
             </entry>
           </parameters>
         </p>
@@ -712,7 +709,7 @@ tAAAAABJRU5ErkJggg==</content>
               <string>content</string>
               <string>=  Formatting Syntax  =
 
-[[doku&gt;DokuWiki]] supports some simple markup language, which tries to make the datafiles to be as readable as possible. This page contains all possible syntax you may use when editing the pages. Simply have a look at the source of this page by pressing "Edit this page". If you want to try something, just use the [[playground&gt;&gt;playground:playground]]  page. The simpler markup is easily accessible via [[quickbuttons&gt;&gt;doku&gt;toolbar]], too.
+[[interwiki:doku:DokuWiki]] supports some simple markup language, which tries to make the datafiles to be as readable as possible. This page contains all possible syntax you may use when editing the pages. Simply have a look at the source of this page by pressing "Edit this page". If you want to try something, just use the [[playground&gt;&gt;playground:playground]]  page. The simpler markup is easily accessible via [[interwiki:doku:toolbar|quickbuttons]], too.
 
 ==  Basic Text Formatting  ==
 
@@ -797,7 +794,7 @@ Internal links are created by using square brackets. You can either just give
 a [[pagename]] or use an additional [[pagename|link text]].
 {{/code}}
 
-[[Wiki pagenames&gt;&gt;doku&gt;pagename]]  are converted to lowercase automatically, special characters are not allowed.
+[[interwiki:doku:pagename|Wiki pagenames]] are converted to lowercase automatically, special characters are not allowed.
 
 You can use [[some:namespaces]] by using a colon in the pagename.
 
@@ -805,7 +802,7 @@ You can use [[some:namespaces]] by using a colon in the pagename.
 You can use [[some:namespaces]] by using a colon in the pagename.
 {{/code}}
 
-For details about namespaces see [[doku&gt;namespaces]] .
+For details about namespaces see [[interwiki:doku:namespaces]] .
 
 Linking to a specific section is possible, too. Just add the section name behind a hash character as known from HTML. This links to [[this Section&gt;&gt;syntax#internal]].
 
@@ -831,7 +828,7 @@ Notes:
 
 ===  Interwiki  ===
 
-DokuWiki supports [[doku&gt;Interwiki]] links. These are quick links to other Wikis. For example this is a link to Wikipedia's page about Wikis: [[wp&gt;Wiki]].
+DokuWiki supports [[interwiki:doku:Interwiki]] links. These are quick links to other Wikis. For example this is a link to Wikipedia's page about Wikis: [[interwiki:wp:Wiki]].
 
 {{code}}
 DokuWiki supports [[doku&gt;Interwiki]] links. These are quick links to other Wikis.
@@ -845,7 +842,7 @@ For example this is a link to Wikipedia's page about Wikis: [[wp&gt;Wiki]].
 
 ===  Windows Shares  ===
 
-Windows shares like [[this&gt;&gt;\\server\share]] are recognized, too. Please note that these only make sense in a homogeneous user group like a corporate [[wp&gt;Intranet]].
+Windows shares like [[this&gt;&gt;\\server\share]] are recognized, too. Please note that these only make sense in a homogeneous user group like a corporate [[interwiki:wp:Intranet]].
 
 {{code}}
 Windows Shares like [[\\server\share|this]] are recognized, too.
@@ -925,7 +922,7 @@ By using four or more dashes, you can make a horizontal line:
 
 ==  Media Files  ==
 
-You can include external and internal [[images, videos and audio files&gt;&gt;doku&gt;images]]  with curly brackets. Optionally you can specify the size of them.
+You can include external and internal [[interwiki:doku:images|images, videos and audio files]]  with curly brackets. Optionally you can specify the size of them.
 
 Real size: [[image:dokuwiki-128.png]]
 
@@ -1068,7 +1065,7 @@ Dokuwiki supports ordered and unordered lists. To create a list item, indent you
   - That's it
 {{/code}}
 
-Also take a look at the [[FAQ on list items&gt;&gt;doku&gt;faq:lists]] .
+Also take a look at the [[interwiki:doku:faq:lists|FAQ on list items]] .
 
 ==  Text Conversions  ==
 
@@ -1078,7 +1075,7 @@ The text to image conversion is mainly done for smileys. And the text to HTML co
 
 ===  Text to Image Conversions  ===
 
-DokuWiki converts commonly used [[wp&gt;emoticon]] s to their graphical equivalents. Those [[doku&gt;Smileys]] and other images can be configured and extended. Here is an overview of Smileys included in DokuWiki:
+DokuWiki converts commonly used [[interwiki:wp:emoticon]] s to their graphical equivalents. Those [[interwiki:doku:Smileys]] and other images can be configured and extended. Here is an overview of Smileys included in DokuWiki:
 
 {{code}}
 * 8-) %%  8-)  %%
@@ -1187,9 +1184,9 @@ Typography: [[DokuWiki]] can convert simple text characters to their typographic
 "He thought 'It's a man's world'..."
 {{/code}}
 
-The same can be done to produce any kind of HTML, it just needs to be added to the [[pattern file&gt;&gt;doku&gt;entities]] .
+The same can be done to produce any kind of HTML, it just needs to be added to the [[interwiki:doku:entities|pattern file]] .
 
-There are three exceptions which do not come from that pattern file: multiplication entity (640x480), 'single' and "double quotes". They can be turned off through a [[config option&gt;&gt;doku&gt;config:typography]].
+There are three exceptions which do not come from that pattern file: multiplication entity (640x480), 'single' and "double quotes". They can be turned off through a [[interwiki:doku:config:typography|config option]].
 
 ==  Quoting  ==
 
@@ -1552,7 +1549,7 @@ Some syntax influences how DokuWiki renders a page without creating any output i
 
 ==  Syntax Plugins  ==
 
-DokuWiki's syntax can be extended by [[Plugins&gt;&gt;doku&gt;plugins]] . How the installed plugins are used is described on their appropriate description pages. The following syntax plugins are available in this particular DokuWiki installation:
+DokuWiki's syntax can be extended by [[interwiki:doku:plugins|Plugins]] . How the installed plugins are used is described on their appropriate description pages. The following syntax plugins are available in this particular DokuWiki installation:
 
 ~~~~INFO:syntaxplugins~~~~</string>
             </entry>
@@ -2080,7 +2077,7 @@ Your wiki needs to have a start page. As long as it doesn't exist, this link wil
 
 Go on, follow that link and create the page. If you need help with using the syntax you can always refer to the [[syntax page&gt;&gt;wiki:syntax]].
 
-You might also want to use a sidebar. To create it, just edit the [[:sidebar]] page. Everything in that page will be shown in a margin column on the side. Read our [[FAQ on sidebars&gt;&gt;doku&gt;faq:sidebar]] to learn more.
+You might also want to use a sidebar. To create it, just edit the [[:sidebar]] page. Everything in that page will be shown in a margin column on the side. Read our [[interwiki:doku:faq:sidebar|FAQ on sidebars]] to learn more.
 
 Please be aware that not all templates support sidebars.
 
@@ -2088,15 +2085,15 @@ Please be aware that not all templates support sidebars.
 
 Once you're comfortable with creating and editing pages you might want to have a look at the [[configuration settings&gt;&gt;this&gt;doku.php?do=admin&amp;page=config]]  (be sure to login as superuser first).
 
-You may also want to see what [[plugins&gt;&gt;doku&gt;plugins]] and [[templates&gt;&gt;doku&gt;templates]] are available at DokuWiki.org to extend the functionality and looks of your DokuWiki installation.
+You may also want to see what [[interwiki:doku:plugins|plugins]] and [[interwiki:doku:templates|templates]] are available at DokuWiki.org to extend the functionality and looks of your DokuWiki installation.
 
 ==  Join the Community  ==
 
-DokuWiki is an Open Source project that thrives through user contributions. A good way to stay informed on what's going on and to get useful tips in using DokuWiki is subscribing to the [[doku&gt;newsletter]] .
+DokuWiki is an Open Source project that thrives through user contributions. A good way to stay informed on what's going on and to get useful tips in using DokuWiki is subscribing to the [[interwiki:doku:newsletter]] .
 
-The [[DokuWiki User Forum&gt;&gt;http://forum.dokuwiki.org]] is an excellent way to get in contact with other DokuWiki users and is just one of the many ways to get [[support&gt;&gt;doku&gt;faq:support]].
+The [[DokuWiki User Forum&gt;&gt;http://forum.dokuwiki.org]] is an excellent way to get in contact with other DokuWiki users and is just one of the many ways to get [[interwiki:doku:faq:support|support]].
 
-Of course we'd be more than happy to have you [[getting involved&gt;&gt;doku&gt;teams:getting_involved]] with DokuWiki.</string>
+Of course we'd be more than happy to have you [[interwiki:doku:teams:getting_involved|getting involved]] with DokuWiki.</string>
             </entry>
           </parameters>
         </p>
@@ -2104,7 +2101,3 @@ Of course we'd be more than happy to have you [[getting involved&gt;&gt;doku&gt;
     </wikiDocument>
   </wikiSpace>
 </wikiSpace>
-.#------------------------------------------------------------------------------
-.input|dokuwiki+text
-.configuration.source=file:${{{xwiki.test.folder}}}/dokuwikitext/dokuwiki-meta-missing.zip
-.#------------------------------------------------------------------------------

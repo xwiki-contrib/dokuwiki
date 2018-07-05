@@ -36,6 +36,7 @@ import org.xwiki.rendering.listener.HeaderLevel;
 import org.xwiki.rendering.listener.ListType;
 import org.xwiki.rendering.listener.Listener;
 import org.xwiki.rendering.listener.MetaData;
+import org.xwiki.rendering.listener.reference.InterWikiResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.parser.ParseException;
@@ -946,8 +947,45 @@ class DokuWikiIterativeParser
         ArrayList<Character> functionBuffer = new ArrayList<>();
         c = source.read();
         while (source.ready() && c != -1) {
-            ResourceReference reference;
             functionBuffer.add((char) c);
+            String bufferString = getStringRepresentation(functionBuffer);
+            if (bufferString.endsWith("doku>") || bufferString.endsWith("wp>") || bufferString.endsWith("phpfn>") ||
+                    bufferString.endsWith("google>") || bufferString.endsWith("skype>"))
+            {
+                InterWikiResourceReference reference;
+                functionBuffer.remove(functionBuffer.size() - 1);
+                functionBuffer.add(':');
+                ArrayList<Character> Buffer = new ArrayList<>();
+                while (c != ']') {
+                    c = source.read();
+                    Buffer.add((char) c);
+                }
+                source.read();
+                Buffer.remove(Buffer.size() - 1);
+                reference = new InterWikiResourceReference(getStringRepresentation(Buffer));
+
+                if (getStringRepresentation(functionBuffer).startsWith("doku")) {
+                    reference.setInterWikiAlias("doku");
+                } else if (getStringRepresentation(functionBuffer).startsWith("wp")) {
+
+                    reference.setInterWikiAlias("wp");
+                } else if (getStringRepresentation(functionBuffer).startsWith("phpfn")) {
+                    reference.setInterWikiAlias("phpfn");
+                } else if (getStringRepresentation(functionBuffer).startsWith("google")) {
+                    reference.setInterWikiAlias("google");
+                } else if (getStringRepresentation(functionBuffer).startsWith("skype")) {
+                    reference.setInterWikiAlias("skype");
+                } else {
+                    continue;
+                }
+
+                reference.setTyped(true);
+                listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
+                listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
+                break;
+            }
+
+            ResourceReference reference;
             if ((char) c == '|') {
                 c = (char) source.read();
                 if (functionBuffer.get(0) == '<' && functionBuffer.get(functionBuffer.size() - 2) == '>'
