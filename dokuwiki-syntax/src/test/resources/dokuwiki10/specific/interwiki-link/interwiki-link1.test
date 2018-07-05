@@ -1,0 +1,24 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.0
+.#-----------------------------------------------------
+[[doku>home]] links
+[[wp>index]] Parah
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+beginLink [Typed = [true] Type = [interwiki] Reference = [home] Parameters = [[interWikiAlias] = [doku]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [home] Parameters = [[interWikiAlias] = [doku]]] [false]
+onSpace
+onWord [links]
+onSpace
+beginLink [Typed = [true] Type = [interwiki] Reference = [index] Parameters = [[interWikiAlias] = [wp]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [index] Parameters = [[interWikiAlias] = [wp]]] [false]
+onSpace
+onWord [Parah]
+endParagraph
+endDocument
+.expect|xwiki/2.1
+.#-----------------------------------------------------
+[[interwiki:doku:home]] links [[interwiki:wp:index]] Parah

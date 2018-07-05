@@ -540,8 +540,8 @@ onSpace
 endHeader [1, ]
 endSection
 beginParagraph
-beginLink [Typed = [false] Type = [url] Reference = [doku>DokuWiki]] [false]
-endLink [Typed = [false] Type = [url] Reference = [doku>DokuWiki]] [false]
+beginLink [Typed = [true] Type = [interwiki] Reference = [DokuWiki] Parameters = [[interWikiAlias] = [doku]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [DokuWiki] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpace
 onWord [supports]
 onSpace
@@ -672,9 +672,8 @@ onWord [accessible]
 onSpace
 onWord [via]
 onSpace
-beginLink [Typed = [false] Type = [url] Reference = [doku>toolbar]] [false]
-onWord [quickbuttons]
-endLink [Typed = [false] Type = [url] Reference = [doku>toolbar]] [false]
+beginLink [Typed = [true] Type = [interwiki] Reference = [toolbar|quickbuttons] Parameters = [[interWikiAlias] = [doku]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [toolbar|quickbuttons] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpecialSymbol [,]
 onSpace
 onWord [too.]
@@ -1098,12 +1097,8 @@ endParagraph
 onMacroStandalone [code] [] [Internal links are created by using square brackets. You can either just give]
 onMacroStandalone [code] [] [a [[pagename]] or use an additional [[pagename|link text]].]
 beginParagraph
-beginLink [Typed = [false] Type = [url] Reference = [doku>pagename]] [false]
-onWord [Wiki]
-onSpace
-onWord [pagenames]
-endLink [Typed = [false] Type = [url] Reference = [doku>pagename]] [false]
-onSpace
+beginLink [Typed = [true] Type = [interwiki] Reference = [pagename|Wiki pagenames] Parameters = [[interWikiAlias] = [doku]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [pagename|Wiki pagenames] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpace
 onWord [are]
 onSpace
@@ -1161,8 +1156,8 @@ onWord [namespaces]
 onSpace
 onWord [see]
 onSpace
-beginLink [Typed = [false] Type = [url] Reference = [doku>namespaces]] [false]
-endLink [Typed = [false] Type = [url] Reference = [doku>namespaces]] [false]
+beginLink [Typed = [true] Type = [interwiki] Reference = [namespaces] Parameters = [[interWikiAlias] = [doku]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [namespaces] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpace
 onSpecialSymbol [.]
 endParagraph
@@ -1243,8 +1238,8 @@ onWord [DokuWiki]
 onSpace
 onWord [supports]
 onSpace
-beginLink [Typed = [false] Type = [url] Reference = [doku>Interwiki]] [false]
-endLink [Typed = [false] Type = [url] Reference = [doku>Interwiki]] [false]
+beginLink [Typed = [true] Type = [interwiki] Reference = [Interwiki] Parameters = [[interWikiAlias] = [doku]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [Interwiki] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpace
 onWord [links.]
 onSpace
@@ -1284,8 +1279,8 @@ onWord [about]
 onSpace
 onWord [Wikis:]
 onSpace
-beginLink [Typed = [false] Type = [url] Reference = [wp>Wiki]] [false]
-endLink [Typed = [false] Type = [url] Reference = [wp>Wiki]] [false]
+beginLink [Typed = [true] Type = [interwiki] Reference = [Wiki] Parameters = [[interWikiAlias] = [wp]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [Wiki] Parameters = [[interWikiAlias] = [wp]]] [false]
 onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [DokuWiki supports [[doku>Interwiki]] links. These are quick links to other Wikis.]
@@ -1348,8 +1343,8 @@ onWord [a]
 onSpace
 onWord [corporate]
 onSpace
-beginLink [Typed = [false] Type = [url] Reference = [wp>Intranet]] [false]
-endLink [Typed = [false] Type = [url] Reference = [wp>Intranet]] [false]
+beginLink [Typed = [true] Type = [interwiki] Reference = [Intranet] Parameters = [[interWikiAlias] = [wp]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [Intranet] Parameters = [[interWikiAlias] = [wp]]] [false]
 onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [Windows Shares like [[\\server\share|this]] are recognized, too.]
@@ -1721,17 +1716,8 @@ onWord [and]
 onSpace
 onWord [internal]
 onSpace
-beginLink [Typed = [false] Type = [url] Reference = [doku>images]] [false]
-onWord [images,]
-onSpace
-onWord [videos]
-onSpace
-onWord [and]
-onSpace
-onWord [audio]
-onSpace
-onWord [files]
-endLink [Typed = [false] Type = [url] Reference = [doku>images]] [false]
+beginLink [Typed = [true] Type = [interwiki] Reference = [images|images, videos and audio files] Parameters = [[interWikiAlias] = [doku]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [images|images, videos and audio files] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpace
 onSpace
 onWord [with]
@@ -2416,15 +2402,8 @@ onWord [at]
 onSpace
 onWord [the]
 onSpace
-beginLink [Typed = [false] Type = [url] Reference = [doku>faq:lists]] [false]
-onWord [FAQ]
-onSpace
-onWord [on]
-onSpace
-onWord [list]
-onSpace
-onWord [items]
-endLink [Typed = [false] Type = [url] Reference = [doku>faq:lists]] [false]
+beginLink [Typed = [true] Type = [interwiki] Reference = [faq:lists|FAQ on list items] Parameters = [[interWikiAlias] = [doku]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [faq:lists|FAQ on list items] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpace
 onSpecialSymbol [.]
 endParagraph
@@ -2553,8 +2532,8 @@ onWord [commonly]
 onSpace
 onWord [used]
 onSpace
-beginLink [Typed = [false] Type = [url] Reference = [wp>emoticon]] [false]
-endLink [Typed = [false] Type = [url] Reference = [wp>emoticon]] [false]
+beginLink [Typed = [true] Type = [interwiki] Reference = [emoticon] Parameters = [[interWikiAlias] = [wp]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [emoticon] Parameters = [[interWikiAlias] = [wp]]] [false]
 onSpace
 onWord [s]
 onSpace
@@ -2568,8 +2547,8 @@ onWord [equivalents.]
 onSpace
 onWord [Those]
 onSpace
-beginLink [Typed = [false] Type = [url] Reference = [doku>Smileys]] [false]
-endLink [Typed = [false] Type = [url] Reference = [doku>Smileys]] [false]
+beginLink [Typed = [true] Type = [interwiki] Reference = [Smileys] Parameters = [[interWikiAlias] = [doku]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [Smileys] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpace
 onWord [and]
 onSpace
@@ -2792,11 +2771,8 @@ onWord [to]
 onSpace
 onWord [the]
 onSpace
-beginLink [Typed = [false] Type = [url] Reference = [doku>entities]] [false]
-onWord [pattern]
-onSpace
-onWord [file]
-endLink [Typed = [false] Type = [url] Reference = [doku>entities]] [false]
+beginLink [Typed = [true] Type = [interwiki] Reference = [entities|pattern file] Parameters = [[interWikiAlias] = [doku]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [entities|pattern file] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpace
 onSpecialSymbol [.]
 endParagraph
@@ -2853,11 +2829,8 @@ onWord [through]
 onSpace
 onWord [a]
 onSpace
-beginLink [Typed = [false] Type = [url] Reference = [doku>config:typography]] [false]
-onWord [config]
-onSpace
-onWord [option]
-endLink [Typed = [false] Type = [url] Reference = [doku>config:typography]] [false]
+beginLink [Typed = [true] Type = [interwiki] Reference = [config:typography|config option] Parameters = [[interWikiAlias] = [doku]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [config:typography|config option] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpecialSymbol [.]
 endParagraph
 beginSection
@@ -5487,9 +5460,8 @@ onWord [extended]
 onSpace
 onWord [by]
 onSpace
-beginLink [Typed = [false] Type = [url] Reference = [doku>plugins]] [false]
-onWord [Plugins]
-endLink [Typed = [false] Type = [url] Reference = [doku>plugins]] [false]
+beginLink [Typed = [true] Type = [interwiki] Reference = [plugins|Plugins] Parameters = [[interWikiAlias] = [doku]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [plugins|Plugins] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpace
 onSpecialSymbol [.]
 onSpace
