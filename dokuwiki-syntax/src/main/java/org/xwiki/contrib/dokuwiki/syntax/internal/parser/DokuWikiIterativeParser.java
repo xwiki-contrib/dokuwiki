@@ -23,8 +23,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,8 +103,9 @@ class DokuWikiIterativeParser
         boolean italicOpen = false;
         boolean underlineOpen = false;
         boolean monospaceOpen = false;
-        int listSpaceidentation = -1;
-        int quotationIdentation = -1;
+        int listIndentation = -1;
+        Stack<ListType> listType = new Stack<>();
+        int quotationIndentation = -1;
         boolean inQuotation = false;
         boolean listEnded = true;
         boolean inSectionEvent = false;
@@ -140,16 +142,17 @@ class DokuWikiIterativeParser
                     || inSectionEvent || horizontalLineAdded)))
             {
                 if (!inParagraph) {
-                    if (listSpaceidentation > -1 || quotationIdentation > -1) {
-                        while (listSpaceidentation >= 0) {
+                    if (listIndentation > -1 ||  quotationIndentation > -1) {
+                        while (listIndentation >= 0) {
                             listener.endListItem();
-                            listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
-                            listSpaceidentation--;
+                            closeList(listener, listType);
+                            listIndentation--;
                         }
-                        while (quotationIdentation >= 0) {
+
+                        while (quotationIndentation >= 0) {
                             listener.endQuotationLine();
                             listener.endQuotation(Listener.EMPTY_PARAMETERS);
-                            quotationIdentation--;
+                            quotationIndentation--;
                         }
                     } else {
                         listener.beginParagraph(Listener.EMPTY_PARAMETERS);
@@ -209,7 +212,7 @@ class DokuWikiIterativeParser
                     }
                     continue;
                 }
-                if (getStringRepresentation(buffer).equals("  ") && listSpaceidentation == -1) {
+                if (getStringRepresentation(buffer).equals("  ") && listIndentation == -1) {
                     //code section
                     buffer.clear();
                     int c;
@@ -270,17 +273,17 @@ class DokuWikiIterativeParser
                         && buffer.get(buffer.size() - 2) == '>')
                 {
                     //process quotation.
-                    if (buffer.size() - 2 > quotationIdentation) {
-                        while (quotationIdentation < buffer.size() - 2) {
+                    if (buffer.size() - 2 > quotationIndentation) {
+                        while (quotationIndentation < buffer.size() - 2) {
                             listener.beginQuotation(Listener.EMPTY_PARAMETERS);
                             listener.beginQuotationLine();
-                            quotationIdentation++;
+                            quotationIndentation++;
                         }
-                    } else if (buffer.size() - 2 < quotationIdentation) {
-                        while (quotationIdentation > (buffer.size() - 2)) {
+                    } else if (buffer.size() - 2 < quotationIndentation) {
+                        while (quotationIndentation > (buffer.size() - 2)) {
                             listener.endQuotationLine();
                             listener.endQuotation(Listener.EMPTY_PARAMETERS);
-                            quotationIdentation--;
+                            quotationIndentation--;
                         }
                         listener.endQuotationLine();
                         listener.beginQuotationLine();
@@ -304,19 +307,20 @@ class DokuWikiIterativeParser
                     }
                     //unordered list
                     if (isUnorederedList) {
-                        if (buffer.size() > listSpaceidentation) {
-                            while (listSpaceidentation < buffer.size()) {
+                        if (buffer.size() > listIndentation) {
+                            while (listIndentation < buffer.size()) {
                                 listener.beginList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
+                                listType.push(ListType.BULLETED);
                                 listener.beginListItem();
-                                listSpaceidentation++;
+                                listIndentation++;
                             }
-                        } else if (buffer.size() < listSpaceidentation) {
-                            while (listSpaceidentation > (buffer.size())) {
-                                listener.endListItem();
-                                listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
-                                listSpaceidentation--;
-                            }
+                        } else if (buffer.size() < listIndentation) {
                             listener.endListItem();
+                            while (listIndentation > (buffer.size())) {
+                                closeList(listener, listType);
+                                listener.endListItem();
+                                listIndentation--;
+                            }
                             listener.beginListItem();
                         } else {
                             listener.endListItem();
@@ -344,18 +348,20 @@ class DokuWikiIterativeParser
                         }
                     }
                     if (isOrederedList) {
-                        if (buffer.size() > listSpaceidentation) {
-                            while (listSpaceidentation < buffer.size()) {
+                        if (buffer.size() > listIndentation) {
+                            while (listIndentation < buffer.size()) {
                                 listener.beginList(ListType.NUMBERED, Listener.EMPTY_PARAMETERS);
+                                listType.push(ListType.NUMBERED);
                                 listener.beginListItem();
-                                listSpaceidentation++;
+                                listIndentation++;
                             }
-                        } else if (buffer.size() < listSpaceidentation) {
-                            while (listSpaceidentation > (buffer.size())) {
+                        } else if (buffer.size() < listIndentation) {
+                            listener.endListItem();
+                            while (listIndentation > (buffer.size())) {
+                                // close internal last list element
+                                closeList(listener, listType);
                                 listener.endListItem();
-                                listener.endList(ListType.NUMBERED, Listener.EMPTY_PARAMETERS);
-                                listener.endListItem();
-                                listSpaceidentation--;
+                                listIndentation--;
                             }
                             listener.beginListItem();
                         } else {
@@ -798,16 +804,17 @@ class DokuWikiIterativeParser
             processWords(0, buffer, listener);
         }
         //close remaining list items
-        while (listSpaceidentation >= 0) {
+        while (listIndentation >= 0) {
             listener.endListItem();
-            listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
-            listSpaceidentation--;
+            closeList(listener, listType);
+            listIndentation--;
         }
+
         //close remaining quotations
-        while (quotationIdentation >= 0) {
+        while (quotationIndentation >= 0) {
             listener.endQuotationLine();
             listener.endQuotation(Listener.EMPTY_PARAMETERS);
-            quotationIdentation--;
+            quotationIndentation--;
         }
         if (inParagraph) {
             listener.endParagraph(Listener.EMPTY_PARAMETERS);
@@ -1092,6 +1099,14 @@ class DokuWikiIterativeParser
         Pattern p = Pattern.compile(urlRegex);
         Matcher m = p.matcher(string);
         return m.find();
+    }
+
+    private void closeList(Listener listener, Stack<ListType> listType) {
+        if (listType.pop() == ListType.BULLETED) {
+            listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
+        } else {
+            listener.endList(ListType.NUMBERED, Listener.EMPTY_PARAMETERS);
+        }
     }
 
     private void trimBuffer(ArrayList<Character> buffer)
