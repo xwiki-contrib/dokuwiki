@@ -102,8 +102,9 @@ class DokuWikiIterativeParser
         boolean italicOpen = false;
         boolean underlineOpen = false;
         boolean monospaceOpen = false;
-        int listSpaceidentation = -1;
-        int quotationIdentation = -1;
+        int unorderedListIndentation = -1;
+        int orderedListIndentation = -1;
+        int quotationIndentation = -1;
         boolean inQuotation = false;
         boolean listEnded = true;
         boolean inSectionEvent = false;
@@ -140,16 +141,23 @@ class DokuWikiIterativeParser
                     || inSectionEvent || horizontalLineAdded)))
             {
                 if (!inParagraph) {
-                    if (listSpaceidentation > -1 || quotationIdentation > -1) {
-                        while (listSpaceidentation >= 0) {
+                    if (unorderedListIndentation > -1 || orderedListIndentation > -1 ||  quotationIndentation > -1) {
+                        while (unorderedListIndentation >= 0) {
                             listener.endListItem();
                             listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
-                            listSpaceidentation--;
+                            unorderedListIndentation--;
                         }
-                        while (quotationIdentation >= 0) {
+
+                        while (orderedListIndentation >= 0) {
+                            listener.endListItem();
+                            listener.endList(ListType.NUMBERED, Listener.EMPTY_PARAMETERS);
+                            orderedListIndentation--;
+                        }
+
+                        while (quotationIndentation >= 0) {
                             listener.endQuotationLine();
                             listener.endQuotation(Listener.EMPTY_PARAMETERS);
-                            quotationIdentation--;
+                            quotationIndentation--;
                         }
                     } else {
                         listener.beginParagraph(Listener.EMPTY_PARAMETERS);
@@ -209,7 +217,8 @@ class DokuWikiIterativeParser
                     }
                     continue;
                 }
-                if (getStringRepresentation(buffer).equals("  ") && listSpaceidentation == -1) {
+                if (getStringRepresentation(buffer).equals("  ") &&
+                        (unorderedListIndentation == -1 &&  orderedListIndentation == -1)) {
                     //code section
                     buffer.clear();
                     int c;
@@ -270,17 +279,17 @@ class DokuWikiIterativeParser
                         && buffer.get(buffer.size() - 2) == '>')
                 {
                     //process quotation.
-                    if (buffer.size() - 2 > quotationIdentation) {
-                        while (quotationIdentation < buffer.size() - 2) {
+                    if (buffer.size() - 2 > quotationIndentation) {
+                        while (quotationIndentation < buffer.size() - 2) {
                             listener.beginQuotation(Listener.EMPTY_PARAMETERS);
                             listener.beginQuotationLine();
-                            quotationIdentation++;
+                            quotationIndentation++;
                         }
-                    } else if (buffer.size() - 2 < quotationIdentation) {
-                        while (quotationIdentation > (buffer.size() - 2)) {
+                    } else if (buffer.size() - 2 < quotationIndentation) {
+                        while (quotationIndentation > (buffer.size() - 2)) {
                             listener.endQuotationLine();
                             listener.endQuotation(Listener.EMPTY_PARAMETERS);
-                            quotationIdentation--;
+                            quotationIndentation--;
                         }
                         listener.endQuotationLine();
                         listener.beginQuotationLine();
@@ -304,17 +313,20 @@ class DokuWikiIterativeParser
                     }
                     //unordered list
                     if (isUnorederedList) {
-                        if (buffer.size() > listSpaceidentation) {
-                            while (listSpaceidentation < buffer.size()) {
+                        int listIndentation = orderedListIndentation + unorderedListIndentation + 1;
+                        if (buffer.size() > listIndentation) {
+                            while (listIndentation < buffer.size()) {
                                 listener.beginList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
                                 listener.beginListItem();
-                                listSpaceidentation++;
+                                unorderedListIndentation++;
+                                listIndentation++;
                             }
-                        } else if (buffer.size() < listSpaceidentation) {
-                            while (listSpaceidentation > (buffer.size())) {
+                        } else if (buffer.size() < listIndentation) {
+                            while (listIndentation > (buffer.size())) {
                                 listener.endListItem();
                                 listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
-                                listSpaceidentation--;
+                                unorderedListIndentation--;
+                                listIndentation--;
                             }
                             listener.endListItem();
                             listener.beginListItem();
@@ -344,18 +356,21 @@ class DokuWikiIterativeParser
                         }
                     }
                     if (isOrederedList) {
-                        if (buffer.size() > listSpaceidentation) {
-                            while (listSpaceidentation < buffer.size()) {
+                        int listIndentation = orderedListIndentation + unorderedListIndentation + 1;
+                        if (buffer.size() > listIndentation) {
+                            while (listIndentation < buffer.size()) {
                                 listener.beginList(ListType.NUMBERED, Listener.EMPTY_PARAMETERS);
                                 listener.beginListItem();
-                                listSpaceidentation++;
+                                orderedListIndentation++;
+                                listIndentation++;
                             }
-                        } else if (buffer.size() < listSpaceidentation) {
-                            while (listSpaceidentation > (buffer.size())) {
+                        } else if (buffer.size() < listIndentation) {
+                            while (listIndentation > (buffer.size())) {
                                 listener.endListItem();
                                 listener.endList(ListType.NUMBERED, Listener.EMPTY_PARAMETERS);
                                 listener.endListItem();
-                                listSpaceidentation--;
+                                orderedListIndentation--;
+                                listIndentation--;
                             }
                             listener.beginListItem();
                         } else {
@@ -797,17 +812,25 @@ class DokuWikiIterativeParser
         if (buffer.size() > 0) {
             processWords(0, buffer, listener);
         }
-        //close remaining list items
-        while (listSpaceidentation >= 0) {
+        //close remaining unordered list items
+        while (unorderedListIndentation >= 0) {
             listener.endListItem();
             listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
-            listSpaceidentation--;
+            unorderedListIndentation--;
         }
+
+        //close remaining ordered list items
+        while (orderedListIndentation >= 0) {
+            listener.endListItem();
+            listener.endList(ListType.NUMBERED, Listener.EMPTY_PARAMETERS);
+            orderedListIndentation--;
+        }
+
         //close remaining quotations
-        while (quotationIdentation >= 0) {
+        while (quotationIndentation >= 0) {
             listener.endQuotationLine();
             listener.endQuotation(Listener.EMPTY_PARAMETERS);
-            quotationIdentation--;
+            quotationIndentation--;
         }
         if (inParagraph) {
             listener.endParagraph(Listener.EMPTY_PARAMETERS);
