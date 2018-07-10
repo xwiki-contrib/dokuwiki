@@ -18,7 +18,7 @@
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-beginList [BULLETED]
+beginList [NUMBERED]
 beginListItem
 onWord [Item]
 onSpace
@@ -28,13 +28,13 @@ beginListItem
 onWord [Item]
 onSpace
 onWord [2]
-beginList [NUMBERED]
+beginList [BULLETED]
 beginListItem
 onWord [Item]
 onSpace
 onWord [3]
 endListItem
-endList [NUMBERED]
+endList [BULLETED]
 endListItem
 beginListItem
 onWord [Item]
@@ -48,8 +48,8 @@ onWord [Item]
 onSpace
 onWord [5]
 endListItem
-endList [BULLETED]
-beginList [NUMBERED]
+endList [NUMBERED]
+beginList [BULLETED]
 beginListItem
 onWord [Item]
 onSpace
@@ -64,13 +64,13 @@ beginListItem
 onWord [Item]
 onSpace
 onWord [3]
-beginList [BULLETED]
+beginList [NUMBERED]
 beginListItem
 onWord [Item]
 onSpace
 onWord [4]
 endListItem
-endList [BULLETED]
+endList [NUMBERED]
 endListItem
 endList [BULLETED]
 endListItem
@@ -91,5 +91,5 @@ onWord [Item]
 onSpace
 onWord [7]
 endListItem
-endList [NUMBERED]
+endList [BULLETED]
 endDocument
