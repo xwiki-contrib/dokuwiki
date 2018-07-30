@@ -1819,10 +1819,10 @@ beginParagraph
 onImage [Typed = [false] Type = [attach] Reference = [:dokuwiki-128.png]] [false] [[align]=[left]]
 endParagraph
 beginParagraph
-onImage [Typed = [false] Type = [attach] Reference = [dokuwiki-128.png ]] [false] [[align]=[right]]
+onImage [Typed = [false] Type = [attach] Reference = [dokuwiki-128.png]] [false] [[align]=[right]]
 endParagraph
 beginParagraph
-onImage [Typed = [false] Type = [attach] Reference = [:dokuwiki-128.png ]] [false] [[align]=[left]]
+onImage [Typed = [false] Type = [attach] Reference = [dokuwiki-128.png]] [false] [[align]=[middle]]
 endParagraph
 onMacroStandalone [code] [] [{{ wiki:dokuwiki-128.png}}]
 onMacroStandalone [code] [] [{{wiki:dokuwiki-128.png }}]
