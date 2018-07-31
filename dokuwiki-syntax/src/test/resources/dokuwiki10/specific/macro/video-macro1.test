@@ -1,0 +1,18 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.0
+.#-----------------------------------------------------
+{{youtube>L-WM8YxwqEU}}
+{{youtube>L-WM8YxwqEU?large}}
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+onMacroInline [video] [url=http://www.youtube.com/watch?v=L-WM8YxwqEU]
+onMacroInline [video] [width=780|url=http://www.youtube.com/watch?v=L-WM8YxwqEU|height=500]
+endParagraph
+endDocument
+.#-----------------------------------------------------
+.expect|xwiki/2.1
+.#-----------------------------------------------------
+{{video url="http://www.youtube.com/watch?v=L-WM8YxwqEU"/}}{{video width="780" url="http://www.youtube.com/watch?v=L-WM8YxwqEU" height="500"/}}
