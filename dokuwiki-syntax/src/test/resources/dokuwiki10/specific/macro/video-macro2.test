@@ -1,0 +1,18 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.0
+.#-----------------------------------------------------
+{{dailymotion>L-WM8YxwqEU}}
+{{vimeo>L-WM8YxwqEU}}
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+onMacroInline [video] [url=http://www.dailymotion.com/video/L-WM8YxwqEU]
+onMacroInline [video] [url=https://vimeo.com/L-WM8YxwqEU]
+endParagraph
+endDocument
+.#-----------------------------------------------------
+.expect|xwiki/2.1
+.#-----------------------------------------------------
+{{video url="http://www.dailymotion.com/video/L-WM8YxwqEU"/}}{{video url="https://vimeo.com/L-WM8YxwqEU"/}}

@@ -23,9 +23,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -142,7 +142,7 @@ class DokuWikiIterativeParser
                     || inSectionEvent || horizontalLineAdded)))
             {
                 if (!inParagraph) {
-                    if (listIndentation > -1 ||  quotationIndentation > -1) {
+                    if (listIndentation > -1 || quotationIndentation > -1) {
                         while (listIndentation >= 0) {
                             listener.endListItem();
                             closeList(listener, listType);
@@ -897,6 +897,88 @@ class DokuWikiIterativeParser
             if (imageArgument.startsWith(TAG_RSS_GREATER_THAN_SYMBOL)) {
                 break;
             }
+
+            if (imageArgument.startsWith(("youtube>"))) {
+                buffer.clear();
+                while (source.ready()) {
+                    c = source.read();
+
+                    if (c == '}') {
+                        if (!param.containsKey("url")) {
+                            param.put("url", "http://www.youtube.com/watch?v=" + getStringRepresentation(buffer));
+                            source.read();
+                            break;
+                        } else {
+                            param = setVideoSize(param, buffer, source);
+                        }
+                        break;
+                    }
+                    if (c == '?') {
+                        param.put("url", "http://www.youtube.com/watch?v=" + getStringRepresentation(buffer));
+                        buffer.clear();
+                        continue;
+                    }
+                    buffer.add((char) c);
+                }
+                listener.onMacro("video", param, null, true);
+                buffer.clear();
+                break;
+            }
+
+            if (imageArgument.startsWith(("dailymotion>"))) {
+                buffer.clear();
+                while (source.ready()) {
+                    c = source.read();
+
+                    if (c == '}') {
+                        if (!param.containsKey("url")) {
+                            param.put("url", "http://www.dailymotion.com/video/" + getStringRepresentation(buffer));
+                            source.read();
+                            break;
+                        } else {
+                            param = setVideoSize(param, buffer, source);
+                        }
+                        break;
+                    }
+                    if (c == '?') {
+                        param.put("url", "http://www.dailymotion.com/video/" + getStringRepresentation(buffer));
+                        buffer.clear();
+                        continue;
+                    }
+                    buffer.add((char) c);
+                }
+                listener.onMacro("video", param, null, true);
+                buffer.clear();
+                break;
+            }
+
+            if (imageArgument.startsWith(("vimeo>"))) {
+                buffer.clear();
+                while (source.ready()) {
+                    c = source.read();
+
+                    if (c == '}') {
+                        if (!param.containsKey("url")) {
+                            param.put("url", "https://vimeo.com/" + getStringRepresentation(buffer));
+                            source.read();
+                            break;
+                        } else {
+                            param = setVideoSize(param, buffer, source);
+                        }
+                        break;
+                    }
+                    if (c == '?') {
+                        param.put("url", "https://vimeo.com/" + getStringRepresentation(buffer));
+                        buffer.clear();
+                        continue;
+                    }
+                    buffer.add((char) c);
+                }
+                listener.onMacro("video", param, null, true);
+                buffer.clear();
+                break;
+            }
+
             if (imageArgument.endsWith("}}")) {
                 String imageName;
                 if (!imageArgument.contains("wiki:")) {
@@ -1008,11 +1090,11 @@ class DokuWikiIterativeParser
                     processWordsFromReader((char) c, source, listener, TAG_DOUBLE_CLOSING_SQUARE_BRACKETS);
                     listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
                     break;
-                }
-                else {
-                    if (c != '{'){
+                } else {
+                    if (c != '{') {
                         reference = new ResourceReference(getStringRepresentation(
-                                new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() - 1))), ResourceType.URL);
+                                new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() - 1))),
+                                ResourceType.URL);
                         reference.setTyped(false);
                         listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
                         functionBuffer.add((char) c);
@@ -1026,7 +1108,9 @@ class DokuWikiIterativeParser
             }
 
             if (getStringRepresentation(functionBuffer).endsWith("{{")) {
-                reference = new ResourceReference(getStringRepresentation(new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() - 3))), ResourceType.URL);
+                reference = new ResourceReference(
+                        getStringRepresentation(new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() - 3))),
+                        ResourceType.URL);
                 reference.setTyped(false);
                 listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
                 functionBuffer.clear();
@@ -1102,7 +1186,8 @@ class DokuWikiIterativeParser
         return m.find();
     }
 
-    private void closeList(Listener listener, Stack<ListType> listType) {
+    private void closeList(Listener listener, Stack<ListType> listType)
+    {
         if (listType.pop() == ListType.BULLETED) {
             listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
         } else {
@@ -1118,5 +1203,20 @@ class DokuWikiIterativeParser
         while (buffer.size() > 0 && buffer.get(buffer.size() - 1) == ' ') {
             buffer.remove(buffer.size() - 1);
         }
+    }
+
+    private Map<String, String> setVideoSize(Map<String, String> param, ArrayList<Character> buffer, Reader source)
+            throws IOException
+    {
+        if (getStringRepresentation(buffer).contains("small")) {
+            param.put("width", "560");
+            param.put("height", "300");
+            source.read();
+        } else if (getStringRepresentation(buffer).contains("large")) {
+            param.put("width", "780");
+            param.put("height", "500");
+            source.read();
+        }
+        return param;
     }
 }
