@@ -902,11 +902,12 @@ class DokuWikiIterativeParser
                 if (!imageArgument.contains("wiki:")) {
                     internalImage = false;
                 }
-                if (imageArgument.startsWith("{{ ")
+                if (imageArgument.startsWith(" ")
                         && imageArgument.endsWith(TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS))
                 {
                     //align centre
                     param.put(TAG_ALIGN, "middle");
+                    imageArgument = imageArgument.substring(1);
                 } else if (imageArgument.startsWith(" ")) {
                     //align left
                     param.put(TAG_ALIGN, TAG_LEFT);
@@ -919,7 +920,7 @@ class DokuWikiIterativeParser
                 } else {
                     imageName = imageArgument.substring(1, imageArgument.length() - 2);
                 }
-                imageArgument = imageName.trim();
+                imageName = imageName.trim();
                 if (imageName.contains("|")) {
                     //there's a caption
                     String caption = imageName.substring(imageName.indexOf('|') + 1);
