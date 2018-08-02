@@ -21,11 +21,12 @@ package org.xwiki.contrib.dokuwiki.syntax.internal.parser;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -117,6 +118,10 @@ class DokuWikiIterativeParser
                 break;
             }
             buffer.add((char) readCharacter);
+            if (getStringRepresentation(buffer).contains("{{")) {
+                dokuwikiMacroParser(buffer, listener, source);
+            }
+
             if (getStringRepresentation(buffer).endsWith("----")) {
                 //generate newline event
                 if (inParagraph) {
@@ -142,7 +147,7 @@ class DokuWikiIterativeParser
                     || inSectionEvent || horizontalLineAdded)))
             {
                 if (!inParagraph) {
-                    if (listIndentation > -1 ||  quotationIndentation > -1) {
+                    if (listIndentation > -1 || quotationIndentation > -1) {
                         while (listIndentation >= 0) {
                             listener.endListItem();
                             closeList(listener, listType);
@@ -487,12 +492,12 @@ class DokuWikiIterativeParser
                 continue;
             }
 
-            if (getStringRepresentation(buffer).endsWith("{{")) {
-
-                processWords(2, buffer, listener);
-                //handle media input
+            if (getStringRepresentation(buffer).startsWith("{{")) {
+                buffer.remove(0);
+                buffer.remove(0);
                 processImage(buffer, source, listener);
             }
+
             if (buffer.size() > 0 && (buffer.get(0) == '|' || buffer.get(0) == '^')) {
                 boolean inCell = false;
                 boolean inHeadCell = false;
@@ -888,64 +893,61 @@ class DokuWikiIterativeParser
             ArrayList<Character> buffer, Reader source, Listener listener)
             throws IOException
     {
-        int c = source.read();
-        while (source.ready() && c != -1) {
-            buffer.add((char) c);
-            String imageArgument = getStringRepresentation(buffer);
-            boolean internalImage = true;
-            Map<String, String> param = new HashMap<>();
-            if (imageArgument.startsWith(TAG_RSS_GREATER_THAN_SYMBOL)) {
-                break;
+        String imageArgument = getStringRepresentation(buffer);
+        boolean internalImage = true;
+        Map<String, String> param = new HashMap<>();
+        if (imageArgument.startsWith(TAG_RSS_GREATER_THAN_SYMBOL)) {
+            return;
+        }
+
+        if (imageArgument.endsWith("}}")) {
+            String imageName;
+            if (!imageArgument.contains("wiki:")) {
+                internalImage = false;
             }
-            if (imageArgument.endsWith("}}")) {
-                String imageName;
-                if (!imageArgument.contains("wiki:")) {
-                    internalImage = false;
-                }
-                if (imageArgument.startsWith(" ")
-                        && imageArgument.endsWith(TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS))
-                {
-                    //align centre
-                    param.put(TAG_ALIGN, "middle");
-                    imageArgument = imageArgument.substring(1);
-                } else if (imageArgument.startsWith(" ")) {
-                    //align left
-                    param.put(TAG_ALIGN, TAG_LEFT);
-                } else if (imageArgument.endsWith(TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS)) {
-                    //align right
-                    param.put(TAG_ALIGN, TAG_RIGHT);
-                }
-                if (internalImage) {
-                    imageName = imageArgument.substring(5, imageArgument.length() - 2);
+            if (imageArgument.startsWith(" ")
+                    && imageArgument.endsWith(TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS))
+            {
+                //align centre
+                param.put(TAG_ALIGN, "middle");
+                imageArgument = imageArgument.substring(1);
+            } else if (imageArgument.startsWith(" ")) {
+                //align left
+                param.put(TAG_ALIGN, TAG_LEFT);
+                imageArgument = imageArgument.substring(1);
+            } else if (imageArgument.endsWith(TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS)) {
+                //align right
+                param.put(TAG_ALIGN, TAG_RIGHT);
+            }
+            if (internalImage) {
+                imageName = imageArgument.substring(5, imageArgument.length() - 2);
+            } else {
+                imageName = imageArgument.substring(1, imageArgument.length() - 2);
+            }
+            imageName = imageName.trim();
+            if (imageName.contains("|")) {
+                //there's a caption
+                String caption = imageName.substring(imageName.indexOf('|') + 1);
+                imageName = imageName.substring(0, imageName.indexOf('|'));
+                param.put("alt", caption);
+                param.put("title", caption);
+            }
+            if (imageName.contains("?")) {
+                //there's size information
+                String size = imageName.substring(imageName.indexOf('?') + 1);
+                imageName = imageName.substring(0, imageName.indexOf('?'));
+                if (size.contains(TAG_X)) {
+                    param.put("height", size.substring(0, size.indexOf(TAG_X)) + TAG_PX);
+                    param.put(TAG_WIDTH, size.substring(size.indexOf(TAG_X) + 1) + TAG_PX);
                 } else {
-                    imageName = imageArgument.substring(1, imageArgument.length() - 2);
+                    param.put(TAG_WIDTH, size + TAG_PX);
                 }
-                imageName = imageName.trim();
-                if (imageName.contains("|")) {
-                    //there's a caption
-                    String caption = imageName.substring(imageName.indexOf('|') + 1);
-                    imageName = imageName.substring(0, imageName.indexOf('|'));
-                    param.put("alt", caption);
-                    param.put("title", caption);
-                }
-                if (imageName.contains("?")) {
-                    //there's size information
-                    String size = imageName.substring(imageName.indexOf('?') + 1);
-                    imageName = imageName.substring(0, imageName.indexOf('?'));
-                    if (size.contains(TAG_X)) {
-                        param.put("height", size.substring(0, size.indexOf(TAG_X)) + TAG_PX);
-                        param.put(TAG_WIDTH, size.substring(size.indexOf(TAG_X) + 1) + TAG_PX);
-                    } else {
-                        param.put(TAG_WIDTH, size + TAG_PX);
-                    }
-                }
-                ResourceReference reference = new ResourceReference(imageName, ResourceType.ATTACHMENT);
-                reference.setTyped(false);
-                listener.onImage(reference, false, param);
-                buffer.clear();
-                break;
             }
-            c = source.read();
+            ResourceReference reference = new ResourceReference(imageName, ResourceType.ATTACHMENT);
+            reference.setTyped(false);
+            listener.onImage(reference, false, param);
+            buffer.clear();
+            return;
         }
     }
 
@@ -1008,11 +1010,11 @@ class DokuWikiIterativeParser
                     processWordsFromReader((char) c, source, listener, TAG_DOUBLE_CLOSING_SQUARE_BRACKETS);
                     listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
                     break;
-                }
-                else {
-                    if (c != '{'){
+                } else {
+                    if (c != '{') {
                         reference = new ResourceReference(getStringRepresentation(
-                                new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() - 1))), ResourceType.URL);
+                                new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() - 1))),
+                                ResourceType.URL);
                         reference.setTyped(false);
                         listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
                         functionBuffer.add((char) c);
@@ -1026,10 +1028,13 @@ class DokuWikiIterativeParser
             }
 
             if (getStringRepresentation(functionBuffer).endsWith("{{")) {
-                reference = new ResourceReference(getStringRepresentation(new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() - 3))), ResourceType.URL);
+                reference = new ResourceReference(
+                        getStringRepresentation(new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() - 3))),
+                        ResourceType.URL);
                 reference.setTyped(false);
                 listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
                 functionBuffer.clear();
+                functionBuffer = readIntoBuffer(functionBuffer, source);
                 processImage(functionBuffer, source, listener);
                 source.skip(2);
                 listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
@@ -1102,7 +1107,8 @@ class DokuWikiIterativeParser
         return m.find();
     }
 
-    private void closeList(Listener listener, Stack<ListType> listType) {
+    private void closeList(Listener listener, Stack<ListType> listType)
+    {
         if (listType.pop() == ListType.BULLETED) {
             listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
         } else {
@@ -1118,5 +1124,65 @@ class DokuWikiIterativeParser
         while (buffer.size() > 0 && buffer.get(buffer.size() - 1) == ' ') {
             buffer.remove(buffer.size() - 1);
         }
+    }
+
+    private ArrayList<Character> readIntoBuffer(ArrayList<Character> functionBuffer, Reader source) throws IOException
+    {
+        int c;
+        while (source.ready()) {
+            c = source.read();
+            if (c == '}') {
+                functionBuffer.add((char) c);
+                functionBuffer.add('}');
+                source.read();
+                break;
+            }
+            functionBuffer.add((char) c);
+        }
+        return functionBuffer;
+    }
+
+    private void dokuwikiMacroParser(ArrayList<Character> buffer, Listener listener, Reader source)
+            throws IOException
+    {
+
+        processWords(2, buffer, listener);
+        buffer.add('{');
+        buffer.add('{');
+        buffer = readIntoBuffer(buffer, source);
+        if (getStringRepresentation(buffer).contains(TAG_RSS_GREATER_THAN_SYMBOL)) {
+            //handle RSS generation feeds
+            rssPlugin(buffer, listener, source);
+        }
+        if (getStringRepresentation(buffer).contains("gallery>")) {
+           // call gallery Plugin importer
+        }
+
+        if (getStringRepresentation(buffer).contains("youtube>") || getStringRepresentation(buffer).contains("vimeo>")
+                || getStringRepresentation(buffer).contains("dailymotion>"))
+        {
+          // call video Plugin importer
+        }
+
+        if (getStringRepresentation(buffer).contains("indexmenu>")) {
+           // call indexmenu plugin importer
+        }
+
+    }
+
+    private void rssPlugin(ArrayList<Character> buffer, Listener listener, Reader source) throws IOException{
+        Map<String, String> param = new HashMap<>();
+
+        String[] argument = getStringRepresentation(buffer).split("\\s");
+        param.put("feed", argument[0].substring(6));
+        param.put("count", "8");
+        if (Arrays.asList(argument).contains("description")) {
+            param.put("content", "true");
+        }
+        listener.onMacro("rss", param, null, true);
+        //remove remaining curly bracket
+        source.read();
+        buffer.clear();
+        return;
     }
 }
