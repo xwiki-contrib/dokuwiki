@@ -21,18 +21,19 @@ package org.xwiki.contrib.dokuwiki.syntax.internal.parser;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.slf4j.Logger;
+import org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiPlugin;
 import org.xwiki.rendering.listener.Format;
 import org.xwiki.rendering.listener.HeaderLevel;
 import org.xwiki.rendering.listener.ListType;
@@ -45,7 +46,7 @@ import org.xwiki.rendering.parser.ParseException;
 
 import static java.lang.Math.abs;
 
-class DokuWikiIterativeParser
+public class DokuWikiIterativeParser
 {
     private static final String TAG_ALIGN = "align";
 
@@ -80,6 +81,14 @@ class DokuWikiIterativeParser
 
     @Inject
     private Logger logger;
+
+    @Inject
+    @Named("curlyBracket")
+    private DokuWikiPlugin curlyPlugin;
+
+    @Inject
+    @Named("angleBracket")
+    private DokuWikiPlugin anglePlugin;
 
     void parse(Reader source, Listener listener, MetaData metaData) throws ParseException
     {
@@ -118,9 +127,10 @@ class DokuWikiIterativeParser
                 break;
             }
             buffer.add((char) readCharacter);
-            if (getStringRepresentation(buffer).contains("{{")) {
-                dokuwikiMacroParser(buffer, listener, source);
-            }
+
+            curlyPlugin.parse(buffer, source, listener);
+
+            anglePlugin.parse(buffer, source, listener);
 
             if (getStringRepresentation(buffer).endsWith("----")) {
                 //generate newline event
@@ -617,33 +627,6 @@ class DokuWikiIterativeParser
                 processWords(11, buffer, listener);
                 continue;
             }
-            if (getStringRepresentation(buffer).equals(TAG_RSS_GREATER_THAN_SYMBOL)) {
-                //handle RSS generation feeds
-                processWords(4, buffer, listener);
-                int c;
-                Map<String, String> param = new HashMap<>();
-                while (source.ready()) {
-                    c = source.read();
-                    if (c == -1) {
-                        break;
-                    }
-                    buffer.add((char) c);
-                    if (c == '}') {
-                        String[] argument = getStringRepresentation(buffer).split("\\s");
-                        param.put("feed", argument[0]);
-                        param.put("count", "8");
-                        if (Arrays.asList(argument).contains("description")) {
-                            param.put("content", "true");
-                        }
-                        listener.onMacro("rss", param, null, true);
-                        //remove remaining curly bracket
-                        source.read();
-                        break;
-                    }
-                }
-                buffer.clear();
-                continue;
-            }
 
             if (getStringRepresentation(buffer).startsWith("<php>")) {
                 processWords(5, buffer, listener);
@@ -827,7 +810,7 @@ class DokuWikiIterativeParser
         }
     }
 
-    private void processWords(int argumentTrimSize, ArrayList<Character> buffer, Listener listener)
+    public void processWords(int argumentTrimSize, ArrayList<Character> buffer, Listener listener)
     {
         buffer.subList(buffer.size() - argumentTrimSize, buffer.size()).clear();
         StringBuilder word = new StringBuilder();
@@ -1090,7 +1073,7 @@ class DokuWikiIterativeParser
     }
 
     //generic helper methods
-    private String getStringRepresentation(ArrayList<Character> list)
+    public String getStringRepresentation(ArrayList<Character> list)
     {
         StringBuilder builder = new StringBuilder(list.size());
         for (Character ch : list) {
@@ -1126,7 +1109,7 @@ class DokuWikiIterativeParser
         }
     }
 
-    private ArrayList<Character> readIntoBuffer(ArrayList<Character> functionBuffer, Reader source) throws IOException
+    public ArrayList<Character> readIntoBuffer(ArrayList<Character> functionBuffer, Reader source) throws IOException
     {
         int c;
         while (source.ready()) {
@@ -1142,47 +1125,4 @@ class DokuWikiIterativeParser
         return functionBuffer;
     }
 
-    private void dokuwikiMacroParser(ArrayList<Character> buffer, Listener listener, Reader source)
-            throws IOException
-    {
-
-        processWords(2, buffer, listener);
-        buffer.add('{');
-        buffer.add('{');
-        buffer = readIntoBuffer(buffer, source);
-        if (getStringRepresentation(buffer).contains(TAG_RSS_GREATER_THAN_SYMBOL)) {
-            //handle RSS generation feeds
-            rssPlugin(buffer, listener, source);
-        }
-        if (getStringRepresentation(buffer).contains("gallery>")) {
-           // call gallery Plugin importer
-        }
-
-        if (getStringRepresentation(buffer).contains("youtube>") || getStringRepresentation(buffer).contains("vimeo>")
-                || getStringRepresentation(buffer).contains("dailymotion>"))
-        {
-          // call video Plugin importer
-        }
-
-        if (getStringRepresentation(buffer).contains("indexmenu>")) {
-           // call indexmenu plugin importer
-        }
-
-    }
-
-    private void rssPlugin(ArrayList<Character> buffer, Listener listener, Reader source) throws IOException{
-        Map<String, String> param = new HashMap<>();
-
-        String[] argument = getStringRepresentation(buffer).split("\\s");
-        param.put("feed", argument[0].substring(6));
-        param.put("count", "8");
-        if (Arrays.asList(argument).contains("description")) {
-            param.put("content", "true");
-        }
-        listener.onMacro("rss", param, null, true);
-        //remove remaining curly bracket
-        source.read();
-        buffer.clear();
-        return;
-    }
 }
