@@ -22,6 +22,7 @@ package org.xwiki.contrib.dokuwiki.syntax.internal.parser;
 import java.io.IOException;
 import java.io.Reader;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -45,6 +46,11 @@ import org.xwiki.rendering.syntax.SyntaxType;
 public class DokuWikiStreamParser implements StreamParser
 {
     /**
+     * The String version of the syntax.
+     */
+    public static final String SYNTAX_STRING = "dokuwiki/1.0";
+
+    /**
      * The syntax type.
      */
     private static final String TAG_DOKUWIKI = "dokuwiki";
@@ -52,14 +58,12 @@ public class DokuWikiStreamParser implements StreamParser
     private static final SyntaxType SYNTAX_TYPE = new SyntaxType(TAG_DOKUWIKI, TAG_DOKUWIKI);
 
     /**
-     * The String version of the syntax.
-     */
-    public static final String SYNTAX_STRING = "dokuwiki/1.0";
-
-    /**
      * The syntax with version.
      */
     static final Syntax SYNTAX = new Syntax(SYNTAX_TYPE, "1.0");
+
+    @Inject private
+    DokuWikiIterativeParser parser;
 
     @Override
     public Syntax getSyntax()
@@ -70,15 +74,14 @@ public class DokuWikiStreamParser implements StreamParser
     @Override
     public void parse(Reader source, Listener listener) throws ParseException
     {
-        DokuWikiIterativeParser parser = new DokuWikiIterativeParser();
         MetaData metaData = new MetaData();
         metaData.addMetaData("syntax", SYNTAX);
         try {
             parser.parse(source, listener, metaData);
-        } catch ( ComponentLookupException  e) {
+        } catch (ComponentLookupException e) {
             e.printStackTrace();
             throw new ParseException("Failed to parse input");
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

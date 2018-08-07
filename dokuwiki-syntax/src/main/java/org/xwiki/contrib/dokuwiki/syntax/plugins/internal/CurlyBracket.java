@@ -10,11 +10,11 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
-import org.xwiki.contrib.dokuwiki.syntax.Helper;
-import org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiIterativeParser;
+import org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxParserHelper;
 import org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiPlugin;
 import org.xwiki.contrib.dokuwiki.syntax.plugins.internal.curlyBrackets.DokuWikiCurlyBracketPlugin;
 import org.xwiki.rendering.listener.Listener;
@@ -31,27 +31,31 @@ import org.xwiki.rendering.listener.Listener;
 public class CurlyBracket implements DokuWikiPlugin
 {
     @Inject
-    @Named("helper") private Helper helper;
+    private Logger logger;
+
+    @Inject
+    private DokuWikiSyntaxParserHelper helper;
 
     @Inject
     @Named("context")
     private Provider<ComponentManager> componentManagerProvider;
 
+    private List<DokuWikiCurlyBracketPlugin> componentList;
 
     @Override public void parse(ArrayList<Character> buffer, Reader source, Listener listener)
             throws IOException, ComponentLookupException
     {
-
-        List<DokuWikiPlugin> componentList = componentManagerProvider.get().getInstanceList(DokuWikiCurlyBracketPlugin.class);
-        for (DokuWikiPlugin plugin : componentList) {
-            plugin.parse(buffer, source, listener);
-        }
-
         if (helper.getStringRepresentation(buffer).contains("{{")) {
-            helper.processWords(2, buffer, listener, false );
+            helper.processWords(2, buffer, listener, false);
             buffer.add('{');
             buffer.add('{');
             helper.readIntoBuffer(buffer, source);
+        }
+
+        List<DokuWikiCurlyBracketPlugin> componentList =
+                componentManagerProvider.get().getInstanceList(DokuWikiCurlyBracketPlugin.class);
+        for (DokuWikiCurlyBracketPlugin plugin : componentList) {
+            plugin.parse(buffer, source, listener);
         }
     }
 }

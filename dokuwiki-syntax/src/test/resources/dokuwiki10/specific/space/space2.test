@@ -1,79 +1,79 @@
 .#-----------------------------------------------------
-.input|dokuwiki/1.0
-.#-----------------------------------------------------
-This is some text with some linebreaks\\ Note that the
-two backslashes are only recognized at the end of a line\\
-or followed by\\ a whitespace \\this happens without it.
-.#-----------------------------------------------------
-.expect|event/1.0
-.#-----------------------------------------------------
-beginDocument
-beginParagraph
-onWord [This]
-onSpace
-onWord [is]
-onSpace
-onWord [some]
-onSpace
-onWord [text]
-onSpace
-onWord [with]
-onSpace
-onWord [some]
-onSpace
-onWord [linebreaks]
-onNewLine
-onWord [Note]
-onSpace
-onWord [that]
-onSpace
-onWord [the]
-onSpace
-onWord [two]
-onSpace
-onWord [backslashes]
-onSpace
-onWord [are]
-onSpace
-onWord [only]
-onSpace
-onWord [recognized]
-onSpace
-onWord [at]
-onSpace
-onWord [the]
-onSpace
-onWord [end]
-onSpace
-onWord [of]
-onSpace
-onWord [a]
-onSpace
-onWord [line]
-onNewLine
-onWord [or]
-onSpace
-onWord [followed]
-onSpace
-onWord [by]
-onNewLine
-onWord [a]
-onSpace
-onWord [whitespace]
-onSpace
-onWord [\\this]
-onSpace
-onWord [happens]
-onSpace
-onWord [without]
-onSpace
-onWord [it.]
-endParagraph
-endDocument
-.#-----------------------------------------------------
-.expect|xwiki/2.1
-.#-----------------------------------------------------
-This is some text with some linebreaks
-Note that the two backslashes are only recognized at the end of a line
-or followed by
-a whitespace ~\~\this happens without it.
+        .input|dokuwiki/1.0
+        .#-----------------------------------------------------
+        This is some text with some linebreaks\\ Note that the
+        two backslashes are only recognized at the end of a line\\
+        or followed by\\ a whitespace \\this happens without it.
+        .#-----------------------------------------------------
+        .expect|event/1.0
+        .#-----------------------------------------------------
+        beginDocument
+        beginParagraph
+        onWord [This]
+        onSpace
+        onWord [is]
+        onSpace
+        onWord [some]
+        onSpace
+        onWord [text]
+        onSpace
+        onWord [with]
+        onSpace
+        onWord [some]
+        onSpace
+        onWord [linebreaks]
+        onNewLine
+        onWord [Note]
+        onSpace
+        onWord [that]
+        onSpace
+        onWord [the]
+        onSpace
+        onWord [two]
+        onSpace
+        onWord [backslashes]
+        onSpace
+        onWord [are]
+        onSpace
+        onWord [only]
+        onSpace
+        onWord [recognized]
+        onSpace
+        onWord [at]
+        onSpace
+        onWord [the]
+        onSpace
+        onWord [end]
+        onSpace
+        onWord [of]
+        onSpace
+        onWord [a]
+        onSpace
+        onWord [line]
+        onNewLine
+        onWord [or]
+        onSpace
+        onWord [followed]
+        onSpace
+        onWord [by]
+        onNewLine
+        onWord [a]
+        onSpace
+        onWord [whitespace]
+        onSpace
+        onWord [\\this]
+        onSpace
+        onWord [happens]
+        onSpace
+        onWord [without]
+        onSpace
+        onWord [it.]
+        endParagraph
+        endDocument
+        .#-----------------------------------------------------
+        .expect|xwiki/2.1
+        .#-----------------------------------------------------
+        This is some text with some linebreaks
+        Note that the two backslashes are only recognized at the end of a line
+        or followed by
+        a whitespace ~\~\this happens without it.

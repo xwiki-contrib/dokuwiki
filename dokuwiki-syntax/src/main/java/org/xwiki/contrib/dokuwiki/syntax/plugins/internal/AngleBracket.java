@@ -13,9 +13,10 @@ import javax.inject.Singleton;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
-import org.xwiki.contrib.dokuwiki.syntax.Helper;
+import org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxParserHelper;
 import org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiPlugin;
 import org.xwiki.contrib.dokuwiki.syntax.plugins.internal.angleBrackets.DokuWikiAngleBracketPlugin;
+import org.xwiki.contrib.dokuwiki.syntax.plugins.internal.curlyBrackets.DokuWikiCurlyBracketPlugin;
 import org.xwiki.rendering.listener.Listener;
 
 /**
@@ -30,22 +31,23 @@ import org.xwiki.rendering.listener.Listener;
 public class AngleBracket implements DokuWikiPlugin
 {
     @Inject
-    @Named("helper") private Helper helper;
+    private DokuWikiSyntaxParserHelper helper;
 
     @Inject
     @Named("context")
     private Provider<ComponentManager> componentManagerProvider;
 
+    private List<DokuWikiAngleBracketPlugin> componentList;
 
     @Override public void parse(ArrayList<Character> buffer, Reader source, Listener listener)
             throws IOException, ComponentLookupException
     {
-        List<DokuWikiPlugin> componentList = componentManagerProvider.get().getInstanceList( DokuWikiAngleBracketPlugin.class);
-        for (DokuWikiPlugin plugin : componentList) {
+        // TODO : add support
+        List<DokuWikiAngleBracketPlugin> componentList =
+                componentManagerProvider.get().getInstanceList(DokuWikiAngleBracketPlugin.class);
+        for (DokuWikiAngleBracketPlugin plugin : componentList) {
             plugin.parse(buffer, source, listener);
         }
-
-        // TODO : add support
 
         return;
     }

@@ -31,7 +31,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
-import org.xwiki.contrib.dokuwiki.syntax.Helper;
+import org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxParserHelper;
 import org.xwiki.rendering.listener.Listener;
 
 /**
@@ -46,9 +46,9 @@ import org.xwiki.rendering.listener.Listener;
 public class Rss implements DokuWikiCurlyBracketPlugin
 {
     @Inject
-    @Named("helper") private Helper helper;
+    private DokuWikiSyntaxParserHelper helper;
 
-    public void parse(Listener listener, Reader source, ArrayList<Character> buffer) throws IOException
+    public void parse(ArrayList<Character> buffer, Reader source, Listener listener) throws IOException
     {
         if (helper.getStringRepresentation(buffer).contains("rss>")) {
 

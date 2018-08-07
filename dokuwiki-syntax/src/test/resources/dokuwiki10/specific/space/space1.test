@@ -1,16 +1,16 @@
 .#-----------------------------------------------------
-.input|dokuwiki/1.0
-.#-----------------------------------------------------
-a     b\\ d
-.#-----------------------------------------------------
-.expect|event/1.0
-.#-----------------------------------------------------
-beginDocument
-beginParagraph
-onWord [a]
-onSpace
-onWord [b]
-onNewLine
-onWord [d]
-endParagraph
-endDocument
+        .input|dokuwiki/1.0
+        .#-----------------------------------------------------
+        a     b\\ d
+        .#-----------------------------------------------------
+        .expect|event/1.0
+        .#-----------------------------------------------------
+        beginDocument
+        beginParagraph
+        onWord [a]
+        onSpace
+        onWord [b]
+        onNewLine
+        onWord [d]
+        endParagraph
+        endDocument

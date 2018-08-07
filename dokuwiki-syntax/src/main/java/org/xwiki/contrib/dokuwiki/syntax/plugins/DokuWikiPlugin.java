@@ -1,6 +1,5 @@
 package org.xwiki.contrib.dokuwiki.syntax.plugins;
 
-
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;

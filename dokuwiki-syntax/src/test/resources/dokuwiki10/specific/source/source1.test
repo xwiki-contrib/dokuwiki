@@ -1,14 +1,14 @@
 .#-----------------------------------------------------
-.input|dokuwiki/1.0
-.#-----------------------------------------------------
+        .input|dokuwiki/1.0
+        .#-----------------------------------------------------
 <code language>
-some
-multiline content
+    some
+    multiline content
 </code>
-.#-----------------------------------------------------
-.expect|event/1.0
-.#-----------------------------------------------------
-beginDocument
-onMacroStandalone [code] [language=language] [some
-multiline content]
-endDocument
+        .#-----------------------------------------------------
+        .expect|event/1.0
+        .#-----------------------------------------------------
+        beginDocument
+        onMacroStandalone [code] [language=language] [some
+        multiline content]
+        endDocument

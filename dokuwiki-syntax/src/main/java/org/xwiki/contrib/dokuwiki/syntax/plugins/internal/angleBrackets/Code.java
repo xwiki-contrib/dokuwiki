@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
+import org.xwiki.component.manager.ComponentLookupException;
+import org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxParserHelper;
 import org.xwiki.rendering.listener.Listener;
 
 /**
@@ -19,10 +22,13 @@ import org.xwiki.rendering.listener.Listener;
 @Component
 @Named("code")
 @Singleton
-class Code implements  DokuWikiAngleBracketPlugin
+public class Code implements DokuWikiAngleBracketPlugin
 {
-    @Override public void parse(Listener listener, Reader source, ArrayList<Character> buffer) throws IOException
-    {
+    @Inject
+    private DokuWikiSyntaxParserHelper helper;
 
+    @Override public void parse(ArrayList<Character> buffer, Reader source, Listener listener)
+            throws IOException, ComponentLookupException
+    {
     }
 }

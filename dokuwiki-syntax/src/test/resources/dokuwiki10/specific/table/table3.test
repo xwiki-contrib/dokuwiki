@@ -1,60 +1,60 @@
 .#-----------------------------------------------------
-.input|dokuwiki/1.0
-.#-----------------------------------------------------
-^           Table with alignment           ^^^
-|         right|    center    |left          |
-|left          |         right|    center    |
-| xxxxxxxxxxxx | xxxxxxxxxxxx | xxxxxxxxxxxx |
-.#-----------------------------------------------------
-.expect|event/1.0
-.#-----------------------------------------------------
-beginDocument
-beginTable
-beginTableRow
-beginTableHeadCell [[align]=[centre]]
-onWord [Table]
-onSpace
-onWord [with]
-onSpace
-onWord [alignment]
-endTableHeadCell [[align]=[centre]]
-beginTableHeadCell
-endTableHeadCell
-beginTableHeadCell
-endTableHeadCell
-endTableRow
-beginTableRow
-beginTableCell [[align]=[right]]
-onWord [right]
-endTableCell [[align]=[right]]
-beginTableCell [[align]=[centre]]
-onWord [center]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[left]]
-onWord [left]
-endTableCell [[align]=[left]]
-endTableRow
-beginTableRow
-beginTableCell [[align]=[left]]
-onWord [left]
-endTableCell [[align]=[left]]
-beginTableCell [[align]=[right]]
-onWord [right]
-endTableCell [[align]=[right]]
-beginTableCell [[align]=[centre]]
-onWord [center]
-endTableCell [[align]=[centre]]
-endTableRow
-beginTableRow
-beginTableCell [[align]=[centre]]
-onWord [xxxxxxxxxxxx]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-onWord [xxxxxxxxxxxx]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-onWord [xxxxxxxxxxxx]
-endTableCell [[align]=[centre]]
-endTableRow
-endTable
-endDocument
+        .input|dokuwiki/1.0
+        .#-----------------------------------------------------
+        ^           Table with alignment           ^^^
+        |         right|    center    |left          |
+        |left          |         right|    center    |
+        | xxxxxxxxxxxx | xxxxxxxxxxxx | xxxxxxxxxxxx |
+        .#-----------------------------------------------------
+        .expect|event/1.0
+        .#-----------------------------------------------------
+        beginDocument
+        beginTable
+        beginTableRow
+        beginTableHeadCell [[align]=[centre]]
+        onWord [Table]
+        onSpace
+        onWord [with]
+        onSpace
+        onWord [alignment]
+        endTableHeadCell [[align]=[centre]]
+        beginTableHeadCell
+        endTableHeadCell
+        beginTableHeadCell
+        endTableHeadCell
+        endTableRow
+        beginTableRow
+        beginTableCell [[align]=[right]]
+        onWord [right]
+        endTableCell [[align]=[right]]
+        beginTableCell [[align]=[centre]]
+        onWord [center]
+        endTableCell [[align]=[centre]]
+        beginTableCell [[align]=[left]]
+        onWord [left]
+        endTableCell [[align]=[left]]
+        endTableRow
+        beginTableRow
+        beginTableCell [[align]=[left]]
+        onWord [left]
+        endTableCell [[align]=[left]]
+        beginTableCell [[align]=[right]]
+        onWord [right]
+        endTableCell [[align]=[right]]
+        beginTableCell [[align]=[centre]]
+        onWord [center]
+        endTableCell [[align]=[centre]]
+        endTableRow
+        beginTableRow
+        beginTableCell [[align]=[centre]]
+        onWord [xxxxxxxxxxxx]
+        endTableCell [[align]=[centre]]
+        beginTableCell [[align]=[centre]]
+        onWord [xxxxxxxxxxxx]
+        endTableCell [[align]=[centre]]
+        beginTableCell [[align]=[centre]]
+        onWord [xxxxxxxxxxxx]
+        endTableCell [[align]=[centre]]
+        endTableRow
+        endTable
+        endDocument

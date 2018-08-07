@@ -1,16 +1,16 @@
 .#-----------------------------------------------------
-.input|dokuwiki/1.0
-.#-----------------------------------------------------
-  some
-  multiline content
-paragraph
-.#-----------------------------------------------------
-.expect|event/1.0
-.#-----------------------------------------------------
-beginDocument
-onMacroStandalone [code] [] [some]
-onMacroStandalone [code] [] [multiline content]
-beginParagraph
-onWord [paragraph]
-endParagraph
-endDocument
+        .input|dokuwiki/1.0
+        .#-----------------------------------------------------
+        some
+        multiline content
+        paragraph
+        .#-----------------------------------------------------
+        .expect|event/1.0
+        .#-----------------------------------------------------
+        beginDocument
+        onMacroStandalone [code] [] [some]
+        onMacroStandalone [code] [] [multiline content]
+        beginParagraph
+        onWord [paragraph]
+        endParagraph
+        endDocument

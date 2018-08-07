@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
@@ -15,17 +14,15 @@ import org.xwiki.rendering.listener.Listener;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
 
-
 /**
  * DokuWiki parser helper method component.
  *
  * @version $Id: $
  * @since 1.2
  */
-@Component
-@Named("helper")
+@Component(roles = DokuWikiSyntaxParserHelper.class)
 @Singleton
-public class Helper
+public class DokuWikiSyntaxParserHelper
 {
     public String getStringRepresentation(ArrayList<Character> list)
     {
@@ -36,16 +33,17 @@ public class Helper
         return builder.toString();
     }
 
-    public boolean processWords(int argumentTrimSize, ArrayList<Character> buffer, Listener listener, boolean paragraphJustOpened)
+    public boolean processWords(int argumentTrimSize, ArrayList<Character> buffer, Listener listener,
+            boolean paragraphJustOpened)
     {
-          buffer.subList(buffer.size() - argumentTrimSize, buffer.size()).clear();
+        buffer.subList(buffer.size() - argumentTrimSize, buffer.size()).clear();
         StringBuilder word = new StringBuilder();
         boolean spaceAdded = false;
         for (char c : buffer) {
             if (c == ' ') {
                 if (!spaceAdded) {
                     if (word.length() > 0) {
-                        processWord(word, listener, paragraphJustOpened);
+                        paragraphJustOpened = processWord(word, listener, paragraphJustOpened);
                     }
                     listener.onSpace();
                     spaceAdded = true;
@@ -56,7 +54,7 @@ public class Helper
             }
         }
         if (word.length() > 0) {
-            processWord(word, listener, paragraphJustOpened);
+            paragraphJustOpened = processWord(word, listener, paragraphJustOpened);
         }
         buffer.clear();
         return paragraphJustOpened;
