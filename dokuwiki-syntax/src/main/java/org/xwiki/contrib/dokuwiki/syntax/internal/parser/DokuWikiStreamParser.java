@@ -19,12 +19,14 @@
  */
 package org.xwiki.contrib.dokuwiki.syntax.internal.parser;
 
+import java.io.IOException;
 import java.io.Reader;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
+import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.rendering.listener.Listener;
 import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.parser.ParseException;
@@ -71,6 +73,13 @@ public class DokuWikiStreamParser implements StreamParser
         DokuWikiIterativeParser parser = new DokuWikiIterativeParser();
         MetaData metaData = new MetaData();
         metaData.addMetaData("syntax", SYNTAX);
-        parser.parse(source, listener, metaData);
+        try {
+            parser.parse(source, listener, metaData);
+        } catch ( ComponentLookupException  e) {
+            e.printStackTrace();
+            throw new ParseException("Failed to parse input");
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

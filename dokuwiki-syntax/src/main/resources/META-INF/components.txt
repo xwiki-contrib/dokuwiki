@@ -5,3 +5,4 @@ org.xwiki.contrib.dokuwiki.syntax.plugins.internal.CurlyBracket
 org.xwiki.contrib.dokuwiki.syntax.plugins.internal.AngleBracket
 org.xwiki.contrib.dokuwiki.syntax.plugins.internal.curlyBrackets.Rss
 org.xwiki.contrib.dokuwiki.syntax.plugins.internal.angleBrackets.Code
+org.xwiki.contrib.dokuwiki.syntax.Helper

@@ -8,13 +8,18 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
-import org.xwiki.contrib.dokuwiki.syntax.plugins.internal.PluginParser;
 import org.xwiki.rendering.listener.Listener;
 
+/**
+ * DokuWiki Code plugin parser.
+ *
+ * @version $Id: $
+ * @since 1.2
+ */
 @Component
 @Named("code")
 @Singleton
-class Code implements PluginParser
+class Code implements  DokuWikiAngleBracketPlugin
 {
     @Override public void parse(Listener listener, Reader source, ArrayList<Character> buffer) throws IOException
     {

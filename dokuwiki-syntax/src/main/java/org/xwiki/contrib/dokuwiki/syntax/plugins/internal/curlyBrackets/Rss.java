@@ -26,33 +26,33 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
-import org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiIterativeParser;
-import org.xwiki.contrib.dokuwiki.syntax.plugins.internal.PluginParser;
+import org.xwiki.contrib.dokuwiki.syntax.Helper;
 import org.xwiki.rendering.listener.Listener;
 
 /**
  * DokuWiki RSS plugin parser.
  *
  * @version $Id:  $
+ * @since 1.2
  */
 @Component
 @Named("rss")
 @Singleton
-public class Rss implements PluginParser
+public class Rss implements DokuWikiCurlyBracketPlugin
 {
-    private DokuWikiIterativeParser helper = new DokuWikiIterativeParser();
+    @Inject
+    @Named("helper") private Helper helper;
 
     public void parse(Listener listener, Reader source, ArrayList<Character> buffer) throws IOException
     {
         if (helper.getStringRepresentation(buffer).contains("rss>")) {
 
             Map<String, String> param = new HashMap<>();
-            DokuWikiIterativeParser helper;
-            helper = new DokuWikiIterativeParser();
             String[] argument = helper.getStringRepresentation(buffer).split("\\s");
             param.put("feed", argument[0].substring(6));
             param.put("count", "8");
