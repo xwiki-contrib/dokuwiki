@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.rendering.listener.Listener;
@@ -62,8 +63,11 @@ public class DokuWikiStreamParser implements StreamParser
      */
     static final Syntax SYNTAX = new Syntax(SYNTAX_TYPE, "1.0");
 
-    @Inject private
-    DokuWikiIterativeParser parser;
+    @Inject
+    private Logger logger;
+
+    @Inject
+    private DokuWikiIterativeParser parser;
 
     @Override
     public Syntax getSyntax()
@@ -79,10 +83,10 @@ public class DokuWikiStreamParser implements StreamParser
         try {
             parser.parse(source, listener, metaData);
         } catch (ComponentLookupException e) {
-            e.printStackTrace();
+            this.logger.error("Failed to get component list");
             throw new ParseException("Failed to parse input");
         } catch (IOException e) {
-            e.printStackTrace();
+            this.logger.error("Failed to parse input");
         }
     }
 }

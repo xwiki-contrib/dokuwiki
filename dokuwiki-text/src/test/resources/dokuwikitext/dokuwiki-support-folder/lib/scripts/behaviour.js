@@ -5,8 +5,10 @@
  * @param {bool} noaria supress aria-expanded state setting
  * @author Adrian Lang <mail@adrianlang.de>
  */
-jQuery.fn.dw_hide = function(fn, noaria) {
-    if(!noaria) this.attr('aria-expanded', 'false');
+jQuery.fn.dw_hide = function (fn, noaria) {
+    if (!noaria) {
+        this.attr('aria-expanded', 'false');
+    }
     return this.slideUp('fast', fn);
 };
 
@@ -17,8 +19,10 @@ jQuery.fn.dw_hide = function(fn, noaria) {
  * @param {bool} noaria supress aria-expanded state setting
  * @author Adrian Lang <mail@adrianlang.de>
  */
-jQuery.fn.dw_show = function(fn, noaria) {
-    if(!noaria) this.attr('aria-expanded', 'true');
+jQuery.fn.dw_show = function (fn, noaria) {
+    if (!noaria) {
+        this.attr('aria-expanded', 'true');
+    }
     return this.slideDown('fast', fn);
 };
 
@@ -29,13 +33,13 @@ jQuery.fn.dw_show = function(fn, noaria) {
  * @param {function} fn callback after the state has been toggled
  * @param {bool} noaria supress aria-expanded state setting
  */
-jQuery.fn.dw_toggle = function(state, fn, noaria) {
-    return this.each(function() {
+jQuery.fn.dw_toggle = function (state, fn, noaria) {
+    return this.each(function () {
         var $this = jQuery(this);
         if (typeof state === 'undefined') {
             state = $this.is(':hidden');
         }
-        $this[state ? "dw_show" : "dw_hide" ](fn, noaria);
+        $this[state ? "dw_show" : "dw_hide"](fn, noaria);
     });
 };
 
@@ -48,7 +52,7 @@ jQuery.fn.dw_toggle = function(state, fn, noaria) {
  */
 var dw_behaviour = {
 
-    init: function(){
+    init: function () {
         dw_behaviour.focusMarker();
         dw_behaviour.scrollToMarker();
         dw_behaviour.removeHighlightOnClick();
@@ -57,20 +61,20 @@ var dw_behaviour = {
         dw_behaviour.subscription();
 
         dw_behaviour.revisionBoxHandler();
-        jQuery(document).on('click','#page__revisions input[type=checkbox]',
+        jQuery(document).on('click', '#page__revisions input[type=checkbox]',
             dw_behaviour.revisionBoxHandler
         );
 
-        jQuery('.bounce').effect('bounce', {times:10}, 2000 );
+        jQuery('.bounce').effect('bounce', {times: 10}, 2000);
     },
 
     /**
      * Looks for an element with the ID scroll__here at scrolls to it
      */
-    scrollToMarker: function(){
+    scrollToMarker: function () {
         var $obj = jQuery('#scroll__here');
-        if($obj.length) {
-            if($obj.offset().top != 0) {
+        if ($obj.length) {
+            if ($obj.offset().top != 0) {
                 jQuery('html, body').animate({
                     scrollTop: $obj.offset().top - 100
                 }, 500);
@@ -84,16 +88,16 @@ var dw_behaviour = {
     /**
      * Looks for an element with the ID focus__this at sets focus to it
      */
-    focusMarker: function(){
+    focusMarker: function () {
         jQuery('#focus__this').focus();
     },
 
     /**
      * Remove all search highlighting when clicking on a highlighted term
      */
-    removeHighlightOnClick: function(){
+    removeHighlightOnClick: function () {
         jQuery('span.search_hit').click(
-            function(e){
+            function (e) {
                 jQuery(e.target).removeClass('search_hit', 1000);
             }
         );
@@ -108,9 +112,11 @@ var dw_behaviour = {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    quickSelect: function(){
+    quickSelect: function () {
         jQuery('select.quickselect')
-            .change(function(e){ e.target.form.submit(); })
+            .change(function (e) {
+                e.target.form.submit();
+            })
             .closest('form').find(':button').not('.show').hide();
     },
 
@@ -119,14 +125,14 @@ var dw_behaviour = {
      *
      * @author Michael Klier <chi@chimeric.de>
      */
-    checkWindowsShares: function() {
-        if(!LANG.nosmblinks || navigator.userAgent.match(/(Trident|MSIE)/)) {
+    checkWindowsShares: function () {
+        if (!LANG.nosmblinks || navigator.userAgent.match(/(Trident|MSIE)/)) {
             // No warning requested or none necessary
             return;
         }
 
-        jQuery('a.windows').on('click', function(){
-            alert(LANG.nosmblinks.replace(/\\n/,"\n"));
+        jQuery('a.windows').on('click', function () {
+            alert(LANG.nosmblinks.replace(/\\n/, "\n"));
         });
     },
 
@@ -136,11 +142,13 @@ var dw_behaviour = {
      * @author Adrian Lang <lang@cosmocode.de>
      * @author Pierre Spring <pierre.spring@caillou.ch>
      */
-    subscription: function(){
+    subscription: function () {
         var $form, $list, $digest;
 
         $form = jQuery('#subscribe__form');
-        if (0 === $form.length) return;
+        if (0 === $form.length) {
+            return;
+        }
 
         $list = $form.find("input[name='sub_style'][value='list']");
         $digest = $form.find("input[name='sub_style'][value='digest']");
@@ -170,21 +178,21 @@ var dw_behaviour = {
      * @author Andreas Gohr <andi@splitbrain.org>
      * @author Anika Henke <anika@selfthinker.org>
      */
-    revisionBoxHandler: function() {
+    revisionBoxHandler: function () {
         var $revisions = jQuery('#page__revisions');
-        var $all       = jQuery('input[type=checkbox]', $revisions);
-        var $checked   = $all.filter(':checked');
-        var $button    = jQuery('button', $revisions);
+        var $all = jQuery('input[type=checkbox]', $revisions);
+        var $checked = $all.filter(':checked');
+        var $button = jQuery('button', $revisions);
 
-        if($checked.length < 2) {
+        if ($checked.length < 2) {
             $all.removeAttr('disabled');
             $button.attr('disabled', true);
         } else {
             $all.attr('disabled', true);
             $button.removeAttr('disabled');
-            $checked.each(function(i) {
+            $checked.each(function (i) {
                 jQuery(this).removeAttr('disabled');
-                if(i>1) {
+                if (i > 1) {
                     jQuery(this).attr('checked', false);
                 }
             });

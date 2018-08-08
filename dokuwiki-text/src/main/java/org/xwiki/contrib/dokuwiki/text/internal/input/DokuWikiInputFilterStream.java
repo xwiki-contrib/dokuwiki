@@ -125,8 +125,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         InputSource inputSource = this.properties.getSource();
         if (inputSource instanceof FileInputSource) {
             File f = ((FileInputSource) inputSource).getFile();
-            if (f.exists())
-            {
+            if (f.exists()) {
                 if (f.isDirectory()) {
                     File dokuwikiDataDirectory = new File(f, "data");
                     readUsers(new File(f, "conf" + System.getProperty(KEY_FILE_SEPERATOR)
@@ -160,7 +159,8 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                             fileInputStream.close();
                             archiveInputStream.close();
                         } catch (IOException | ArchiveException e2) {
-                            this.logger.error("Failed to read/unarchive or unknown format from file input type", e1, e2);
+                            this.logger
+                                    .error("Failed to read/unarchive or unknown format from file input type", e1, e2);
                         }
                     }
                 }
@@ -307,7 +307,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                     FilterEventParameters documentLocaleParameters = new FilterEventParameters();
 
                     File f = new File(fileMetadataPath);
-                    if(f.exists() && !f.isDirectory()) {
+                    if (f.exists() && !f.isDirectory()) {
                         String metadataFileContents = FileUtils.readFileToString
                                 (new File(fileMetadataPath), "UTF-8");
                         MixedArray documentMetadata = Pherialize.unserialize(metadataFileContents).toArray();
@@ -325,15 +325,14 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                             //read revisions
                             readPageRevision(file, dokuwikiDataDirectory, proxyFilter);
                         } else {
-                            documentLocaleParameters = readDocument(file,documentLocaleParameters,
+                            documentLocaleParameters = readDocument(file, documentLocaleParameters,
                                     dokuwikiDataDirectory, proxyFilter);
                         }
-                    }
-                    else {
+                    } else {
                         this.logger.warn("File [{}] not found (Some datafile's properties (eg. filesize, " +
                                 "last modified date) are not imported. Details can be found on " +
                                 "https://www.dokuwiki.org/devel:metadata)", f);
-                        documentLocaleParameters = readDocument(file,documentLocaleParameters,
+                        documentLocaleParameters = readDocument(file, documentLocaleParameters,
                                 dokuwikiDataDirectory, proxyFilter);
                     }
 
@@ -344,8 +343,8 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         }
     }
 
-    private FilterEventParameters readDocument( File file ,FilterEventParameters documentLocaleParameters,
-                                        String dokuwikiDataDirectory, DokuWikiFilter proxyFilter) throws FilterException
+    private FilterEventParameters readDocument(File file, FilterEventParameters documentLocaleParameters,
+            String dokuwikiDataDirectory, DokuWikiFilter proxyFilter) throws FilterException
     {
         try {
             String pageContents = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
@@ -355,7 +354,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
             readAttachments(pageContents, file, dokuwikiDataDirectory, proxyFilter);
             return documentLocaleParameters;
-        }  catch (IOException e) {
+        } catch (IOException e) {
             this.logger.error("Could not read file", e);
         }
         return documentLocaleParameters;

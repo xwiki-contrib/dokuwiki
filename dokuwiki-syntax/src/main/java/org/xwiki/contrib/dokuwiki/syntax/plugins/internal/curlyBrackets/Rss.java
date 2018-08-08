@@ -48,6 +48,13 @@ public class Rss implements DokuWikiCurlyBracketPlugin
     @Inject
     private DokuWikiSyntaxParserHelper helper;
 
+    /**
+     * Parse the input buffer for RSS plugin.
+     * @param buffer Buffer stores list of characters
+     * @param source Source is the input stream
+     * @param listener Listener calls the java events.
+     * @throws IOException when fail to parse input buffer
+     */
     public void parse(ArrayList<Character> buffer, Reader source, Listener listener) throws IOException
     {
         if (helper.getStringRepresentation(buffer).contains("rss>")) {

@@ -31,7 +31,9 @@ var dw_mediamanager = {
         var $content, $tree;
         $content = jQuery('#media__content');
         $tree = jQuery('#media__tree');
-        if (!$tree.length) return;
+        if (!$tree.length) {
+            return;
+        }
 
         dw_mediamanager.prepare_content($content);
 
@@ -272,7 +274,8 @@ var dw_mediamanager = {
         cb = String.prototype.match.call(document.location, /&onselect=([^&]+)/);
         cb = cb ? cb[1].replace(/[^\w]+/, '') : 'dw_mediamanager_item_select';
 
-        // arguments here only match the dw_mediamanager_item_select function, these will need to change if you override cb with onselect GET param
+        // arguments here only match the dw_mediamanager_item_select function, these will need to change if you
+        // override cb with onselect GET param
         opener[cb](edid, id, opts, dw_mediamanager.align, dw_mediamanager.keepopen);
         if (!dw_mediamanager.keepopen) {
             window.close();
@@ -280,7 +283,6 @@ var dw_mediamanager = {
         opener.focus();
         return false;
     },
-
 
     /**
      * Prefills the wikiname.
@@ -293,7 +295,9 @@ var dw_mediamanager = {
         $file = jQuery(this);
         $name = jQuery('#upload__name');
 
-        if ($name.val() != '') return;
+        if ($name.val() != '') {
+            return;
+        }
 
         if (!$file.length || !$name.length) {
             return;
@@ -357,7 +361,9 @@ var dw_mediamanager = {
      * @author Kate Arzamastseva <pshns@ukr.net>
      */
     form_params: function ($form) {
-        if (!$form.length) return;
+        if (!$form.length) {
+            return;
+        }
 
         var action = '';
         var i = $form[0].action.indexOf('?');
@@ -434,7 +440,7 @@ var dw_mediamanager = {
         }
 
         update_list = ($link[0].id == 'mediamanager__btn_delete' ||
-        $link[0].id == 'mediamanager__btn_restore');
+            $link[0].id == 'mediamanager__btn_restore');
 
         dw_mediamanager.update_content($content, params, update_list);
     },
@@ -449,7 +455,8 @@ var dw_mediamanager = {
                 dw_mediamanager.$resizables().resizable('destroy');
 
                 if (update_list) {
-                    dw_mediamanager.list.call(jQuery('#mediamanager__page').find('form.options button[type="submit"]')[0]);
+                    dw_mediamanager.list.call(
+                        jQuery('#mediamanager__page').find('form.options button[type="submit"]')[0]);
                 }
 
                 $content.html(data);
@@ -554,10 +561,14 @@ var dw_mediamanager = {
      * @author Kate Arzamastseva <pshns@ukr.net>
      */
     image_diff: function () {
-        if (jQuery('#mediamanager__difftype').length) return;
+        if (jQuery('#mediamanager__difftype').length) {
+            return;
+        }
 
         var $form = jQuery('#mediamanager__form_diffview');
-        if (!$form.length) return;
+        if (!$form.length) {
+            return;
+        }
 
         var $label = jQuery(document.createElement('label'));
         $label.append('<span>' + LANG.media_diff + '</span> ');
@@ -608,10 +619,14 @@ var dw_mediamanager = {
     opacity_slider: function () {
         var $diff = jQuery("#mediamanager__diff");
         var $slider = $diff.find("div.slider");
-        if (!$slider.length) return;
+        if (!$slider.length) {
+            return;
+        }
 
         var $image = $diff.find('div.imageDiff.opacity div.image1 img');
-        if (!$image.length) return;
+        if (!$image.length) {
+            return;
+        }
         $slider.width($image.width() - 20);
 
         $slider.slider();
@@ -620,7 +635,8 @@ var dw_mediamanager = {
         $slider.slider("option", "step", 0.001);
         $slider.slider("option", "value", 0.5);
         $slider.on("slide", function (event, ui) {
-            jQuery('#mediamanager__diff').find('div.imageDiff.opacity div.image2 img').css({opacity: $slider.slider("option", "value")});
+            jQuery('#mediamanager__diff').find('div.imageDiff.opacity div.image2 img').css(
+                {opacity: $slider.slider("option", "value")});
         });
     },
 
@@ -631,11 +647,15 @@ var dw_mediamanager = {
      */
     portions_slider: function () {
         var $diff = jQuery("#mediamanager__diff");
-        if (!$diff.length) return;
+        if (!$diff.length) {
+            return;
+        }
 
         var $image1 = $diff.find('div.imageDiff.portions div.image1 img');
         var $image2 = $diff.find('div.imageDiff.portions div.image2 img');
-        if (!$image1.length || !$image2.length) return;
+        if (!$image1.length || !$image2.length) {
+            return;
+        }
 
         $diff.width('100%');
         $image2.parent().width('97%');
@@ -651,7 +671,9 @@ var dw_mediamanager = {
         $image1.width($image1.width());
 
         var $slider = $diff.find("div.slider");
-        if (!$slider.length) return;
+        if (!$slider.length) {
+            return;
+        }
         $slider.width($image1.width() - 20);
 
         $slider.slider();
@@ -660,7 +682,8 @@ var dw_mediamanager = {
         $slider.slider("option", "step", 1);
         $slider.slider("option", "value", 50);
         $slider.on("slide", function (event, ui) {
-            jQuery('#mediamanager__diff').find('div.imageDiff.portions div.image2').css({width: $slider.slider("option", "value") + '%'});
+            jQuery('#mediamanager__diff').find('div.imageDiff.portions div.image2').css(
+                {width: $slider.slider("option", "value") + '%'});
         });
     },
 
@@ -680,8 +703,12 @@ var dw_mediamanager = {
     },
 
     init_ajax_uploader: function () {
-        if (!jQuery('#mediamanager__uploader').length) return;
-        if (jQuery('.qq-upload-list').length) return;
+        if (!jQuery('#mediamanager__uploader').length) {
+            return;
+        }
+        if (jQuery('.qq-upload-list').length) {
+            return;
+        }
 
         var params = dw_mediamanager.form_params(jQuery('#dw__upload')) + '&call=mediaupload';
         params = dw_mediamanager.params_toarray(params);
@@ -938,7 +965,8 @@ var dw_mediamanager = {
  * @param {string} opts
  * @param {string} align [none, left, center, right]
  */
-function dw_mediamanager_item_select(edid, mediaid, opts, align, keepopen) {
+function dw_mediamanager_item_select(edid, mediaid, opts, align, keepopen)
+{
     var alignleft = '';
     var alignright = '';
 

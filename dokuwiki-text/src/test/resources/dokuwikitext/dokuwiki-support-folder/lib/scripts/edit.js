@@ -20,30 +20,31 @@
  * @author Andreas Gohr <andi@splitbrain.org>
  * @author Michal Rezler <m.rezler@centrum.cz>
  */
-function createToolButton(icon,label,key,id,classname){
+function createToolButton(icon, label, key, id, classname)
+{
     var $btn = jQuery(document.createElement('button')),
         $ico = jQuery(document.createElement('img'));
 
     // prepare the basic button stuff
     $btn.addClass('toolbutton');
-    if(classname){
+    if (classname) {
         $btn.addClass(classname);
     }
 
     $btn.attr('title', label).attr('aria-controls', 'wiki__text');
-    if(key){
-        $btn.attr('title', label + ' ['+key.toUpperCase()+']')
+    if (key) {
+        $btn.attr('title', label + ' [' + key.toUpperCase() + ']')
             .attr('accessKey', key);
     }
 
     // set IDs if given
-    if(id){
+    if (id) {
         $btn.attr('id', id);
-        $ico.attr('id', id+'_ico');
+        $ico.attr('id', id + '_ico');
     }
 
     // create the icon and add it to the button
-    if(icon.substr(0,1) !== '/'){
+    if (icon.substr(0, 1) !== '/') {
         icon = DOKU_BASE + 'lib/images/toolbar/' + icon;
     }
     $ico.attr('src', icon);
@@ -70,18 +71,20 @@ function createToolButton(icon,label,key,id,classname){
  * @return DOMobject    the created picker
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function createPicker(id,props,edid){
+function createPicker(id, props, edid)
+{
     // create the wrapping div
     var $picker = jQuery(document.createElement('div'));
 
     $picker.addClass('picker a11y');
-    if(props['class']){
+    if (props['class']) {
         $picker.addClass(props['class']);
     }
 
     $picker.attr('id', id).css('position', 'absolute');
 
-    function $makebutton(title) {
+    function $makebutton(title)
+    {
         var $btn = jQuery(document.createElement('button'))
             .addClass('pickerbutton').attr('title', title)
             .attr('aria-controls', edid)
@@ -95,21 +98,21 @@ function createPicker(id,props,edid){
             return;
         }
 
-        if(isNaN(key)){
+        if (isNaN(key)) {
             // associative array -> treat as text => image pairs
-            if (item.substr(0,1) !== '/') {
-                item = DOKU_BASE+'lib/images/'+props.icobase+'/'+item;
+            if (item.substr(0, 1) !== '/') {
+                item = DOKU_BASE + 'lib/images/' + props.icobase + '/' + item;
             }
             jQuery(document.createElement('img'))
                 .attr('src', item)
                 .attr('alt', '')
                 .appendTo($makebutton(key));
-        }else if (typeof item == 'string'){
+        } else if (typeof item == 'string') {
             // a list of text -> treat as text picker
             $makebutton(item).text(item);
-        }else{
+        } else {
             // a list of lists -> treat it as subtoolbar
-            initToolbar($picker,edid,props.list);
+            initToolbar($picker, edid, props.list);
             return false; // all buttons handled already
         }
 
@@ -125,8 +128,9 @@ function createPicker(id,props,edid){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function pickerInsert(text,edid){
-    insertAtCarret(edid,text);
+function pickerInsert(text, edid)
+{
+    insertAtCarret(edid, text);
     pickerClose();
 }
 
@@ -139,10 +143,11 @@ function pickerInsert(text,edid){
  * @return {string} picker id for aria-controls attribute
  * @author Gabriel Birke <birke@d-scribe.de>
  */
-function addBtnActionSignature($btn, props, edid) {
-    if(typeof SIG != 'undefined' && SIG != ''){
+function addBtnActionSignature($btn, props, edid)
+{
+    if (typeof SIG != 'undefined' && SIG != '') {
         $btn.on('click', function (e) {
-            insertAtCarret(edid,SIG);
+            insertAtCarret(edid, SIG);
             e.preventDefault();
         });
         return edid;
@@ -157,10 +162,11 @@ function addBtnActionSignature($btn, props, edid) {
  *
  * @author Andreas Gohr <gohr@cosmocode.de>
  */
-function currentHeadlineLevel(textboxId){
+function currentHeadlineLevel(textboxId)
+{
     var field = jQuery('#' + textboxId)[0],
         s = false,
-        opts = [field.value.substr(0,DWgetSelection(field).start)];
+        opts = [field.value.substr(0, DWgetSelection(field).start)];
     if (field.form.prefix) {
         // we need to look in prefix context
         opts.push(field.form.prefix.value);
@@ -171,7 +177,7 @@ function currentHeadlineLevel(textboxId){
         var str = "\n" + opt,
             lasthl = str.lastIndexOf("\n==");
         if (lasthl !== -1) {
-            s = str.substr(lasthl+1,6);
+            s = str.substr(lasthl + 1, 6);
             return false;
         }
     });
@@ -180,7 +186,6 @@ function currentHeadlineLevel(textboxId){
     }
     return 7 - s.match(/^={2,6}/)[0].length;
 }
-
 
 /**
  * global var used for not saved yet warning
@@ -191,17 +196,19 @@ window.textChanged = false;
  * global var which stores original editor content
  */
 window.doku_edit_text_content = '';
+
 /**
  * Delete the draft before leaving the page
  */
-function deleteDraft() {
+function deleteDraft()
+{
     if (is_opera || window.keepDraft) {
         return;
     }
 
     var $dwform = jQuery('#dw__editform');
 
-    if($dwform.length === 0) {
+    if ($dwform.length === 0) {
         return;
     }
 
@@ -229,21 +236,21 @@ jQuery(function () {
 
     var $edit_text = jQuery('#wiki__text');
     if ($edit_text.length > 0) {
-        if($edit_text.attr('readOnly')) {
+        if ($edit_text.attr('readOnly')) {
             return;
         }
 
         // set focus and place cursor at the start
         var sel = DWgetSelection($edit_text[0]);
         sel.start = 0;
-        sel.end   = 0;
+        sel.end = 0;
         DWsetSelection(sel);
         $edit_text.focus();
 
         doku_edit_text_content = $edit_text.val();
     }
 
-    var changeHandler = function() {
+    var changeHandler = function () {
         doku_hasTextBeenModified();
 
         doku_summaryCheck();
@@ -252,8 +259,8 @@ jQuery(function () {
     $editform.change(changeHandler);
     $editform.keydown(changeHandler);
 
-    window.onbeforeunload = function(){
-        if(window.textChanged) {
+    window.onbeforeunload = function () {
+        if (window.textChanged) {
             return LANG.notsavedyet;
         }
     };
@@ -261,13 +268,13 @@ jQuery(function () {
 
     // reset change memory var on submit
     jQuery('#edbtn__save').click(
-        function() {
+        function () {
             window.onbeforeunload = '';
             textChanged = false;
         }
     );
     jQuery('#edbtn__preview').click(
-        function() {
+        function () {
             window.onbeforeunload = '';
             textChanged = false;
             window.keepDraft = true; // needed to keep draft on page unload
@@ -278,13 +285,16 @@ jQuery(function () {
     $summary.change(doku_summaryCheck);
     $summary.keyup(doku_summaryCheck);
 
-    if (textChanged) doku_summaryCheck();
+    if (textChanged) {
+        doku_summaryCheck();
+    }
 });
 
 /**
  * Updates textChanged variable if content of the editor has been modified
  */
-function doku_hasTextBeenModified() {
+function doku_hasTextBeenModified()
+{
     if (!textChanged) {
         var $edit_text = jQuery('#wiki__text');
 
@@ -301,7 +311,8 @@ function doku_hasTextBeenModified() {
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function doku_summaryCheck(){
+function doku_summaryCheck()
+{
     var $sum = jQuery('#edit__summary'),
         missing = $sum.val() === '';
     $sum.toggleClass('missing', missing).toggleClass('edit', !missing);

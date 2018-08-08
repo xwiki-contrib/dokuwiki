@@ -6,7 +6,8 @@
  *
  * @author Marek Sacha <sachamar@fel.cvut.cz>
  */
-function Hotkeys() {
+function Hotkeys()
+{
 
     this.shortcuts = new Array();
 
@@ -34,13 +35,13 @@ function Hotkeys() {
      *
      * @author Marek Sacha <sachamar@fel.cvut.cz>
      */
-    this.initialize = function() {
+    this.initialize = function () {
         var t = this;
 
         //switch modifier key based on OS FS#1958
-        if(is_macos){
+        if (is_macos) {
             t.modifier = 'ctrl+alt';
-        }else{
+        } else {
             t.modifier = 'alt';
         }
 
@@ -49,9 +50,9 @@ function Hotkeys() {
          * target.
          */
         var anchors = document.getElementsByTagName("a");
-        t.each(anchors, function(a) {
+        t.each(anchors, function (a) {
             if (a.accessKey != "") {
-                t.addShortcut(t.modifier + '+' + a.accessKey, function() {
+                t.addShortcut(t.modifier + '+' + a.accessKey, function () {
                     location.href = a.href;
                 });
                 a.accessKey = '';
@@ -63,9 +64,9 @@ function Hotkeys() {
          * perform "click" on a button.
          */
         var inputs = document.getElementsByTagName("button");
-        t.each(inputs, function(i) {
+        t.each(inputs, function (i) {
             if (i.type == "submit" && i.accessKey != "") {
-                t.addShortcut(t.modifier + '+' + i.accessKey, function() {
+                t.addShortcut(t.modifier + '+' + i.accessKey, function () {
                     i.click();
                 });
                 i.accessKey = '';
@@ -77,9 +78,9 @@ function Hotkeys() {
          * perform "click" on a button.
          */
         var buttons = document.getElementsByTagName("button");
-        t.each(buttons, function(b) {
+        t.each(buttons, function (b) {
             if (b.accessKey != "") {
-                t.addShortcut(t.modifier + '+' + b.accessKey, function() {
+                t.addShortcut(t.modifier + '+' + b.accessKey, function () {
                     b.click();
                 });
                 b.accessKey = '';
@@ -90,16 +91,16 @@ function Hotkeys() {
          * Register listeners on document to catch keyboard events.
          */
 
-        addEvent(document,'keyup',function (e) {
-            return t.onkeyup.call(t,e);
+        addEvent(document, 'keyup', function (e) {
+            return t.onkeyup.call(t, e);
         });
 
-        addEvent(document,'keypress',function (e) {
-            return t.onkeypress.call(t,e);
+        addEvent(document, 'keypress', function (e) {
+            return t.onkeypress.call(t, e);
         });
 
-        addEvent(document,'keydown',function (e) {
-            return t.onkeydown.call(t,e);
+        addEvent(document, 'keydown', function (e) {
+            return t.onkeydown.call(t, e);
         });
     };
 
@@ -112,7 +113,7 @@ function Hotkeys() {
      * @author Marek Sacha <sachamar@fel.cvut.cz>
      * @return b boolean
      */
-    this.onkeyup = function(e) {
+    this.onkeyup = function (e) {
         var t = this;
         var v = t.findShortcut(e);
         if (v != null && v != false) {
@@ -130,7 +131,7 @@ function Hotkeys() {
      * @author Marek Sacha <sachamar@fel.cvut.cz>
      * @return b boolean
      */
-    this.onkeydown = function(e) {
+    this.onkeydown = function (e) {
         var t = this;
         var v = t.findShortcut(e);
         if (v != null && v != false) {
@@ -147,7 +148,7 @@ function Hotkeys() {
      * @author Marek Sacha <sachamar@fel.cvut.cz>
      * @return b
      */
-    this.onkeypress = function(e) {
+    this.onkeypress = function (e) {
         var t = this;
         var v = t.findShortcut(e);
         if (v != null && v != false) {
@@ -176,17 +177,17 @@ function Hotkeys() {
      * @param cmd_func Function to be called if shortcut is pressed
      * @author Marek Sacha <sachamar@fel.cvut.cz>
      */
-    this.addShortcut = function(pa, cmd_func) {
+    this.addShortcut = function (pa, cmd_func) {
         var t = this;
 
         var o = {
-            func : cmd_func,
-            alt : false,
-            ctrl : false,
-            shift : false
+            func: cmd_func,
+            alt: false,
+            ctrl: false,
+            shift: false
         };
 
-        t.each(t.explode(pa, '+'), function(v) {
+        t.each(t.explode(pa, '+'), function (v) {
             switch (v) {
                 case 'alt':
                 case 'ctrl':
@@ -200,7 +201,8 @@ function Hotkeys() {
             }
         });
 
-        t.shortcuts.push((o.ctrl ? 'ctrl' : '') + ',' + (o.alt ? 'alt' : '') + ',' + (o.shift ? 'shift' : '') + ',' + o.keyCode,  o);
+        t.shortcuts.push((o.ctrl ? 'ctrl' : '') + ',' + (o.alt ? 'alt' : '') + ',' + (o.shift ? 'shift' : '') + ',' +
+            o.keyCode, o);
 
         return true;
     };
@@ -217,26 +219,29 @@ function Hotkeys() {
      * @param s Namespace to be used during call of cb (default namespace is o)
      * @author Marek Sacha <sachamar@fel.cvut.cz>
      */
-    this.each = function(o, cb, s) {
+    this.each = function (o, cb, s) {
         var n, l;
 
-        if (!o)
+        if (!o) {
             return 0;
+        }
 
         s = s || o;
 
         if (o.length !== undefined) {
             // Indexed arrays, needed for Safari
-            for (n=0, l = o.length; n < l; n++) {
-                if (cb.call(s, o[n], n, o) === false)
+            for (n = 0, l = o.length; n < l; n++) {
+                if (cb.call(s, o[n], n, o) === false) {
                     return 0;
+                }
             }
         } else {
             // Hashtables
             for (n in o) {
                 if (o.hasOwnProperty(n)) {
-                    if (cb.call(s, o[n], n, o) === false)
+                    if (cb.call(s, o[n], n, o) === false) {
                         return 0;
+                    }
                 }
             }
         }
@@ -251,8 +256,8 @@ function Hotkeys() {
      * @author Marek Sacha <sachamar@fel.cvut.cz>
      * @return a Array of tokens
      */
-    this.explode = function(s, d) {
-        return  s.split(d || ',');
+    this.explode = function (s, d) {
+        return s.split(d || ',');
     };
 
     /**
@@ -271,15 +276,18 @@ function Hotkeys() {
             return v;
         }
 
-        t.each(t.shortcuts, function(o) {
-            if (o.ctrl != e.ctrlKey)
+        t.each(t.shortcuts, function (o) {
+            if (o.ctrl != e.ctrlKey) {
                 return;
+            }
 
-            if (o.alt != e.altKey)
+            if (o.alt != e.altKey) {
                 return;
+            }
 
-            if (o.shift != e.shiftKey)
+            if (o.shift != e.shiftKey) {
                 return;
+            }
 
             if (e.keyCode == o.keyCode || (e.charCode && e.charCode == o.charCode)) {
                 v = o;
@@ -296,7 +304,8 @@ function Hotkeys() {
  *
  * @author Marek Sacha <sachamar@fel.cvut.cz>
  */
-function initializeHotkeys() {
+function initializeHotkeys()
+{
     var hotkeys = new Hotkeys();
     hotkeys.initialize();
 }
