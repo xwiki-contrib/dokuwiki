@@ -1,103 +1,103 @@
 .#-----------------------------------------------------
-        .input|dokuwiki/1.0
-        .#-----------------------------------------------------
-        * This is a list
-        * The second item
-        * You may have different levels
-        * Another item
+.input|dokuwiki/1.0
+.#-----------------------------------------------------
+* This is a list
+ * The second item
+* You may have different levels
+* Another item
 
-        - The same list but ordered
-        - Another item
-        - Just use indention for deeper levels
-        - That's it
-        .#-----------------------------------------------------
-        .expect|event/1.0
-        .#-----------------------------------------------------
-        beginDocument
-        beginList [BULLETED]
-        beginListItem
-        onWord [This]
-        onSpace
-        onWord [is]
-        onSpace
-        onWord [a]
-        onSpace
-        onWord [list]
-        beginList [BULLETED]
-        beginListItem
-        onWord [The]
-        onSpace
-        onWord [second]
-        onSpace
-        onWord [item]
-        endListItem
-        endList [BULLETED]
-        endListItem
-        beginListItem
-        onWord [You]
-        onSpace
-        onWord [may]
-        onSpace
-        onWord [have]
-        onSpace
-        onWord [different]
-        onSpace
-        onWord [levels]
-        endListItem
-        beginListItem
-        onWord [Another]
-        onSpace
-        onWord [item]
-        endListItem
-        endList [BULLETED]
-        beginList [NUMBERED]
-        beginListItem
-        onWord [The]
-        onSpace
-        onWord [same]
-        onSpace
-        onWord [list]
-        onSpace
-        onWord [but]
-        onSpace
-        onWord [ordered]
-        beginList [NUMBERED]
-        beginListItem
-        onWord [Another]
-        onSpace
-        onWord [item]
-        endListItem
-        endList [NUMBERED]
-        endListItem
-        beginListItem
-        onWord [Just]
-        onSpace
-        onWord [use]
-        onSpace
-        onWord [indention]
-        onSpace
-        onWord [for]
-        onSpace
-        onWord [deeper]
-        onSpace
-        onWord [levels]
-        endListItem
-        beginListItem
-        onWord [That's]
-        onSpace
-        onWord [it]
-        endListItem
-        endList [NUMBERED]
-        endDocument
-        .#-----------------------------------------------------
-        .expect|xwiki/2.1
-        .#-----------------------------------------------------
-        * This is a list
-        ** The second item
-        * You may have different levels
-        * Another item
+- The same list but ordered
+ - Another item
+- Just use indention for deeper levels
+- That's it
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginList [BULLETED]
+beginListItem
+onWord [This]
+onSpace
+onWord [is]
+onSpace
+onWord [a]
+onSpace
+onWord [list]
+beginList [BULLETED]
+beginListItem
+onWord [The]
+onSpace
+onWord [second]
+onSpace
+onWord [item]
+endListItem
+endList [BULLETED]
+endListItem
+beginListItem
+onWord [You]
+onSpace
+onWord [may]
+onSpace
+onWord [have]
+onSpace
+onWord [different]
+onSpace
+onWord [levels]
+endListItem
+beginListItem
+onWord [Another]
+onSpace
+onWord [item]
+endListItem
+endList [BULLETED]
+beginList [NUMBERED]
+beginListItem
+onWord [The]
+onSpace
+onWord [same]
+onSpace
+onWord [list]
+onSpace
+onWord [but]
+onSpace
+onWord [ordered]
+beginList [NUMBERED]
+beginListItem
+onWord [Another]
+onSpace
+onWord [item]
+endListItem
+endList [NUMBERED]
+endListItem
+beginListItem
+onWord [Just]
+onSpace
+onWord [use]
+onSpace
+onWord [indention]
+onSpace
+onWord [for]
+onSpace
+onWord [deeper]
+onSpace
+onWord [levels]
+endListItem
+beginListItem
+onWord [That's]
+onSpace
+onWord [it]
+endListItem
+endList [NUMBERED]
+endDocument
+.#-----------------------------------------------------
+.expect|xwiki/2.1
+.#-----------------------------------------------------
+* This is a list
+** The second item
+* You may have different levels
+* Another item
 
-        1. The same list but ordered
-        11. Another item
-        1. Just use indention for deeper levels
-        1. That's it
+1. The same list but ordered
+11. Another item
+1. Just use indention for deeper levels
+1. That's it

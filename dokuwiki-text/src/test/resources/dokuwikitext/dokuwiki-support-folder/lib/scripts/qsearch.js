@@ -30,8 +30,7 @@ jQuery.fn.dw_qsearch = function (overrides) {
 
             // objects found?
             if (dw_qsearch.$inObj.length === 0 ||
-                dw_qsearch.$outObj.length === 0)
-            {
+                dw_qsearch.$outObj.length === 0) {
                 return;
             }
 
@@ -75,7 +74,7 @@ jQuery.fn.dw_qsearch = function (overrides) {
         /**
          * Read search term from input
          */
-        getSearchterm: function () {
+        getSearchterm: function() {
             return dw_qsearch.$inObj.val();
         },
 
@@ -172,6 +171,7 @@ jQuery.fn.dw_qsearch = function (overrides) {
             // reenable overflow
             dw_qsearch.$outObj.find('li').css('overflow', 'hidden').css('text-overflow', 'ellipsis');
         }
+
 
     };
 

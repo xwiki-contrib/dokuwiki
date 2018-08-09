@@ -6,6 +6,7 @@
  * their site width) are the 4 min-width's (search for @change).
  */
 
+
 /*____________ structure ____________*/
 
 #mediamanager__page h1 {
@@ -18,15 +19,12 @@
     width: 100%;
     text-align: left;
 }
-
 [dir=rtl] #mediamanager__page {
     text-align: right;
 }
-
 #mediamanager__page .panel {
     float: left;
 }
-
 [dir=rtl] #mediamanager__page .panel {
     float: right;
 }
@@ -34,15 +32,13 @@
 #mediamanager__page .namespaces {
     width: 20%;
     min-width: 10em; /* @change */
-    left: 0 !important; /* overrules jQuery UI resizable in rtl */
+    left:0 !important; /* overrules jQuery UI resizable in rtl */
 }
-
 #mediamanager__page .filelist {
     width: 50%;
     min-width: 25em; /* @change */
-    left: 0 !important; /* overrules jQuery UI resizable in rtl */
+    left:0 !important; /* overrules jQuery UI resizable in rtl */
 }
-
 #mediamanager__page .file {
     width: 30%;
     min-width: 15em; /* @change */
@@ -60,12 +56,10 @@
     min-height: 20px;
     overflow: hidden;
 }
-
 [dir=rtl] #mediamanager__page .panelHeader {
     text-align: right;
     margin: 0 0 10px 10px;
 }
-
 #mediamanager__page .panelContent {
     overflow-y: auto;
     overflow-x: hidden;
@@ -73,7 +67,6 @@
     margin: 0 10px 10px 0;
     position: relative;
 }
-
 [dir=rtl] #mediamanager__page .panelContent {
     text-align: right;
     margin: 0 0 10px 10px;
@@ -83,7 +76,6 @@
 #mediamanager__page .file .panelContent {
     margin-right: 0;
 }
-
 [dir=rtl] #mediamanager__page .file .panelHeader,
 [dir=rtl] #mediamanager__page .file .panelContent {
     margin-left: 0;
@@ -94,20 +86,18 @@
     right: 2px;
     background: transparent url(../../images/resizecol.png) center center no-repeat;
 }
-
 #mediamanager__page .ui-resizable-e:hover {
     background-color: @ini_background_alt;
 }
-
 [dir=rtl] #mediamanager__page .ui-resizable-w {
     width: 6px;
     left: 2px;
     background: transparent url(../../images/resizecol.png) center center no-repeat;
 }
-
 [dir=rtl] #mediamanager__page .ui-resizable-w:hover {
     background-color: @ini_background_alt;
 }
+
 
 #mediamanager__page dd {
     margin: 0;
@@ -120,10 +110,10 @@
     padding: 0;
     margin: 0 0 3px;
 }
-
 [dir=rtl] #mediamanager__page .panelHeader h3 {
-    float: right
+    float : right
 }
+
 
 /*____________ namespaces panel ____________*/
 
@@ -148,13 +138,11 @@
     bottom: -1px;
     z-index: 2;
 }
-
 [dir=rtl] #mediamanager__page .namespaces h2 {
     margin: 0 .3em 0 0;
     position: relative;
     right: 10px;
 }
-
 #mediamanager__page .namespaces .panelHeader {
     border-top: 1px solid @ini_border;
     z-index: 1;
@@ -166,21 +154,17 @@
     padding: 0;
     list-style: none;
 }
-
 [dir=rtl] #mediamanager__page .namespaces ul {
     margin-left: 0;
     margin-right: .2em;
 }
-
 #mediamanager__page .namespaces ul ul {
     margin-left: 1em;
 }
-
 [dir=rtl] #mediamanager__page .namespaces ul ul {
     margin-left: 0;
     margin-right: 1em;
 }
-
 #mediamanager__page .namespaces ul ul li {
     margin: 0;
 }
@@ -190,6 +174,7 @@
     font-weight: bold;
 }
 
+
 /*____________ file list panel ____________*/
 
 /* file list header */
@@ -198,24 +183,20 @@
     float: right;
     margin-top: -3px;
 }
-
 [dir=rtl] #mediamanager__page .panelHeader form.options {
-    float: left
+    float : left
 }
-
 #mediamanager__page .panelHeader ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
-
 #mediamanager__page .panelHeader ul li {
     color: @ini_text;
     float: left;
     line-height: 1;
     padding-left: 3px;
 }
-
 [dir=rtl] #mediamanager__page .panelHeader ul li {
     padding-right: 3px;
     padding-left: 0;
@@ -226,15 +207,12 @@
     padding-left: 30px;
     margin: 0 0 0 5px;
 }
-
 #mediamanager__page .panelHeader ul li.listType {
     background: url('../../images/icon-list.png') 3px 1px no-repeat;
 }
-
 #mediamanager__page .panelHeader ul li.sortBy {
     background: url('../../images/icon-sort.png') 3px 1px no-repeat;
 }
-
 [dir=rtl] #mediamanager__page .panelHeader ul li.ui-controlgroup-horizontal {
     padding-left: 0;
     padding-right: 30px;
@@ -242,7 +220,7 @@
     background-position: right 1px;
 }
 
-#mediamanager__page .panelHeader form.options .ui-controlgroup-horizontal label {
+#mediamanager__page .panelHeader form.options .ui-controlgroup-horizontal label{
     font-size: 90%;
     margin-right: -0.4em;
     padding: .3em .5em;
@@ -255,15 +233,12 @@
     padding: 0;
     margin: 0 10px 0 0;
 }
-
 [dir=rtl] #mediamanager__page .filelist ul {
     margin: 0 0 0 10px;
 }
-
 #mediamanager__page .filelist ul.rows {
     margin: 0;
 }
-
 #mediamanager__page .filelist .panelContent ul li:hover {
     background-color: @ini_background_alt;
 }
@@ -290,7 +265,6 @@
     position: relative;
     line-height: 1.2;
 }
-
 [dir=rtl] #mediamanager__page .filelist .thumbs li {
     margin-right: 0;
     margin-left: 6px;
@@ -316,12 +290,10 @@
     width: 90px;
     white-space: nowrap;
 }
-
 #mediamanager__page .filelist .thumbs li .name {
     padding: 5px 0;
     font-weight: bold;
 }
-
 #mediamanager__page .filelist .thumbs li .date {
     font-style: italic;
     white-space: normal;
@@ -350,11 +322,9 @@
     height: 40px;
     text-align: center;
 }
-
 [dir=rtl] #mediamanager__page .filelist .rows li dt {
     float: right;
 }
-
 #mediamanager__page .filelist .rows li dt a {
     width: 100px;
     height: 40px;
@@ -375,7 +345,6 @@
     margin-left: 1%;
     white-space: nowrap;
 }
-
 [dir=rtl] #mediamanager__page .filelist .rows li .name,
 [dir=rtl] #mediamanager__page .filelist .rows li .size,
 [dir=rtl] #mediamanager__page .filelist .rows li .filesize,
@@ -389,12 +358,10 @@
     width: 30%;
     font-weight: bold;
 }
-
 #mediamanager__page .filelist .rows li .size,
 #mediamanager__page .filelist .rows li .filesize {
     width: 15%;
 }
-
 #mediamanager__page .filelist .rows li .date {
     width: 20%;
     font-style: italic;
@@ -415,7 +382,6 @@
     padding: 0;
     list-style: none;
 }
-
 #mediamanager__page .file ul.actions li {
     display: inline;
     margin: 0;
@@ -433,17 +399,16 @@
 #mediamanager__page .file dl {
     margin-bottom: 0;
 }
-
 #mediamanager__page .file dl dt {
     font-weight: bold;
     display: block;
     background-color: @ini_background_alt;
 }
-
 #mediamanager__page .file dl dd {
     display: block;
     background-color: @ini_background_neu;
 }
+
 
 /* file meta data edit form */
 
@@ -477,7 +442,6 @@
     padding: 0;
     list-style-type: none;
 }
-
 [dir=rtl] #mediamanager__page form.changes ul {
     margin-left: 0;
     margin-right: 10px;
@@ -488,12 +452,10 @@
     color: @ini_text_neu;
     padding-left: 18px;
 }
-
 [dir=rtl] #mediamanager__page form.changes ul li div.li div {
     padding-left: 0;
     padding-right: 18px;
 }
-
 #mediamanager__page form.changes ul li div.li input {
     position: relative;
     top: 1px;
@@ -515,7 +477,6 @@
     text-align: left;
     border-color: @ini_background;
 }
-
 [dir=rtl] #mediamanager__diff td,
 [dir=rtl] #mediamanager__diff th {
     margin: 0 0 10px 5px;
@@ -527,16 +488,14 @@
     background-color: @ini_background;
     line-height: 1.2;
 }
-
 #mediamanager__diff th a {
     font-weight: bold;
 }
-
 #mediamanager__diff th span {
     font-size: 90%;
 }
 
-#mediamanager__diff dl dd strong {
+#mediamanager__diff dl dd strong{
     background-color: __highlight__;
     color: @ini_text;
     font-weight: normal;
@@ -557,7 +516,6 @@
 #mediamanager__diff .imageDiff {
     position: relative;
 }
-
 #mediamanager__diff .imageDiff .image2 {
     position: absolute;
     top: 0;

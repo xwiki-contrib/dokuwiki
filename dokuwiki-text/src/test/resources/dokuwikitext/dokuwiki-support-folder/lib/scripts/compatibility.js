@@ -7,33 +7,22 @@
  *
  * @param msg optional message to print
  */
-function DEPRECATED(msg)
-{
-    if (!window.console) {
-        return;
-    }
-    if (!msg) {
-        msg = '';
-    }
+function DEPRECATED(msg){
+    if(!window.console) return;
+    if(!msg) msg = '';
 
     var func;
-    if (arguments.callee) {
-        func = arguments.callee.caller.name;
-    }
-    if (func) {
-        func = ' ' + func + '()';
-    }
-    var line = 'DEPRECATED function call' + func + '. ' + msg;
+    if(arguments.callee) func = arguments.callee.caller.name;
+    if(func) func = ' '+func+'()';
+    var line = 'DEPRECATED function call'+func+'. '+msg;
 
-    if (console.warn) {
+    if(console.warn){
         console.warn(line);
-    } else {
+    }else{
         console.log(line);
     }
 
-    if (console.trace) {
-        console.trace();
-    }
+    if(console.trace) console.trace();
 }
 
 /**
@@ -45,8 +34,7 @@ function DEPRECATED(msg)
  * @param func    The new function
  * @param context Optional; The context (`this`) of the call
  */
-function DEPRECATED_WRAP(func, context)
-{
+function DEPRECATED_WRAP(func, context) {
     return function () {
         DEPRECATED();
         return func.apply(context || this, arguments);

@@ -1,106 +1,106 @@
 .#-----------------------------------------------------
-        .input|dokuwiki/1.0
-        .#-----------------------------------------------------
-        ^ Heading 1      ^ Heading 2                  ^ Heading 3          ^
-        | Row 1 Col 1    | this cell spans vertically | Row 1 Col 3        |
-        | Row 2 Col 1    | :::                        | Row 2 Col 3        |
-        | Row 3 Col 1    | :::                        | Row 2 Col 3        |
-        .#-----------------------------------------------------
-        .expect|event/1.0
-        .#-----------------------------------------------------
-        beginDocument
-        beginTable
-        beginTableRow
-        beginTableHeadCell [[align]=[centre]]
-        onWord [Heading]
-        onSpace
-        onWord [1]
-        endTableHeadCell [[align]=[centre]]
-        beginTableHeadCell [[align]=[centre]]
-        onWord [Heading]
-        onSpace
-        onWord [2]
-        endTableHeadCell [[align]=[centre]]
-        beginTableHeadCell [[align]=[centre]]
-        onWord [Heading]
-        onSpace
-        onWord [3]
-        endTableHeadCell [[align]=[centre]]
-        endTableRow
-        beginTableRow
-        beginTableCell [[align]=[centre]]
-        onWord [Row]
-        onSpace
-        onWord [1]
-        onSpace
-        onWord [Col]
-        onSpace
-        onWord [1]
-        endTableCell [[align]=[centre]]
-        beginTableCell [[align]=[centre]]
-        onWord [this]
-        onSpace
-        onWord [cell]
-        onSpace
-        onWord [spans]
-        onSpace
-        onWord [vertically]
-        endTableCell [[align]=[centre]]
-        beginTableCell [[align]=[centre]]
-        onWord [Row]
-        onSpace
-        onWord [1]
-        onSpace
-        onWord [Col]
-        onSpace
-        onWord [3]
-        endTableCell [[align]=[centre]]
-        endTableRow
-        beginTableRow
-        beginTableCell [[align]=[centre]]
-        onWord [Row]
-        onSpace
-        onWord [2]
-        onSpace
-        onWord [Col]
-        onSpace
-        onWord [1]
-        endTableCell [[align]=[centre]]
-        beginTableCell [[align]=[centre]]
-        onWord [:::]
-        endTableCell [[align]=[centre]]
-        beginTableCell [[align]=[centre]]
-        onWord [Row]
-        onSpace
-        onWord [2]
-        onSpace
-        onWord [Col]
-        onSpace
-        onWord [3]
-        endTableCell [[align]=[centre]]
-        endTableRow
-        beginTableRow
-        beginTableCell [[align]=[centre]]
-        onWord [Row]
-        onSpace
-        onWord [3]
-        onSpace
-        onWord [Col]
-        onSpace
-        onWord [1]
-        endTableCell [[align]=[centre]]
-        beginTableCell [[align]=[centre]]
-        onWord [:::]
-        endTableCell [[align]=[centre]]
-        beginTableCell [[align]=[centre]]
-        onWord [Row]
-        onSpace
-        onWord [2]
-        onSpace
-        onWord [Col]
-        onSpace
-        onWord [3]
-        endTableCell [[align]=[centre]]
-        endTableRow
-        endTable
-        endDocument
+.input|dokuwiki/1.0
+.#-----------------------------------------------------
+^ Heading 1      ^ Heading 2                  ^ Heading 3          ^
+| Row 1 Col 1    | this cell spans vertically | Row 1 Col 3        |
+| Row 2 Col 1    | :::                        | Row 2 Col 3        |
+| Row 3 Col 1    | :::                        | Row 2 Col 3        |
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginTable
+beginTableRow
+beginTableHeadCell [[align]=[centre]]
+onWord [Heading]
+onSpace
+onWord [1]
+endTableHeadCell [[align]=[centre]]
+beginTableHeadCell [[align]=[centre]]
+onWord [Heading]
+onSpace
+onWord [2]
+endTableHeadCell [[align]=[centre]]
+beginTableHeadCell [[align]=[centre]]
+onWord [Heading]
+onSpace
+onWord [3]
+endTableHeadCell [[align]=[centre]]
+endTableRow
+beginTableRow
+beginTableCell [[align]=[centre]]
+onWord [Row]
+onSpace
+onWord [1]
+onSpace
+onWord [Col]
+onSpace
+onWord [1]
+endTableCell [[align]=[centre]]
+beginTableCell [[align]=[centre]]
+onWord [this]
+onSpace
+onWord [cell]
+onSpace
+onWord [spans]
+onSpace
+onWord [vertically]
+endTableCell [[align]=[centre]]
+beginTableCell [[align]=[centre]]
+onWord [Row]
+onSpace
+onWord [1]
+onSpace
+onWord [Col]
+onSpace
+onWord [3]
+endTableCell [[align]=[centre]]
+endTableRow
+beginTableRow
+beginTableCell [[align]=[centre]]
+onWord [Row]
+onSpace
+onWord [2]
+onSpace
+onWord [Col]
+onSpace
+onWord [1]
+endTableCell [[align]=[centre]]
+beginTableCell [[align]=[centre]]
+onWord [:::]
+endTableCell [[align]=[centre]]
+beginTableCell [[align]=[centre]]
+onWord [Row]
+onSpace
+onWord [2]
+onSpace
+onWord [Col]
+onSpace
+onWord [3]
+endTableCell [[align]=[centre]]
+endTableRow
+beginTableRow
+beginTableCell [[align]=[centre]]
+onWord [Row]
+onSpace
+onWord [3]
+onSpace
+onWord [Col]
+onSpace
+onWord [1]
+endTableCell [[align]=[centre]]
+beginTableCell [[align]=[centre]]
+onWord [:::]
+endTableCell [[align]=[centre]]
+beginTableCell [[align]=[centre]]
+onWord [Row]
+onSpace
+onWord [2]
+onSpace
+onWord [Col]
+onSpace
+onWord [3]
+endTableCell [[align]=[centre]]
+endTableRow
+endTable
+endDocument

@@ -32,8 +32,7 @@ var timer = {
  * To call a function with a delay, just create a new Delay(func, timeout) and
  * call that object’s method “start”.
  */
-function Delay(func, timeout)
-{
+function Delay (func, timeout) {
     this.func = func;
     if (timeout) {
         this.timeout = timeout;
@@ -55,10 +54,8 @@ Delay.prototype = {
         DEPRECATED('don\'t use the Delay object, use window.timeout with a callback instead');
         this.delTimer();
         var _this = this;
-        this.timer = timer.add(function () {
-                _this.exec.call(_this);
-            },
-            this.timeout);
+        this.timer = timer.add(function () { _this.exec.call(_this); },
+                               this.timeout);
 
         this._data = {
             _this: arguments[0],

@@ -1,16 +1,16 @@
 .#-----------------------------------------------------
-        .input|dokuwiki/1.0
-        .#-----------------------------------------------------
-        {{wiki:image.png}}
-        .#-----------------------------------------------------
-        .expect|event/1.0
-        .#-----------------------------------------------------
-        beginDocument
-        beginParagraph
-        onImage [Typed = [false] Type = [attach] Reference = [image.png]] [false]
-        endParagraph
-        endDocument
-        .#-----------------------------------------------------
-        .expect|xwiki/2.1
-        .#-----------------------------------------------------
-        [[image:image.png]]
+.input|dokuwiki/1.0
+.#-----------------------------------------------------
+{{wiki:image.png}}
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+onImage [Typed = [false] Type = [attach] Reference = [image.png]] [false]
+endParagraph
+endDocument
+.#-----------------------------------------------------
+.expect|xwiki/2.1
+.#-----------------------------------------------------
+[[image:image.png]]

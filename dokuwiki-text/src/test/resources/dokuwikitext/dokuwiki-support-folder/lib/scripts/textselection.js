@@ -9,20 +9,19 @@
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function selection_class()
-{
-    this.start = 0;
-    this.end = 0;
-    this.obj = null;
-    this.scroll = 0;
-    this.fix = 0;
+function selection_class(){
+    this.start     = 0;
+    this.end       = 0;
+    this.obj       = null;
+    this.scroll    = 0;
+    this.fix       = 0;
 
-    this.getLength = function () {
+    this.getLength = function(){
         return this.end - this.start;
     };
 
-    this.getText = function () {
-        return (!this.obj) ? '' : this.obj.value.substring(this.start, this.end);
+    this.getText = function(){
+        return (!this.obj) ? '' : this.obj.value.substring(this.start,this.end);
     };
 }
 
@@ -34,14 +33,13 @@ function selection_class()
  * @link   http://linebyline.blogspot.com/2006/11/textarea-cursor-position-in-internet.html
  * @returns object - a selection object
  */
-function DWgetSelection(textArea)
-{
+function DWgetSelection(textArea) {
     var sel = new selection_class();
 
     textArea.focus();
-    sel.obj = textArea;
-    sel.start = textArea.selectionStart;
-    sel.end = textArea.selectionEnd;
+    sel.obj   = textArea;
+    sel.start  = textArea.selectionStart;
+    sel.end    = textArea.selectionEnd;
     sel.scroll = textArea.scrollTop;
     return sel;
 }
@@ -56,12 +54,9 @@ function DWgetSelection(textArea)
  * @author Andreas Gohr <andi@splitbrain.org>
  * @param {selection_class} selection  a selection object as returned by DWgetSelection()
  */
-function DWsetSelection(selection)
-{
+function DWsetSelection(selection){
     selection.obj.setSelectionRange(selection.start, selection.end);
-    if (selection.scroll) {
-        selection.obj.scrollTop = selection.scroll;
-    }
+    if(selection.scroll) selection.obj.scrollTop = selection.scroll;
 }
 
 /**
@@ -75,11 +70,8 @@ function DWsetSelection(selection)
  * @param {int}     opts.endofs    number of characters at the end to skip from new selection
  * @param {boolean} opts.nosel     set true if new text should not be selected
  */
-function pasteText(selection, text, opts)
-{
-    if (!opts) {
-        opts = {};
-    }
+function pasteText(selection,text,opts){
+    if(!opts) opts = {};
     // replace the content
 
     selection.obj.value =
@@ -94,21 +86,17 @@ function pasteText(selection, text, opts)
         selection.end = selection.start + text.length;
     }
 
+
     // modify the new selection if wanted
-    if (opts.startofs) {
-        selection.start += opts.startofs;
-    }
-    if (opts.endofs) {
-        selection.end -= opts.endofs;
-    }
+    if(opts.startofs) selection.start += opts.startofs;
+    if(opts.endofs)   selection.end   -= opts.endofs;
 
     // no selection wanted? set cursor to end position
-    if (opts.nosel) {
-        selection.start = selection.end;
-    }
+    if(opts.nosel) selection.start = selection.end;
 
     DWsetSelection(selection);
 }
+
 
 /**
  * Format selection
@@ -118,8 +106,7 @@ function pasteText(selection, text, opts)
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function insertTags(textAreaID, tagOpen, tagClose, sampleText)
-{
+function insertTags(textAreaID, tagOpen, tagClose, sampleText){
     var txtarea = jQuery('#' + textAreaID)[0];
 
     var selection = DWgetSelection(txtarea);
@@ -127,19 +114,19 @@ function insertTags(textAreaID, tagOpen, tagClose, sampleText)
     var opts;
 
     // don't include trailing space in selection
-    if (text.charAt(text.length - 1) == ' ') {
+    if(text.charAt(text.length - 1) == ' '){
         selection.end--;
         text = selection.getText();
     }
 
-    if (!text) {
+    if(!text){
         // nothing selected, use the sample text and select it
         text = sampleText;
         opts = {
             startofs: tagOpen.length,
             endofs: tagClose.length
         };
-    } else {
+    }else{
         // place cursor at the end
         opts = {
             nosel: true
@@ -150,7 +137,7 @@ function insertTags(textAreaID, tagOpen, tagClose, sampleText)
     text = tagOpen + text + tagClose;
 
     // do it
-    pasteText(selection, text, opts);
+    pasteText(selection,text,opts);
 }
 
 /**
@@ -158,9 +145,8 @@ function insertTags(textAreaID, tagOpen, tagClose, sampleText)
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function insertAtCarret(textAreaID, text)
-{
+function insertAtCarret(textAreaID, text){
     var txtarea = jQuery('#' + textAreaID)[0];
     var selection = DWgetSelection(txtarea);
-    pasteText(selection, text, {nosel: true});
+    pasteText(selection,text,{nosel: true});
 }

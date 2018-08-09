@@ -16,23 +16,23 @@ var dw_locktimer = {
      * @param {bool}   draft   Whether to save drafts
      * @param {string} edid    Optional; ID of an edit object which has to be present
      */
-    init: function (timeout, draft, edid) {
+    init: function(timeout,draft,edid){
         var $edit;
 
         edid = edid || 'wiki__text';
 
         $edit = jQuery('#' + edid);
-        if ($edit.length === 0 || $edit.attr('readonly')) {
+        if($edit.length === 0 || $edit.attr('readonly')) {
             return;
         }
 
         // init values
-        dw_locktimer.timeout = timeout * 1000;
-        dw_locktimer.draft = draft;
+        dw_locktimer.timeout  = timeout*1000;
+        dw_locktimer.draft    = draft;
         dw_locktimer.lasttime = new Date();
 
-        dw_locktimer.pageid = jQuery('#dw__editform').find('input[name=id]').val();
-        if (!dw_locktimer.pageid) {
+        dw_locktimer.pageid   = jQuery('#dw__editform').find('input[name=id]').val();
+        if(!dw_locktimer.pageid) {
             return;
         }
 
@@ -45,7 +45,7 @@ var dw_locktimer = {
     /**
      * (Re)start the warning timer
      */
-    reset: function () {
+    reset: function(){
         dw_locktimer.clear();
         dw_locktimer.timerID = window.setTimeout(dw_locktimer.warning, dw_locktimer.timeout);
     },
@@ -53,7 +53,7 @@ var dw_locktimer = {
     /**
      * Display the warning about the expiring lock
      */
-    warning: function () {
+    warning: function(){
         dw_locktimer.clear();
         alert(fixtxt(dw_locktimer.msg));
     },
@@ -61,8 +61,8 @@ var dw_locktimer = {
     /**
      * Remove the current warning timer
      */
-    clear: function () {
-        if (dw_locktimer.timerID !== null) {
+    clear: function(){
+        if(dw_locktimer.timerID !== null){
             window.clearTimeout(dw_locktimer.timerID);
             dw_locktimer.timerID = null;
         }
@@ -73,21 +73,21 @@ var dw_locktimer = {
      *
      * Called on keypresses in the edit area
      */
-    refresh: function () {
+    refresh: function(){
         var now = new Date(),
             params = 'call=lock&id=' + dw_locktimer.pageid + '&';
 
         // refresh every minute only
-        if (now.getTime() - dw_locktimer.lasttime.getTime() <= 30 * 1000) {
+        if(now.getTime() - dw_locktimer.lasttime.getTime() <= 30*1000) {
             return;
         }
 
         // POST everything necessary for draft saving
-        if (dw_locktimer.draft && jQuery('#dw__editform').find('textarea[name=wikitext]').length > 0) {
+        if(dw_locktimer.draft && jQuery('#dw__editform').find('textarea[name=wikitext]').length > 0){
             params += jQuery('#dw__editform').find('input[name=prefix], ' +
-                'textarea[name=wikitext], ' +
-                'input[name=suffix], ' +
-                'input[name=date]').serialize();
+                                                   'textarea[name=wikitext], ' +
+                                                   'input[name=suffix], ' +
+                                                   'input[name=date]').serialize();
         }
 
         jQuery.post(
@@ -102,12 +102,12 @@ var dw_locktimer = {
     /**
      * Callback. Resets the warning timer
      */
-    refreshed: function (data) {
+    refreshed: function(data){
         var error = data.charAt(0);
         data = data.substring(1);
 
         jQuery('#draft__status').html(data);
-        if (error != '1') {
+        if(error != '1') {
             return; // locking failed
         }
         dw_locktimer.reset();

@@ -17,35 +17,33 @@ var dw_linkwiz = {
      * Initialize the dw_linkwizard by creating the needed HTML
      * and attaching the eventhandlers
      */
-    init: function ($editor) {
+    init: function($editor){
         // position relative to the text area
         var pos = $editor.position();
 
         // create HTML Structure
-        if (dw_linkwiz.$wiz) {
+        if(dw_linkwiz.$wiz)
             return;
-        }
         dw_linkwiz.$wiz = jQuery(document.createElement('div'))
-            .dialog({
-                autoOpen: false,
-                draggable: true,
-                title: LANG.linkwiz,
-                resizable: false
-            })
-            .html(
-                '<div>' + LANG.linkto +
-                ' <input type="text" class="edit" id="link__wiz_entry" autocomplete="off" /></div>' +
-                '<div id="link__wiz_result"></div>'
-            )
-            .parent()
-            .attr('id', 'link__wiz')
-            .css({
-                'position': 'absolute',
-                'top': (pos.top + 20) + 'px',
-                'left': (pos.left + 80) + 'px'
-            })
-            .hide()
-            .appendTo('.dokuwiki:first');
+               .dialog({
+                   autoOpen: false,
+                   draggable: true,
+                   title: LANG.linkwiz,
+                   resizable: false
+               })
+               .html(
+                    '<div>'+LANG.linkto+' <input type="text" class="edit" id="link__wiz_entry" autocomplete="off" /></div>'+
+                    '<div id="link__wiz_result"></div>'
+                    )
+               .parent()
+               .attr('id','link__wiz')
+               .css({
+                    'position':    'absolute',
+                    'top':         (pos.top+20)+'px',
+                    'left':        (pos.left+80)+'px'
+                   })
+               .hide()
+               .appendTo('.dokuwiki:first');
 
         dw_linkwiz.textArea = $editor[0];
         dw_linkwiz.result = jQuery('#link__wiz_result')[0];
@@ -54,8 +52,8 @@ var dw_linkwiz = {
         jQuery(dw_linkwiz.result).css('position', 'relative');
 
         dw_linkwiz.$entry = jQuery('#link__wiz_entry');
-        if (JSINFO.namespace) {
-            dw_linkwiz.$entry.val(JSINFO.namespace + ':');
+        if(JSINFO.namespace){
+            dw_linkwiz.$entry.val(JSINFO.namespace+':');
         }
 
         // attach event handlers
@@ -67,35 +65,35 @@ var dw_linkwiz = {
     /**
      * handle all keyup events in the entry field
      */
-    onEntry: function (e) {
-        if (e.keyCode == 37 || e.keyCode == 39) { //left/right
+    onEntry: function(e){
+        if(e.keyCode == 37 || e.keyCode == 39){ //left/right
             return true; //ignore
         }
-        if (e.keyCode == 27) { //Escape
+        if(e.keyCode == 27){ //Escape
             dw_linkwiz.hide();
             e.preventDefault();
             e.stopPropagation();
             return false;
         }
-        if (e.keyCode == 38) { //Up
-            dw_linkwiz.select(dw_linkwiz.selected - 1);
+        if(e.keyCode == 38){ //Up
+            dw_linkwiz.select(dw_linkwiz.selected -1);
             e.preventDefault();
             e.stopPropagation();
             return false;
         }
-        if (e.keyCode == 40) { //Down
-            dw_linkwiz.select(dw_linkwiz.selected + 1);
+        if(e.keyCode == 40){ //Down
+            dw_linkwiz.select(dw_linkwiz.selected +1);
             e.preventDefault();
             e.stopPropagation();
             return false;
         }
-        if (e.keyCode == 13) { //Enter
-            if (dw_linkwiz.selected > -1) {
+        if(e.keyCode == 13){ //Enter
+            if(dw_linkwiz.selected > -1){
                 var $obj = dw_linkwiz.$getResult(dw_linkwiz.selected);
-                if ($obj.length > 0) {
+                if($obj.length > 0){
                     dw_linkwiz.resultClick($obj.find('a')[0]);
                 }
-            } else if (dw_linkwiz.$entry.val()) {
+            }else if(dw_linkwiz.$entry.val()){
                 dw_linkwiz.insertLink(dw_linkwiz.$entry.val());
             }
 
@@ -112,7 +110,7 @@ var dw_linkwiz = {
      * @param   num int result div to return
      * @returns DOMObject or null
      */
-    getResult: function (num) {
+    getResult: function(num){
         DEPRECATED('use dw_linkwiz.$getResult()[0] instead');
         return dw_linkwiz.$getResult()[0] || null;
     },
@@ -123,15 +121,15 @@ var dw_linkwiz = {
      * @param   num int result div to return
      * @returns jQuery object
      */
-    $getResult: function (num) {
+    $getResult: function(num) {
         return jQuery(dw_linkwiz.result).find('div').eq(num);
     },
 
     /**
      * Select the given result
      */
-    select: function (num) {
-        if (num < 0) {
+    select: function(num){
+        if(num < 0){
             dw_linkwiz.deselect();
             return;
         }
@@ -154,7 +152,7 @@ var dw_linkwiz = {
         if (childPos < 0) {
             //if childPos is above viewable area (that's why it goes negative)
             jQuery(dw_linkwiz.result)[0].scrollTop += childPos;
-        } else if (yDiff > 0) {
+        } else if(yDiff > 0) {
             // if difference between childs top and parents viewable area is
             // greater than the height of a childDiv
             jQuery(dw_linkwiz.result)[0].scrollTop += yDiff;
@@ -166,8 +164,8 @@ var dw_linkwiz = {
     /**
      * deselect a result if any is selected
      */
-    deselect: function () {
-        if (dw_linkwiz.selected > -1) {
+    deselect: function(){
+        if(dw_linkwiz.selected > -1){
             dw_linkwiz.$getResult(dw_linkwiz.selected).removeClass('selected');
         }
         dw_linkwiz.selected = -1;
@@ -177,8 +175,8 @@ var dw_linkwiz = {
      * Handle clicks in the result set an dispatch them to
      * resultClick()
      */
-    onResultClick: function (e) {
-        if (!jQuery(this).is('a')) {
+    onResultClick: function(e){
+        if(!jQuery(this).is('a')) {
             return;
         }
         e.stopPropagation();
@@ -190,14 +188,14 @@ var dw_linkwiz = {
     /**
      * Handles the "click" on a given result anchor
      */
-    resultClick: function (a) {
+    resultClick: function(a){
         dw_linkwiz.$entry.val(a.title);
-        if (a.title == '' || a.title.substr(a.title.length - 1) == ':') {
+        if(a.title == '' || a.title.substr(a.title.length-1) == ':'){
             dw_linkwiz.autocomplete_exec();
-        } else {
+        }else{
             if (jQuery(a.nextSibling).is('span')) {
                 dw_linkwiz.insertLink(a.nextSibling.innerHTML);
-            } else {
+            }else{
                 dw_linkwiz.insertLink('');
             }
         }
@@ -209,56 +207,55 @@ var dw_linkwiz = {
      * When no selection is available the given title will be used
      * as link title instead
      */
-    insertLink: function (title) {
+    insertLink: function(title){
         var link = dw_linkwiz.$entry.val(),
             sel, stxt;
-        if (!link) {
+        if(!link) {
             return;
         }
 
         sel = DWgetSelection(dw_linkwiz.textArea);
-        if (sel.start == 0 && sel.end == 0) {
+        if(sel.start == 0 && sel.end == 0) {
             sel = dw_linkwiz.selection;
         }
 
         stxt = sel.getText();
 
         // don't include trailing space in selection
-        if (stxt.charAt(stxt.length - 1) == ' ') {
+        if(stxt.charAt(stxt.length - 1) == ' '){
             sel.end--;
             stxt = sel.getText();
         }
 
-        if (!stxt && !DOKU_UHC) {
-            stxt = title;
+        if(!stxt && !DOKU_UHC) {
+            stxt=title;
         }
 
         // prepend colon inside namespaces for non namespace pages
-        if (dw_linkwiz.textArea.form.id.value.indexOf(':') != -1 &&
-            link.indexOf(':') == -1)
-        {
-            link = ':' + link;
+        if(dw_linkwiz.textArea.form.id.value.indexOf(':') != -1 &&
+           link.indexOf(':') == -1){
+           link = ':' + link;
         }
 
         var so = link.length;
         var eo = 0;
-        if (dw_linkwiz.val) {
-            if (dw_linkwiz.val.open) {
+        if(dw_linkwiz.val){
+            if(dw_linkwiz.val.open) {
                 so += dw_linkwiz.val.open.length;
-                link = dw_linkwiz.val.open + link;
+                link = dw_linkwiz.val.open+link;
             }
             link += '|';
             so += 1;
-            if (stxt) {
+            if(stxt) {
                 link += stxt;
             }
-            if (dw_linkwiz.val.close) {
+            if(dw_linkwiz.val.close) {
                 link += dw_linkwiz.val.close;
                 eo = dw_linkwiz.val.close.length;
             }
         }
 
-        pasteText(sel, link, {startofs: so, endofs: eo});
+        pasteText(sel,link,{startofs: so, endofs: eo});
         dw_linkwiz.hide();
 
         // reset the entry to the parent namespace
@@ -281,36 +278,36 @@ var dw_linkwiz = {
      *
      * Calls autocomplete_exec when the timer runs out
      */
-    autocomplete: function () {
-        if (dw_linkwiz.timer !== null) {
+    autocomplete: function(){
+        if(dw_linkwiz.timer !== null){
             window.clearTimeout(dw_linkwiz.timer);
             dw_linkwiz.timer = null;
         }
 
-        dw_linkwiz.timer = window.setTimeout(dw_linkwiz.autocomplete_exec, 350);
+        dw_linkwiz.timer = window.setTimeout(dw_linkwiz.autocomplete_exec,350);
     },
 
     /**
      * Executes the AJAX call for the page/namespace lookup
      */
-    autocomplete_exec: function () {
+    autocomplete_exec: function(){
         var $res = jQuery(dw_linkwiz.result);
         dw_linkwiz.deselect();
-        $res.html('<img src="' + DOKU_BASE + 'lib/images/throbber.gif" alt="" width="16" height="16" />')
+        $res.html('<img src="'+DOKU_BASE+'lib/images/throbber.gif" alt="" width="16" height="16" />')
             .load(
-                DOKU_BASE + 'lib/exe/ajax.php',
-                {
-                    call: 'linkwiz',
-                    q: dw_linkwiz.$entry.val()
-                }
-            );
+            DOKU_BASE + 'lib/exe/ajax.php',
+            {
+                call: 'linkwiz',
+                q: dw_linkwiz.$entry.val()
+            }
+        );
     },
 
     /**
      * Show the link wizard
      */
-    show: function () {
-        dw_linkwiz.selection = DWgetSelection(dw_linkwiz.textArea);
+    show: function(){
+        dw_linkwiz.selection  = DWgetSelection(dw_linkwiz.textArea);
         dw_linkwiz.$wiz.show();
         dw_linkwiz.$entry.focus();
         dw_linkwiz.autocomplete();
@@ -324,7 +321,7 @@ var dw_linkwiz = {
     /**
      * Hide the link wizard
      */
-    hide: function () {
+    hide: function(){
         dw_linkwiz.$wiz.hide();
         dw_linkwiz.textArea.focus();
     },
@@ -332,10 +329,10 @@ var dw_linkwiz = {
     /**
      * Toggle the link wizard
      */
-    toggle: function () {
-        if (dw_linkwiz.$wiz.css('display') == 'none') {
+    toggle: function(){
+        if(dw_linkwiz.$wiz.css('display') == 'none'){
             dw_linkwiz.show();
-        } else {
+        }else{
             dw_linkwiz.hide();
         }
     }

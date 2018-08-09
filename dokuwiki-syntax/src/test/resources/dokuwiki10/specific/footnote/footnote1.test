@@ -1,18 +1,18 @@
 .#-----------------------------------------------------
-        .input|dokuwiki/1.0
-        .#-----------------------------------------------------
-        This is a ((footnote))
-        .#-----------------------------------------------------
-        .expect|event/1.0
-        .#-----------------------------------------------------
-        beginDocument
-        beginParagraph
-        onWord [This]
-        onSpace
-        onWord [is]
-        onSpace
-        onWord [a]
-        onSpace
-        onMacroInline [foootnote] [] [footnote]
-        endParagraph
-        endDocument
+.input|dokuwiki/1.0
+.#-----------------------------------------------------
+This is a ((footnote))
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+onWord [This]
+onSpace
+onWord [is]
+onSpace
+onWord [a]
+onSpace
+onMacroInline [foootnote] [] [footnote]
+endParagraph
+endDocument

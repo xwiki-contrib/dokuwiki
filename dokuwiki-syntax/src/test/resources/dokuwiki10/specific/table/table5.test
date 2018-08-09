@@ -1,60 +1,60 @@
 .#-----------------------------------------------------
-        .input|dokuwiki/1.0
-        .#-----------------------------------------------------
-        | Image | ''gif'', ''jpg'', ''png''  |
-        | Video | ''webm'', ''ogv'', ''mp4'' |
-        | Audio | ''ogg'', ''mp3'', ''wav''  |
-        | Flash | ''swf''                    |
-        .#-----------------------------------------------------
-        .expect|event/1.0
-        .#-----------------------------------------------------
-        beginDocument
-        beginParagraph
-        beginTable
-        beginTableRow
-        beginTableCell [[align]=[centre]]
-        onWord [Image]
-        endTableCell [[align]=[centre]]
-        beginTableCell [[align]=[centre]]
-        onWord [''gif'',]
-        onSpace
-        onWord [''jpg'',]
-        onSpace
-        onWord [''png'']
-        endTableCell [[align]=[centre]]
-        endTableRow
-        beginTableRow
-        beginTableCell [[align]=[centre]]
-        onWord [Video]
-        endTableCell [[align]=[centre]]
-        beginTableCell [[align]=[centre]]
-        onWord [''webm'',]
-        onSpace
-        onWord [''ogv'',]
-        onSpace
-        onWord [''mp4'']
-        endTableCell [[align]=[centre]]
-        endTableRow
-        beginTableRow
-        beginTableCell [[align]=[centre]]
-        onWord [Audio]
-        endTableCell [[align]=[centre]]
-        beginTableCell [[align]=[centre]]
-        onWord [''ogg'',]
-        onSpace
-        onWord [''mp3'',]
-        onSpace
-        onWord [''wav'']
-        endTableCell [[align]=[centre]]
-        endTableRow
-        beginTableRow
-        beginTableCell [[align]=[centre]]
-        onWord [Flash]
-        endTableCell [[align]=[centre]]
-        beginTableCell [[align]=[centre]]
-        onWord [''swf'']
-        endTableCell [[align]=[centre]]
-        endTableRow
-        endTable
-        endParagraph
-        endDocument
+.input|dokuwiki/1.0
+.#-----------------------------------------------------
+| Image | ''gif'', ''jpg'', ''png''  |
+| Video | ''webm'', ''ogv'', ''mp4'' |
+| Audio | ''ogg'', ''mp3'', ''wav''  |
+| Flash | ''swf''                    |
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+beginTable
+beginTableRow
+beginTableCell [[align]=[centre]]
+onWord [Image]
+endTableCell [[align]=[centre]]
+beginTableCell [[align]=[centre]]
+onWord [''gif'',]
+onSpace
+onWord [''jpg'',]
+onSpace
+onWord [''png'']
+endTableCell [[align]=[centre]]
+endTableRow
+beginTableRow
+beginTableCell [[align]=[centre]]
+onWord [Video]
+endTableCell [[align]=[centre]]
+beginTableCell [[align]=[centre]]
+onWord [''webm'',]
+onSpace
+onWord [''ogv'',]
+onSpace
+onWord [''mp4'']
+endTableCell [[align]=[centre]]
+endTableRow
+beginTableRow
+beginTableCell [[align]=[centre]]
+onWord [Audio]
+endTableCell [[align]=[centre]]
+beginTableCell [[align]=[centre]]
+onWord [''ogg'',]
+onSpace
+onWord [''mp3'',]
+onSpace
+onWord [''wav'']
+endTableCell [[align]=[centre]]
+endTableRow
+beginTableRow
+beginTableCell [[align]=[centre]]
+onWord [Flash]
+endTableCell [[align]=[centre]]
+beginTableCell [[align]=[centre]]
+onWord [''swf'']
+endTableCell [[align]=[centre]]
+endTableRow
+endTable
+endParagraph
+endDocument

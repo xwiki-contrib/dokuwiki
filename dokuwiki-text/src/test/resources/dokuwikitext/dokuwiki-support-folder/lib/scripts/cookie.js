@@ -1,14 +1,14 @@
 /**
- * Handles the cookie used by several JavaScript functions
- *
- * Only a single cookie is written and read. You may only save
- * simple name-value pairs - no complex types!
- *
- * You should only use the getValue and setValue methods
- *
- * @author Andreas Gohr <andi@splitbrain.org>
- * @author Michal Rezler <m.rezler@centrum.cz>
- */
+* Handles the cookie used by several JavaScript functions
+*
+* Only a single cookie is written and read. You may only save
+* simple name-value pairs - no complex types!
+*
+* You should only use the getValue and setValue methods
+*
+* @author Andreas Gohr <andi@splitbrain.org>
+* @author Michal Rezler <m.rezler@centrum.cz>
+*/
 var DokuCookie = {
     data: {},
     name: 'DOKU_PREFS',
@@ -18,7 +18,7 @@ var DokuCookie = {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    setValue: function (key, val) {
+    setValue: function(key,val){
         var text = [],
             _this = this;
         this.init();
@@ -27,11 +27,10 @@ var DokuCookie = {
         //save the whole data array
         jQuery.each(_this.data, function (key, val) {
             if (_this.data.hasOwnProperty(key)) {
-                text.push(encodeURIComponent(key) + '#' + encodeURIComponent(val));
+                text.push(encodeURIComponent(key)+'#'+encodeURIComponent(val));
             }
         });
-        jQuery.cookie(this.name, text.join('#'),
-            {expires: 365, path: DOKU_COOKIE_PARAM.path, secure: DOKU_COOKIE_PARAM.secure});
+        jQuery.cookie(this.name, text.join('#'), {expires: 365, path: DOKU_COOKIE_PARAM.path, secure: DOKU_COOKIE_PARAM.secure});
     },
 
     /**
@@ -39,7 +38,7 @@ var DokuCookie = {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    getValue: function (key) {
+    getValue: function(key){
         this.init();
         return this.data[key];
     },
@@ -49,16 +48,16 @@ var DokuCookie = {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    init: function () {
+    init: function(){
         var text, parts, i;
-        if (!jQuery.isEmptyObject(this.data)) {
+        if(!jQuery.isEmptyObject(this.data)) {
             return;
         }
         text = jQuery.cookie(this.name);
-        if (text) {
+        if(text){
             parts = text.split('#');
-            for (i = 0; i < parts.length; i += 2) {
-                this.data[decodeURIComponent(parts[i])] = decodeURIComponent(parts[i + 1]);
+            for(i = 0; i < parts.length; i += 2){
+                this.data[decodeURIComponent(parts[i])] = decodeURIComponent(parts[i+1]);
             }
         }
     }

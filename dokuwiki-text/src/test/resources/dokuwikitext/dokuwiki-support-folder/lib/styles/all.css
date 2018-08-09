@@ -15,17 +15,14 @@ div.clearer {
 .group {
     display: inline-block;
 }
-
 .group {
     display: block;
 }
-
 .group:before,
 .group:after {
     content: "";
     display: table;
 }
-
 .group:after {
     clear: both;
 }
@@ -44,11 +41,9 @@ div.no {
 .medialeft {
     float: left;
 }
-
 .mediaright {
     float: right;
 }
-
 .mediacenter {
     display: block;
     margin-left: auto;
@@ -56,36 +51,18 @@ div.no {
 }
 
 /* table cell alignment */
-.leftalign {
-    text-align: left;
-}
-
-.centeralign {
-    text-align: center;
-}
-
-.rightalign {
-    text-align: right;
-}
-
-[dir=rtl] .leftalign {
-    text-align: left;
-}
-
-[dir=rtl] .centeralign {
-    text-align: center;
-}
-
-[dir=rtl] .rightalign {
-    text-align: right;
-}
+.leftalign   { text-align: left;   }
+.centeralign { text-align: center; }
+.rightalign  { text-align: right;  }
+[dir=rtl] .leftalign   { text-align: left;   }
+[dir=rtl] .centeralign { text-align: center; }
+[dir=rtl] .rightalign  { text-align: right;  }
 
 /* underline */
 em.u {
     font-style: normal;
     text-decoration: underline;
 }
-
 em em.u {
     font-style: italic;
 }

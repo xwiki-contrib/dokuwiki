@@ -1,4 +1,4 @@
-jQuery.fn.dw_tree = function (overrides) {
+jQuery.fn.dw_tree = function(overrides) {
     var dw_tree = {
 
         /**
@@ -13,7 +13,7 @@ jQuery.fn.dw_tree = function (overrides) {
 
         init: function () {
             this.$obj.on('click', this.toggle_selector, this,
-                this.toggle);
+                               this.toggle);
             jQuery('ul:first', this.$obj).attr('role', 'tree');
             jQuery('ul', this.$obj).not(':first').attr('role', 'group');
             jQuery('li', this.$obj).attr('role', 'treeitem');
@@ -81,13 +81,12 @@ jQuery.fn.dw_tree = function (overrides) {
             $listitem.append($sublist);
 
             timeout = window.setTimeout(
-                bind(show_sublist, '<li aria-busy="true"><img src="' + DOKU_BASE +
-                    'lib/images/throbber.gif" alt="loading..." title="loading..." /></li>'), dw_tree.throbber_delay);
+                bind(show_sublist, '<li aria-busy="true"><img src="' + DOKU_BASE + 'lib/images/throbber.gif" alt="loading..." title="loading..." /></li>'), dw_tree.throbber_delay);
 
             dw_tree.load_data(function (data) {
-                window.clearTimeout(timeout);
-                show_sublist(data);
-            }, $clicky);
+                                  window.clearTimeout(timeout);
+                                  show_sublist(data);
+                              }, $clicky);
         },
 
         toggle_display: function ($clicky, opening) {

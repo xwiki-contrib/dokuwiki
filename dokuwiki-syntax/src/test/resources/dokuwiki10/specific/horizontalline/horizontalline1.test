@@ -1,22 +1,22 @@
 .#-----------------------------------------------------
-        .input|dokuwiki/1.0
-        .#-----------------------------------------------------
-        Text before
-        ----
-        Text after
-        .#-----------------------------------------------------
-        .expect|event/1.0
-        .#-----------------------------------------------------
-        beginDocument
-        beginParagraph
-        onWord [Text]
-        onSpace
-        onWord [before]
-        endParagraph
-        onHorizontalLine
-        beginParagraph
-        onWord [Text]
-        onSpace
-        onWord [after]
-        endParagraph
-        endDocument
+.input|dokuwiki/1.0
+.#-----------------------------------------------------
+Text before
+----
+Text after
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+onWord [Text]
+onSpace
+onWord [before]
+endParagraph
+onHorizontalLine
+beginParagraph
+onWord [Text]
+onSpace
+onWord [after]
+endParagraph
+endDocument

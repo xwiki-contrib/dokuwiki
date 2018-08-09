@@ -1,12 +1,12 @@
-jQuery(function () {
+jQuery(function(){
 
     var $extmgr = jQuery('#extension__manager');
 
     /**
      * Confirm uninstalling
      */
-    $extmgr.find('button.uninstall').click(function (e) {
-        if (!window.confirm(LANG.plugins.extension.reallydel)) {
+    $extmgr.find('button.uninstall').click(function(e){
+        if(!window.confirm(LANG.plugins.extension.reallydel)){
             e.preventDefault();
             return false;
         }
@@ -17,7 +17,7 @@ jQuery(function () {
      * very simple lightbox
      * @link http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/super-simple-lightbox-with-css-and-jquery/
      */
-    $extmgr.find('a.extension_screenshot').click(function (e) {
+    $extmgr.find('a.extension_screenshot').click(function(e) {
         e.preventDefault();
 
         //Get clicked link href
@@ -25,11 +25,11 @@ jQuery(function () {
 
         // create lightbox if needed
         var $lightbox = jQuery('#plugin__extensionlightbox');
-        if (!$lightbox.length) {
+        if(!$lightbox.length){
             $lightbox = jQuery('<div id="plugin__extensionlightbox"><p>Click to close</p><div></div></div>')
                 .appendTo(jQuery('body'))
                 .hide()
-                .click(function () {
+                .click(function(){
                     $lightbox.hide();
                 });
         }
@@ -38,6 +38,7 @@ jQuery(function () {
         $lightbox
             .show()
             .find('div').html('<img src="' + image_href + '" />');
+
 
         return false;
     });
@@ -63,8 +64,8 @@ jQuery(function () {
             DOKU_BASE + 'lib/exe/ajax.php',
             {
                 call: 'plugin_extension',
-                ext: extension,
-                act: act
+                ext:  extension,
+                act:  act
             },
             function (data) {
                 $btn.css('cursor', '')
@@ -73,7 +74,7 @@ jQuery(function () {
                     .removeClass('enable')
                     .text(data.label)
                     .addClass(data.reverse)
-                    .parents('li')
+                .parents('li')
                     .removeClass('disabled')
                     .removeClass('enabled')
                     .addClass(data.state);
@@ -84,12 +85,12 @@ jQuery(function () {
     /**
      * AJAX detail infos
      */
-    $extmgr.find('a.info').click(function (e) {
+    $extmgr.find('a.info').click(function(e){
         e.preventDefault();
 
         var $link = jQuery(this);
         var $details = $link.parent().find('dl.details');
-        if ($details.length) {
+        if($details.length){
             $link.toggleClass('close');
             $details.toggle();
             return;
@@ -103,41 +104,41 @@ jQuery(function () {
                 ext: $link.data('extid'),
                 act: 'info'
             },
-            function (data) {
+            function(data){
                 $link.parent().append(data);
             }
         );
     });
 
     /**
-     Create section for enabling/disabling viewing options
+        Create section for enabling/disabling viewing options
      */
-    if ($extmgr.find('.plugins, .templates').hasClass('active')) {
+    if ( $extmgr.find('.plugins, .templates').hasClass('active') ) {
         var $extlist = jQuery('#extension__list');
         $extlist.addClass('hasDisplayOptions');
 
-        var $displayOpts = jQuery('<p>', {id: 'extension__viewoptions'}).appendTo($extmgr.find('.panelHeader'));
+        var $displayOpts = jQuery('<p>', { id: 'extension__viewoptions'} ).appendTo($extmgr.find( '.panelHeader' ));
         $displayOpts.append(LANG.plugins.extension.display_viewoptions);
 
-        var displayOptionsHandler = function () {
-            $extlist.toggleClass(this.name);
-            DokuCookie.setValue('ext_' + this.name, $extlist.hasClass(this.name) ? '1' : '0');
+        var displayOptionsHandler = function(){
+            $extlist.toggleClass( this.name );
+            DokuCookie.setValue('ext_'+this.name, $extlist.hasClass(this.name) ? '1' : '0');
         };
 
-        jQuery(['enabled', 'disabled', 'updatable']).each(function (index, chkName) {
-            var $label = jQuery('<label></label>')
+        jQuery(['enabled', 'disabled', 'updatable']).each(function(index, chkName){
+            var $label = jQuery( '<label></label>' )
                 .appendTo($displayOpts);
-            var $input = jQuery('<input />', {type: 'checkbox', name: chkName})
+            var $input = jQuery( '<input />', { type: 'checkbox', name: chkName })
                 .change(displayOptionsHandler)
                 .appendTo($label);
 
-            var previous = DokuCookie.getValue('ext_' + chkName);
-            if (typeof previous === "undefined" || previous == '1') {
+            var previous = DokuCookie.getValue('ext_'+chkName);
+            if(typeof previous === "undefined" || previous == '1') {
                 $input.click();
             }
 
-            jQuery('<span/>')
-                .append(' ' + LANG.plugins.extension['display_' + chkName])
+            jQuery( '<span/>' )
+                .append(' '+LANG.plugins.extension['display_'+chkName])
                 .appendTo($label);
         });
     }

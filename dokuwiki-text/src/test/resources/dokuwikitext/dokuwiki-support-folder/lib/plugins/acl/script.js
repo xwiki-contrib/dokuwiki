@@ -19,32 +19,28 @@ var dw_acl = {
         jQuery('#acl__user button').click(dw_acl.loadinfo);
 
         $tree = jQuery('#acl__tree');
-        $tree.dw_tree({
-            toggle_selector: 'img',
-            load_data: function (show_sublist, $clicky) {
-                // get the enclosed link and the edit form
-                var $frm = jQuery('#acl__detail form');
+        $tree.dw_tree({toggle_selector: 'img',
+                       load_data: function (show_sublist, $clicky) {
+                           // get the enclosed link and the edit form
+                           var $frm = jQuery('#acl__detail form');
 
-                jQuery.post(
-                    DOKU_BASE + 'lib/exe/ajax.php',
-                    jQuery.extend(dw_acl.parseatt($clicky.parent().find('a')[0].search),
-                        {
-                            call: 'plugin_acl',
-                            ajax: 'tree',
-                            current_ns: $frm.find('input[name=ns]').val(),
-                            current_id: $frm.find('input[name=id]').val()
-                        }),
-                    show_sublist,
-                    'html'
-                );
-            },
+                           jQuery.post(
+                               DOKU_BASE + 'lib/exe/ajax.php',
+                               jQuery.extend(dw_acl.parseatt($clicky.parent().find('a')[0].search),
+                                             {call: 'plugin_acl',
+                                              ajax: 'tree',
+                                              current_ns: $frm.find('input[name=ns]').val(),
+                                              current_id: $frm.find('input[name=id]').val()}),
+                               show_sublist,
+                               'html'
+                           );
+                       },
 
-            toggle_display: function ($clicky, opening) {
-                $clicky.attr('src',
-                    DOKU_BASE + 'lib/images/' +
-                    (opening ? 'minus' : 'plus') + '.gif');
-            }
-        });
+                       toggle_display: function ($clicky, opening) {
+                           $clicky.attr('src',
+                                        DOKU_BASE + 'lib/images/' +
+                                        (opening ? 'minus' : 'plus') + '.gif');
+                       }});
         $tree.delegate('a', 'click', dw_acl.treehandler);
     },
 
@@ -57,7 +53,7 @@ var dw_acl = {
     userselhandler: function () {
         // make entry field visible/invisible
         jQuery('#acl__user input').toggle(this.value === '__g__' ||
-            this.value === '__u__');
+                                          this.value === '__u__');
         dw_acl.loadinfo();
     },
 
@@ -67,7 +63,7 @@ var dw_acl = {
     loadinfo: function () {
         jQuery('#acl__info')
             .attr('role', 'alert')
-            .html('<img src="' + DOKU_BASE + 'lib/images/throbber.gif" alt="..." />')
+            .html('<img src="'+DOKU_BASE+'lib/images/throbber.gif" alt="..." />')
             .load(
                 DOKU_BASE + 'lib/exe/ajax.php',
                 jQuery('#acl__detail form').serialize() + '&call=plugin_acl&ajax=info'
@@ -101,13 +97,13 @@ var dw_acl = {
 
         $link = jQuery(this);
 
-        // remove highlighting
-        jQuery('#acl__tree a.cur').removeClass('cur');
+            // remove highlighting
+            jQuery('#acl__tree a.cur').removeClass('cur');
 
-        // add new highlighting
+            // add new highlighting
         $link.addClass('cur');
 
-        // set new page to detail form
+            // set new page to detail form
         $frm = jQuery('#acl__detail form');
         if ($link.hasClass('wikilink1')) {
             $frm.find('input[name=ns]').val('');
@@ -115,7 +111,7 @@ var dw_acl = {
         } else if ($link.hasClass('idx_dir')) {
             $frm.find('input[name=ns]').val(dw_acl.parseatt($link[0].search).ns);
             $frm.find('input[name=id]').val('');
-        }
+            }
         dw_acl.loadinfo();
 
         return false;

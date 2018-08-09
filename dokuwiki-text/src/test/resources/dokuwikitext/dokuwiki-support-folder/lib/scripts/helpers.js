@@ -9,8 +9,7 @@
  * str and replace arrays.
  * See http://php.net/substr-replace for further documentation.
  */
-function substr_replace(str, replace, start, length)
-{
+function substr_replace(str, replace, start, length) {
     var a2, b1;
     a2 = (start < 0 ? str.length : 0) + start;
     if (typeof length === 'undefined') {
@@ -34,12 +33,11 @@ function substr_replace(str, replace, start, length)
  * @param   mixed - any arguments to be passed to the function
  * @returns functionref
  */
-function bind(fnc/*, ... */)
-{
+function bind(fnc/*, ... */) {
     var Aps = Array.prototype.slice,
-        // Store passed arguments in this scope.
-        // Since arguments is no Array nor has an own slice method,
-        // we have to apply the slice method from the Array.prototype
+    // Store passed arguments in this scope.
+    // Since arguments is no Array nor has an own slice method,
+    // we have to apply the slice method from the Array.prototype
         static_args = Aps.call(arguments, 1);
 
     // Return a function evaluating the passed function with the
@@ -48,7 +46,7 @@ function bind(fnc/*, ... */)
         // Same here, but we use Array.prototype.slice solely for
         // converting arguments to an Array.
         return fnc.apply(this,
-            static_args.concat(Aps.call(arguments, 0)));
+                         static_args.concat(Aps.call(arguments, 0)));
     };
 }
 
@@ -58,14 +56,13 @@ function bind(fnc/*, ... */)
  * @param e    The error object
  * @param file The file in which the error occurred
  */
-function logError(e, file)
-{
+function logError(e, file) {
     if (window.console && console.error) {
         console.error('The error "%s: %s" occurred in file "%s". ' +
             'If this is in a plugin try updating or disabling the plugin, ' +
             'if this is in a template try updating the template or switching to the "dokuwiki" template.',
             e.name, e.message, file);
-        if (e.stack) {
+        if(e.stack) {
             console.error(e.stack);
         }
     }
