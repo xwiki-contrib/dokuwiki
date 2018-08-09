@@ -36,8 +36,6 @@ import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
-import org.xwiki.component.phase.Initializable;
-import org.xwiki.component.phase.InitializationException;
 import org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxParserHelper;
 import org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiPlugin;
 import org.xwiki.rendering.listener.Format;
@@ -53,7 +51,7 @@ import static java.lang.Math.abs;
 
 @Component(roles = DokuWikiIterativeParser.class)
 @Singleton
-public class DokuWikiIterativeParser implements Initializable
+public class DokuWikiIterativeParser
 {
     private static final String TAG_ALIGN = "align";
 
@@ -93,8 +91,6 @@ public class DokuWikiIterativeParser implements Initializable
     @Named("context")
     private Provider<ComponentManager> componentManagerProvider;
 
-    private List<DokuWikiPlugin> componentList;
-
     @Inject
     private DokuWikiSyntaxParserHelper helper;
 
@@ -104,18 +100,6 @@ public class DokuWikiIterativeParser implements Initializable
         listener.beginDocument(metaData);
         parseRecursive(source, listener);
         listener.endDocument(metaData);
-    }
-
-    public void initialize() throws InitializationException
-    {
-
-        if (componentManagerProvider != null) {
-            try {
-                componentList = componentManagerProvider.get().getInstanceList(DokuWikiPlugin.class);
-            } catch (ComponentLookupException e) {
-                this.logger.error("Failed to get components");
-            }
-        }
     }
 
     private void parseRecursive(Reader source, Listener listener) throws IOException, ComponentLookupException
@@ -144,6 +128,15 @@ public class DokuWikiIterativeParser implements Initializable
                 break;
             }
             buffer.add((char) readCharacter);
+
+            List<DokuWikiPlugin> componentList = null;
+            if (componentManagerProvider != null) {
+                try {
+                    componentList = componentManagerProvider.get().getInstanceList(DokuWikiPlugin.class);
+                } catch (ComponentLookupException e) {
+                    this.logger.error("Failed to get components");
+                }
+            }
 
             for (DokuWikiPlugin plugin : componentList) {
                 plugin.parse(buffer, source, listener);

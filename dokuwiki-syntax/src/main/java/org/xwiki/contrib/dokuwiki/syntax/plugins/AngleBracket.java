@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.dokuwiki.syntax.plugins.internal;
+package org.xwiki.contrib.dokuwiki.syntax.plugins;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -34,20 +34,19 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxParserHelper;
-import org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiPlugin;
-import org.xwiki.contrib.dokuwiki.syntax.plugins.internal.curlyBrackets.DokuWikiCurlyBracketPlugin;
+import org.xwiki.contrib.dokuwiki.syntax.plugins.internal.angleBrackets.DokuWikiAngleBracketPlugin;
 import org.xwiki.rendering.listener.Listener;
 
 /**
- * DokuWiki curly plugin parser.
+ * DokuWiki Angle plugin parser.
  *
  * @version $Id: $
  * @since 1.2
  */
 @Component
-@Named("curlyBracket")
+@Named("angleBracket")
 @Singleton
-public class CurlyBracket implements DokuWikiPlugin
+public class AngleBracket implements DokuWikiPlugin
 {
     @Inject
     private Logger logger;
@@ -59,25 +58,24 @@ public class CurlyBracket implements DokuWikiPlugin
     @Named("context")
     private Provider<ComponentManager> componentManagerProvider;
 
-    private List<DokuWikiCurlyBracketPlugin> componentList;
-
     @Override public void parse(ArrayList<Character> buffer, Reader source, Listener listener)
             throws IOException
     {
-        if (helper.getStringRepresentation(buffer).contains("{{")) {
-            helper.processWords(2, buffer, listener, false);
-            buffer.add('{');
-            buffer.add('{');
-            helper.readIntoBuffer(buffer, source);
+        List<DokuWikiAngleBracketPlugin> componentList = null;
+
+        // TODO : add support
+        try {
+            componentList = componentManagerProvider.get().getInstanceList(DokuWikiAngleBracketPlugin.class);
+        } catch (ComponentLookupException e) {
+            this.logger.error("Failed to get the ComponentList");
         }
 
-        try {
-            componentList = componentManagerProvider.get().getInstanceList(DokuWikiCurlyBracketPlugin.class);
-        } catch (ComponentLookupException e) {
-            this.logger.error("Failed to get Component List");
-        }
-        for (DokuWikiCurlyBracketPlugin plugin : componentList) {
-            plugin.parse(buffer, source, listener);
+        if (componentList != null) {
+            for (DokuWikiAngleBracketPlugin plugin : componentList) {
+                plugin.parse(buffer, source, listener);
+            }
+        } else {
+            this.logger.error("Failed to get ComponentManager instance");
         }
     }
 }
