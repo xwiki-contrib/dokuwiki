@@ -134,7 +134,7 @@ public class DokuWikiIterativeParser
                 try {
                     componentList = componentManagerProvider.get().getInstanceList(DokuWikiPlugin.class);
                 } catch (ComponentLookupException e) {
-                    this.logger.error("Failed to get components");
+                    this.logger.error("Failed to get components", e);
                 }
             }
 

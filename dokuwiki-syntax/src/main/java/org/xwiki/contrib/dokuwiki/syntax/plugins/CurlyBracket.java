@@ -72,7 +72,7 @@ public class CurlyBracket implements DokuWikiPlugin
         try {
             componentList = componentManagerProvider.get().getInstanceList(DokuWikiCurlyBracketPlugin.class);
         } catch (ComponentLookupException e) {
-            this.logger.error("Failed to get Component List");
+            this.logger.error("Failed to get Component List", e);
         }
         for (DokuWikiCurlyBracketPlugin plugin : componentList) {
             plugin.parse(buffer, source, listener);

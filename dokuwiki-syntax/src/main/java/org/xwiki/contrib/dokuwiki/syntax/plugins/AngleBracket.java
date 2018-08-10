@@ -67,7 +67,7 @@ public class AngleBracket implements DokuWikiPlugin
         try {
             componentList = componentManagerProvider.get().getInstanceList(DokuWikiAngleBracketPlugin.class);
         } catch (ComponentLookupException e) {
-            this.logger.error("Failed to get the ComponentList");
+            this.logger.error("Failed to get the ComponentList", e);
         }
 
         if (componentList != null) {
