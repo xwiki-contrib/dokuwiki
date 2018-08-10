@@ -19,7 +19,12 @@
  */
 package org.xwiki.contrib.dokuwiki.syntax.plugins;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+
 import org.xwiki.component.annotation.Role;
+import org.xwiki.rendering.listener.Listener;
 
 /**
  * DokuWiki Curly Bracket Plugin parser.
@@ -29,6 +34,15 @@ import org.xwiki.component.annotation.Role;
  */
 @FunctionalInterface
 @Role
-public interface DokuWikiCurlyBracketPlugin extends DokuWikiPlugin
+public interface DokuWikiCurlyBracketPlugin
 {
+    /**
+     * Parse the input buffer.
+     * @param buffer Buffer stores list of characters
+     * @param source Source is the input stream
+     * @param listener Listener calls the java events.
+     * @throws IOException when fail to parse input buffer
+     */
+    void parse(ArrayList<Character> buffer, Reader source, Listener listener)
+            throws IOException;
 }

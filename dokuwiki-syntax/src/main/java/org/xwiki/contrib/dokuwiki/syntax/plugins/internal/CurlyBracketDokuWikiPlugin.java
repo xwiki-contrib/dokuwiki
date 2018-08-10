@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.dokuwiki.syntax.plugins;
+package org.xwiki.contrib.dokuwiki.syntax.plugins.internal;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -34,6 +34,8 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxParserHelper;
+import org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiCurlyBracketPlugin;
+import org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiPlugin;
 import org.xwiki.rendering.listener.Listener;
 
 /**
@@ -57,7 +59,8 @@ public class CurlyBracketDokuWikiPlugin implements DokuWikiPlugin
     @Named("context")
     private Provider<ComponentManager> componentManagerProvider;
 
-    @Override public void parse(ArrayList<Character> buffer, Reader source, Listener listener)
+    @Override
+    public void parse(ArrayList<Character> buffer, Reader source, Listener listener)
             throws IOException
     {
         List<DokuWikiCurlyBracketPlugin> componentList = null;

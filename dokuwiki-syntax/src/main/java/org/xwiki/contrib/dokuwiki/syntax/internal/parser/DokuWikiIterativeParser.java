@@ -124,8 +124,7 @@ public class DokuWikiIterativeParser
         boolean inCodeBlock;
 
         List<DokuWikiPlugin> componentList = null;
-        if (componentManagerProvider != null)
-            componentList = componentManagerProvider.get().getInstanceList(DokuWikiPlugin.class);
+        componentList = componentManagerProvider.get().getInstanceList(DokuWikiPlugin.class);
 
         while (source.ready()) {
             readCharacter = source.read();

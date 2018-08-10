@@ -46,7 +46,8 @@ public class Code implements DokuWikiAngleBracketPlugin
     @Inject
     private DokuWikiSyntaxParserHelper helper;
 
-    @Override public void parse(ArrayList<Character> buffer, Reader source, Listener listener)
+    @Override
+    public void parse(ArrayList<Character> buffer, Reader source, Listener listener)
             throws IOException
     {
     }
