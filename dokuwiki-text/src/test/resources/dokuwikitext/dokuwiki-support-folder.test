@@ -955,7 +955,7 @@ Resized external image:           {{http://php.net/images/php.gif?200x50}}
 
 By using left or right whitespaces you can choose the alignment.
 
-[[image::dokuwiki-128.png||align="left"]]
+[[image:dokuwiki-128.png||align="left"]]
 
 [[image:dokuwiki-128.png||align="right"]]
 
@@ -975,7 +975,7 @@ By using left or right whitespaces you can choose the alignment.
 
 Of course, you can add a title (displayed as a tooltip by most browsers), too.
 
-[[image::dokuwiki-128.png ||alt="This is the caption" align="left" title="This is the caption"]]
+[[image:dokuwiki-128.png ||alt="This is the caption" align="left" title="This is the caption"]]
 
 {{code}}
 {{ wiki:dokuwiki-128.png |This is the caption}}

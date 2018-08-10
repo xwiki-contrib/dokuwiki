@@ -1816,7 +1816,7 @@ onSpace
 onWord [alignment.]
 endParagraph
 beginParagraph
-onImage [Typed = [false] Type = [attach] Reference = [:dokuwiki-128.png]] [false] [[align]=[left]]
+onImage [Typed = [false] Type = [attach] Reference = [dokuwiki-128.png]] [false] [[align]=[left]]
 endParagraph
 beginParagraph
 onImage [Typed = [false] Type = [attach] Reference = [dokuwiki-128.png]] [false] [[align]=[right]]
@@ -1859,7 +1859,7 @@ onSpace
 onWord [too.]
 endParagraph
 beginParagraph
-onImage [Typed = [false] Type = [attach] Reference = [:dokuwiki-128.png ]] [false] [[align]=[left][alt]=[This is the caption][title]=[This is the caption]]
+onImage [Typed = [false] Type = [attach] Reference = [dokuwiki-128.png ]] [false] [[align]=[left][alt]=[This is the caption][title]=[This is the caption]]
 endParagraph
 onMacroStandalone [code] [] [{{ wiki:dokuwiki-128.png |This is the caption}}]
 beginParagraph
