@@ -122,9 +122,7 @@ public class DokuWikiIterativeParser
         boolean inSectionEvent = false;
         int headerLevel = 1;
         boolean inCodeBlock;
-
-        List<DokuWikiPlugin> componentList = null;
-        componentList = componentManagerProvider.get().getInstanceList(DokuWikiPlugin.class);
+        List<DokuWikiPlugin> componentList = componentManagerProvider.get().getInstanceList(DokuWikiPlugin.class);
 
         while (source.ready()) {
             readCharacter = source.read();
