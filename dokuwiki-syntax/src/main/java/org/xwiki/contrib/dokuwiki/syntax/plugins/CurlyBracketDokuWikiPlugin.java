@@ -45,7 +45,7 @@ import org.xwiki.rendering.listener.Listener;
 @Component
 @Named("curlyBracket")
 @Singleton
-public class CurlyBracket implements DokuWikiPlugin
+public class CurlyBracketDokuWikiPlugin implements DokuWikiPlugin
 {
     @Inject
     private Logger logger;

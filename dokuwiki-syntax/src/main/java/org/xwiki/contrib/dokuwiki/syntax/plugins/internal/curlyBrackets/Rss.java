@@ -32,6 +32,7 @@ import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxParserHelper;
+import org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiCurlyBracketPlugin;
 import org.xwiki.rendering.listener.Listener;
 
 /**

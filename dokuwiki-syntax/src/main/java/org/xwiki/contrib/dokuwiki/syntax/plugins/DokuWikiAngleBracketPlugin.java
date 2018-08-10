@@ -17,10 +17,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.dokuwiki.syntax.plugins.internal.angleBrackets;
+package org.xwiki.contrib.dokuwiki.syntax.plugins;
 
 import org.xwiki.component.annotation.Role;
-import org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiPlugin;
 
 /**
  * DokuWiki Angle Bracket Plugin parser.

@@ -34,7 +34,6 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxParserHelper;
-import org.xwiki.contrib.dokuwiki.syntax.plugins.internal.angleBrackets.DokuWikiAngleBracketPlugin;
 import org.xwiki.rendering.listener.Listener;
 
 /**
@@ -46,7 +45,7 @@ import org.xwiki.rendering.listener.Listener;
 @Component
 @Named("angleBracket")
 @Singleton
-public class AngleBracket implements DokuWikiPlugin
+public class AngleBracketDokuWikiPlugin implements DokuWikiPlugin
 {
     @Inject
     private Logger logger;

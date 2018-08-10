@@ -122,6 +122,11 @@ public class DokuWikiIterativeParser
         boolean inSectionEvent = false;
         int headerLevel = 1;
         boolean inCodeBlock;
+
+        List<DokuWikiPlugin> componentList = null;
+        if (componentManagerProvider != null)
+            componentList = componentManagerProvider.get().getInstanceList(DokuWikiPlugin.class);
+
         while (source.ready()) {
             readCharacter = source.read();
             if (readCharacter == -1) {
@@ -129,17 +134,9 @@ public class DokuWikiIterativeParser
             }
             buffer.add((char) readCharacter);
 
-            List<DokuWikiPlugin> componentList = null;
-            if (componentManagerProvider != null) {
-                try {
-                    componentList = componentManagerProvider.get().getInstanceList(DokuWikiPlugin.class);
-                } catch (ComponentLookupException e) {
-                    this.logger.error("Failed to get components", e);
-                }
-            }
-
-            for (DokuWikiPlugin plugin : componentList) {
-                plugin.parse(buffer, source, listener);
+            if (componentList != null) {
+                for (DokuWikiPlugin plugin : componentList)
+                    plugin.parse(buffer, source, listener);
             }
 
             if (helper.getStringRepresentation(buffer).endsWith("----")) {
