@@ -39,7 +39,7 @@ import org.xwiki.rendering.listener.Listener;
  * DokuWiki RSS plugin parser.
  *
  * @version $Id:  $
- * @since 1.2
+ * @since 1.3
  */
 @Component
 @Named("rss")

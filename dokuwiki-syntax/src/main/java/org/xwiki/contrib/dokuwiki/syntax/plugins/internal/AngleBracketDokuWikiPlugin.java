@@ -42,7 +42,7 @@ import org.xwiki.rendering.listener.Listener;
  * DokuWiki Angle plugin parser.
  *
  * @version $Id: $
- * @since 1.2
+ * @since 1.3
  */
 @Component
 @Named("angleBracket")

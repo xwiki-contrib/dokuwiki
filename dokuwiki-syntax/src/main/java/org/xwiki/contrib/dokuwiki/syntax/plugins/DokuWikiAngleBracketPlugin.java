@@ -30,7 +30,7 @@ import org.xwiki.rendering.listener.Listener;
  * DokuWiki Angle Bracket Plugin parser.
  *
  * @version $Id:  $
- * @since 1.2
+ * @since 1.3
  */
 @Role
 public interface DokuWikiAngleBracketPlugin
