@@ -16,6 +16,34 @@
   </p>
 </user>
 <wikiSpace name="Main">
+  <wikiDocument name="page">
+    <wikiDocumentLocale>
+      <p>
+        <parameters>
+          <entry>
+            <string>creation_author</string>
+            <string>User</string>
+          </entry>
+          <entry>
+            <string>creation_date</string>
+            <date>2015-04-21 14:13:42.0 UTC</date>
+          </entry>
+          <entry>
+            <string>lastrevision</string>
+            <string>1500462593</string>
+          </entry>
+          <entry>
+            <string>revision_date</string>
+            <date>2017-07-19 11:09:53.0 UTC</date>
+          </entry>
+          <entry>
+            <string>revision_author</string>
+            <string>user</string>
+          </entry>
+        </parameters>
+      </p>
+    </wikiDocumentLocale>
+  </wikiDocument>
   <wikiSpace name="playground">
     <wikiDocument name="playground">
       <wikiDocumentLocale>

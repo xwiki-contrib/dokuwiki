@@ -47,9 +47,9 @@
     </repositories>
     <dependencies>
         <dependency>
-            <groupId>de.ailis.pherialize</groupId>
+            <groupId>com.xk72</groupId>
             <artifactId>pherialize</artifactId>
-            <version>1.2.1</version>
+            <version>1.2.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
