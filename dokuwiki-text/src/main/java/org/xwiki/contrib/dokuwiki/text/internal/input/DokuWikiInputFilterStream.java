@@ -256,7 +256,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         try {
             lines = FileUtils.readLines(userInformation, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            this.logger.error("Couldn't read user information", e);
+            this.logger.warn("Couldn't read user information", e);
         }
 
         if (lines != null) {
