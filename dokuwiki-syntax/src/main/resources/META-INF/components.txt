@@ -1,4 +1,3 @@
-
 org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiParser
 org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiStreamParser
 org.xwiki.contrib.dokuwiki.syntax.plugins.internal.CurlyBracketDokuWikiPlugin
