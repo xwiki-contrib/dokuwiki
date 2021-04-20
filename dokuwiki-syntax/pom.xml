@@ -38,6 +38,14 @@
         <!-- List it as a rendering syntax related module -->
         <xwiki.extension.category>syntax</xwiki.extension.category>
 
+        <!-- Components -->
+        <xwiki.extension.components>
+          org.xwiki.rendering.parser.Parser/dokuwiki/1.0
+          org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiPlugin/angleBracket
+          org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiPlugin/curlyBracket
+          org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiCurlyBracketPlugin/rss
+          org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiAngleBracketPlugin/code
+        </xwiki.extension.components>
     </properties>
     <dependencies>
         <dependency>

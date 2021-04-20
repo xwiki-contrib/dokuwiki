@@ -37,6 +37,11 @@
         <xwiki.extension.name>DokuWiki Text</xwiki.extension.name>
 
         <xwiki.extension.category>filter</xwiki.extension.category>
+
+        <!-- Components -->
+        <xwiki.extension.components>
+          org.xwiki.filter.input.InputFilterStreamFactory/dokuwiki+text
+        </xwiki.extension.components>
     </properties>
     <repositories>
         <repository>
