@@ -327,7 +327,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     }
 
     private FilterEventParameters readDocument(File file, FilterEventParameters documentLocaleParameters,
-        String dokuwikiDataDirectory, DokuWikiFilter proxyFilter) throws FilterException
+        String dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
     {
         try {
             String pageContents = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
@@ -336,10 +336,12 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             // Wiki Document Locale
             proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
             readAttachments(pageContents, file, dokuwikiDataDirectory, proxyFilter);
+
             return documentLocaleParameters;
-        } catch (IOException e) {
-            this.logger.error("Could not read file", e);
+        } catch (Exception e) {
+            this.logger.error("Failed to parse DockuWiki file [{}]", file, e);
         }
+
         return documentLocaleParameters;
     }
 
