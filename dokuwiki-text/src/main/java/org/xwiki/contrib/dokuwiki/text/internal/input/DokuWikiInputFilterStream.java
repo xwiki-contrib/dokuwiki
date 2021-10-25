@@ -369,7 +369,6 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             for (File revisionFile : revisionFiles) {
                 String revision = revisionFile.getName().replace(fileName + KEY_FULL_STOP, "").replace(".txt.gz", "");
                 try {
-
                     String documentContent = extractGZip(revisionFile);
                     String convertedContent = parseContent(documentContent);
                     FilterEventParameters revisionParameters = new FilterEventParameters();
@@ -377,8 +376,8 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                     proxyFilter.beginWikiDocumentRevision(revision, revisionParameters);
                     readAttachments(documentContent, revisionFile, dokuwikiDataDirectory, proxyFilter);
                     proxyFilter.endWikiDocumentRevision(revision, revisionParameters);
-                } catch (FilterException | IOException e) {
-                    this.logger.error("could not parse document revision", e);
+                } catch (Exception e) {
+                    this.logger.error("Failed to parse file [{}]", revisionFile.getAbsolutePath(), e);
                 }
             }
         }
