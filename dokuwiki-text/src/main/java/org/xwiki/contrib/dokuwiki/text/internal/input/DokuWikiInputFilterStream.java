@@ -265,6 +265,10 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     private void readDocument(File directory, String dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
         throws FilterException, IOException
     {
+        if (this.properties.isVerbose()) {
+            this.logger.info("Reading directory [{}]", directory.getAbsolutePath());
+        }
+
         File[] directoryFiles = directory.listFiles();
         // Maintain order across file systems
         if (directoryFiles != null) {
@@ -275,6 +279,10 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                     readDocument(file, dokuwikiDataDirectory, proxyFilter);
                     proxyFilter.endWikiSpace(file.getName(), FilterEventParameters.EMPTY);
                 } else if (file.getName().endsWith(KEY_TEXT_FILE_FORMAT) && !file.getName().startsWith(KEY_FULL_STOP)) {
+                    if (this.properties.isVerbose()) {
+                        this.logger.info("Reading file [{}]", file.getAbsolutePath());
+                    }
+
                     String[] pathArray =
                         file.getName().split(Matcher.quoteReplacement(System.getProperty(KEY_FILE_SEPERATOR)));
                     String documentName = pathArray[pathArray.length - 1].replace(KEY_TEXT_FILE_FORMAT, "");
@@ -290,9 +298,9 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
                     FilterEventParameters documentLocaleParameters = new FilterEventParameters();
 
-                    File f = new File(fileMetadataPath);
-                    if (f.exists() && !f.isDirectory()) {
-                        String metadataFileContents = FileUtils.readFileToString(new File(fileMetadataPath), "UTF-8");
+                    File fileMetadata = new File(fileMetadataPath);
+                    if (fileMetadata.exists() && !fileMetadata.isDirectory()) {
+                        String metadataFileContents = FileUtils.readFileToString(fileMetadata, StandardCharsets.UTF_8);
                         MixedArray documentMetadata = Pherialize.unserialize(metadataFileContents).toArray();
                         readDocumentParametersFromMetadata(documentMetadata, documentLocaleParameters);
 
@@ -314,7 +322,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                     } else {
                         this.logger.warn("File [{}] not found (Some datafile's properties (eg. filesize, "
                             + "last modified date) are not imported. Details can be found on "
-                            + "https://www.dokuwiki.org/devel:metadata)", f);
+                            + "https://www.dokuwiki.org/devel:metadata)", fileMetadata);
                         documentLocaleParameters =
                             readDocument(file, documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
                     }
