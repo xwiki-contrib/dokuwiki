@@ -8,8 +8,8 @@ paragraph
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-onMacroStandalone [code] [] [some]
-onMacroStandalone [code] [] [multiline content]
+onMacroStandalone [code] [] [some
+multiline content]
 beginParagraph
 onWord [paragraph]
 endParagraph

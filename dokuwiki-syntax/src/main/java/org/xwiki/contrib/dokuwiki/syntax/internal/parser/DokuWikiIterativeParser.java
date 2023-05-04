@@ -20,12 +20,14 @@
 package org.xwiki.contrib.dokuwiki.syntax.internal.parser;
 
 import java.io.IOException;
+import java.io.PushbackReader;
 import java.io.Reader;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -94,6 +96,25 @@ public class DokuWikiIterativeParser
     @Inject
     private DokuWikiSyntaxParserHelper helper;
 
+    private static class ListState {
+        private final int depth;
+
+        private final ListType type;
+
+        ListState(int depth, ListType type) {
+            this.depth = depth;
+            this.type = type;
+        }
+
+        int getDepth() {
+            return depth;
+        }
+
+        ListType getType() {
+            return type;
+        }
+    }
+
     void parse(Reader source, Listener listener, MetaData metaData)
             throws ComponentLookupException, IOException
     {
@@ -102,7 +123,7 @@ public class DokuWikiIterativeParser
         listener.endDocument(metaData);
     }
 
-    private void parseRecursive(Reader source, Listener listener) throws IOException, ComponentLookupException
+    private void parseRecursive(Reader originalSource, Listener listener) throws IOException, ComponentLookupException
     {
         ArrayList<Character> buffer = new ArrayList<>();
         boolean inParagraph = false;
@@ -114,8 +135,8 @@ public class DokuWikiIterativeParser
         boolean italicOpen = false;
         boolean underlineOpen = false;
         boolean monospaceOpen = false;
-        int listIndentation = -1;
-        Stack<ListType> listType = new Stack<>();
+        int initialListDepth = -1;
+        Deque<ListState> listStack = new ArrayDeque<>();
         int quotationIndentation = -1;
         boolean inQuotation = false;
         boolean listEnded = true;
@@ -123,6 +144,9 @@ public class DokuWikiIterativeParser
         int headerLevel = 1;
         boolean inCodeBlock;
         List<DokuWikiPlugin> componentList = componentManagerProvider.get().getInstanceList(DokuWikiPlugin.class);
+
+        // Use a PushbackReader to be able to look ahead at the next characters.
+        PushbackReader source = new PushbackReader(originalSource, 3);
 
         while (source.ready()) {
             readCharacter = source.read();
@@ -155,17 +179,19 @@ public class DokuWikiIterativeParser
 
             if (!(buffer.size() > 0 && (buffer.get(buffer.size() - 1) == '-' || buffer.get(buffer.size() - 1) == '>'
                     || (buffer.contains('<') && !buffer.contains('@'))
+                    // Ignore buffers starting with two spaces as they will eventually be handled as code block or
+                    // as list item.
+                    || (buffer.size() > 1 && buffer.get(0) == ' ' && buffer.get(1) == ' ')
                     || buffer.get(buffer.size() - 1) == ' ' || buffer.get(buffer.size() - 1) == '*'
                     || buffer.get(buffer.size() - 1) == '=' || buffer.get(buffer.size() - 1) == '<'
                     || buffer.get(buffer.size() - 1) == '^' || !listEnded || inQuotation
                     || inSectionEvent || horizontalLineAdded)))
             {
                 if (!inParagraph) {
-                    if (listIndentation > -1 || quotationIndentation > -1) {
-                        while (listIndentation >= 0) {
+                    if (!listStack.isEmpty() || quotationIndentation > -1) {
+                        while (!listStack.isEmpty()) {
                             listener.endListItem();
-                            closeList(listener, listType);
-                            listIndentation--;
+                            closeList(listener, listStack);
                         }
 
                         while (quotationIndentation >= 0) {
@@ -215,47 +241,21 @@ public class DokuWikiIterativeParser
                         if (headerLevelAdjusted > 5) {
                             headerLevelAdjusted = 5;
                         }
-                        //Dokuwiki doesn't use ids in headers
+                        // TODO: generate heading ids, see https://jira.xwiki.org/browse/DOKUWIKI-28
                         listener.beginHeader(HeaderLevel.parseInt(abs(6 - headerLevelAdjusted)), "",
                                 Listener.EMPTY_PARAMETERS);
                         this.paragraphJustOpened = helper.processWords(2, buffer, listener, this.paragraphJustOpened);
                         listener.endHeader(HeaderLevel.parseInt(abs(6 - headerLevelAdjusted)), "",
                                 Listener.EMPTY_PARAMETERS);
                         listener.endSection(Listener.EMPTY_PARAMETERS);
+                        // TODO: DokuWiki's parser is not picky about the number of '=' characters, two are enough so
+                        //  this might swallow more than it should. See https://jira.xwiki.org/browse/DOKUWIKI-30
                         while (source.ready() && headerLevel > 1) {
                             source.read();
                             headerLevel--;
                         }
                         source.read();
                         inSectionEvent = false;
-                    }
-                    continue;
-                }
-                if (helper.getStringRepresentation(buffer).equals("  ") && listIndentation == -1) {
-                    //code section
-                    buffer.clear();
-                    int c;
-                    boolean endOfLine = false;
-                    while (source.ready()) {
-                        c = source.read();
-                        if (c == -1) {
-                            break;
-                        }
-                        if (((char) c) == '\n') {
-                            listener.onMacro(TAG_CODE, Listener.EMPTY_PARAMETERS,
-                                    helper.getStringRepresentation(buffer),
-                                    false);
-                            buffer.clear();
-                            endOfLine = true;
-                            break;
-                        } else {
-                            buffer.add((char) c);
-                        }
-                    }
-                    if (!endOfLine) {
-                        listener.onMacro(TAG_CODE, Listener.EMPTY_PARAMETERS, helper.getStringRepresentation(buffer),
-                                false);
-                        buffer.clear();
                     }
                     continue;
                 }
@@ -315,86 +315,139 @@ public class DokuWikiIterativeParser
                     buffer.clear();
                     continue;
                 }
-                if (buffer.size() >= 2 && buffer.get(buffer.size() - 1) == ' '
-                        && buffer.get(buffer.size() - 2) == '*')
+
+                // If the buffer ends with * or - and contains at least two spaces or at least one tab (but not mixed)
+                // before that, then it's a list.
+                if (buffer.size() > 1 && (buffer.get(buffer.size() - 1) == '*' || buffer.get(buffer.size() - 1) == '-')
+                    && (buffer.stream().filter(c -> c == '\t').count() == buffer.size() - 1
+                    || buffer.stream().filter(c -> c == ' ').count() == buffer.size() - 1))
                 {
-                    buffer.subList(buffer.size() - 2, buffer.size()).clear();
-                    boolean isUnorederedList = true;
-                    for (Character c : buffer) {
-                        if (c != ' ') {
-                            isUnorederedList = false;
-                        }
+                    // Consume the next character if it is a space, otherwise unread it. DokuWiki doesn't require a
+                    // space at the start of the list item but there is usually one and XWiki preserves it (DokuWiki
+                    // also preserves it, but browsers ignore spaces at the start of a block element).
+                    int nextChar = source.read();
+                    if (nextChar != -1 && nextChar != ' ') {
+                        source.unread(nextChar);
                     }
-                    //unordered list
-                    if (isUnorederedList) {
-                        if (buffer.size() > listIndentation) {
-                            while (listIndentation < buffer.size()) {
-                                listener.beginList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
-                                listType.push(ListType.BULLETED);
-                                listener.beginListItem();
-                                listIndentation++;
-                            }
-                        } else if (buffer.size() < listIndentation) {
-                            listener.endListItem();
-                            while (listIndentation > (buffer.size())) {
-                                closeList(listener, listType);
+
+                    String indentation = this.helper.getStringRepresentation(buffer.subList(0, buffer.size() - 1))
+                        .replace("\t", "  ");
+                    int listDepth = indentation.length() / 2;
+
+                    ListType listType = buffer.get(buffer.size() - 1) == '*' ? ListType.BULLETED : ListType.NUMBERED;
+
+                    if (listStack.isEmpty()) {
+                        initialListDepth = listDepth;
+
+                        listener.beginList(listType, Listener.EMPTY_PARAMETERS);
+                        listener.beginListItem();
+                        listStack.push(new ListState(listDepth, listType));
+                    } else {
+                        if (listDepth < initialListDepth) {
+                            listDepth = initialListDepth;
+                        }
+
+                        if (listDepth > listStack.peek().getDepth()) {
+                            listener.beginList(listType, Listener.EMPTY_PARAMETERS);
+                            listener.beginListItem();
+                            listStack.push(new ListState(listDepth, listType));
+                        } else if (listDepth < listStack.peek().getDepth()) {
+                            while (!listStack.isEmpty() && listDepth < listStack.peek().getDepth()) {
                                 listener.endListItem();
-                                listIndentation--;
+                                closeList(listener, listStack);
                             }
+
+                            listener.endListItem();
+
+                            if (listType != listStack.peek().getType()) {
+                                closeList(listener, listStack);
+                                listener.beginList(listType, Listener.EMPTY_PARAMETERS);
+                                listStack.push(new ListState(listDepth, listType));
+                            }
+
                             listener.beginListItem();
                         } else {
                             listener.endListItem();
+
+                            if (listType != listStack.peek().getType()) {
+                                closeList(listener, listStack);
+                                listener.beginList(listType, Listener.EMPTY_PARAMETERS);
+                                listStack.push(new ListState(listDepth, listType));
+                            }
+
                             listener.beginListItem();
                         }
-
-                        listEnded = false;
-                        buffer.clear();
-                        continue;
-                    } else {
-                        buffer.add('*');
-                        buffer.add(' ');
                     }
+
+                    listEnded = false;
+                    buffer.clear();
+                    continue;
                 }
 
-                if (buffer.size() >= 2 && buffer.get(buffer.size() - 1) == ' '
-                        && buffer.get(buffer.size() - 2) == '-')
+                // If the buffer starts with at least two spaces or at least one tab followed by another character,
+                // it is a preformatted text.
+                if ((buffer.size() > 1 && buffer.get(0) == '\t' && buffer.get(buffer.size() - 1) != '\t')
+                    || (buffer.size() > 2 && buffer.get(0) == ' ' && buffer.get(1) == ' '
+                    && buffer.get(buffer.size() - 1) != ' '))
                 {
-                    //Ordered list
-                    buffer.subList(buffer.size() - 2, buffer.size()).clear();
-                    boolean isOrederedList = true;
-                    for (Character c : buffer) {
-                        if (c != ' ') {
-                            isOrederedList = false;
-                        }
+                    // Remove the indentation.
+                    buffer.remove(0);
+                    if (buffer.get(0) == ' ') {
+                        buffer.remove(0);
                     }
-                    if (isOrederedList) {
-                        if (buffer.size() > listIndentation) {
-                            while (listIndentation < buffer.size()) {
-                                listener.beginList(ListType.NUMBERED, Listener.EMPTY_PARAMETERS);
-                                listType.push(ListType.NUMBERED);
-                                listener.beginListItem();
-                                listIndentation++;
+                    
+                    StringBuilder codeContent = new StringBuilder();
+
+                    while (true) {
+                        // Read into the buffer until the end of the line.
+                        while (source.ready() && (buffer.isEmpty() || buffer.get(buffer.size() - 1) != '\n')) {
+                            int c = source.read();
+                            if (c == -1) {
+                                break;
                             }
-                        } else if (buffer.size() < listIndentation) {
-                            listener.endListItem();
-                            while (listIndentation > (buffer.size())) {
-                                // close internal last list element
-                                closeList(listener, listType);
-                                listener.endListItem();
-                                listIndentation--;
-                            }
-                            listener.beginListItem();
-                        } else {
-                            listener.endListItem();
-                            listener.beginListItem();
+                            buffer.add((char) c);
                         }
-                        listEnded = false;
+                        
+                        // Append the buffer to the code content.
+                        buffer.forEach(codeContent::append);
                         buffer.clear();
-                        continue;
-                    } else {
-                        buffer.add('-');
-                        buffer.add(' ');
+
+                        // Start reading the next line. Read only the first character, if it is a space, also read
+                        // the second character.
+                        while (source.ready() && (buffer.isEmpty() || buffer.get(0) == ' ')
+                            && buffer.size() < 2) {
+                            int c = source.read();
+                            if (c == -1) {
+                                break;
+                            }
+                            buffer.add((char) c);
+                        }
+                        
+                        // If the next line starts with a tab or two spaces, continue reading.
+                        if (!buffer.isEmpty() && (buffer.get(0) == '\t' || (buffer.size() == 2
+                            && buffer.get(0) == ' ' && buffer.get(1) == ' ')))
+                        {
+                            // Remove the indentation.
+                            buffer.clear();
+                        } else {
+                            // Otherwise, end the code block.
+                            // Remove the last character from code content if it is a newline.
+                            if (codeContent.length() > 0 && codeContent.charAt(codeContent.length() - 1) == '\n') {
+                                codeContent.deleteCharAt(codeContent.length() - 1);
+                            }
+
+                            listener.onMacro(TAG_CODE, Listener.EMPTY_PARAMETERS, codeContent.toString(), false);
+
+                            // Push the characters in the buffer back to the source and clear the buffer.
+                            while (!buffer.isEmpty()) {
+                                source.unread(buffer.remove(buffer.size() - 1));
+                            }
+
+                            break;
+                        }
                     }
+
+                    continue;
                 }
 
                 if (helper.getStringRepresentation(buffer).endsWith(" //") || helper.getStringRepresentation(buffer)
@@ -800,10 +853,9 @@ public class DokuWikiIterativeParser
             this.paragraphJustOpened = helper.processWords(0, buffer, listener, this.paragraphJustOpened);
         }
         //close remaining list items
-        while (listIndentation >= 0) {
+        while (!listStack.isEmpty()) {
             listener.endListItem();
-            closeList(listener, listType);
-            listIndentation--;
+            closeList(listener, listStack);
         }
 
         //close remaining quotations
@@ -1038,9 +1090,9 @@ public class DokuWikiIterativeParser
         buffer.clear();
     }
 
-    private void closeList(Listener listener, Stack<ListType> listType)
+    private void closeList(Listener listener, Deque<ListState> listType)
     {
-        if (listType.pop() == ListType.BULLETED) {
+        if (listType.pop().getType() == ListType.BULLETED) {
             listener.endList(ListType.BULLETED, Listener.EMPTY_PARAMETERS);
         } else {
             listener.endList(ListType.NUMBERED, Listener.EMPTY_PARAMETERS);

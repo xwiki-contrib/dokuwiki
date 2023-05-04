@@ -1,15 +1,16 @@
 .#-----------------------------------------------------
 .input|dokuwiki/1.0
+.# Test with one more space as DokuWiki doesn't care if you use two or three spaces
 .#-----------------------------------------------------
-* This is a list
- * The second item
-* You may have different levels
-* Another item
+  * This is a list
+    * The second item
+   * You may have different levels
+  * Another item
 
-- The same list but ordered
- - Another item
-- Just use indention for deeper levels
-- That's it
+  - The same list but ordered
+     - Another item
+  - Just use indention for deeper levels
+  - That's it
 .#-----------------------------------------------------
 .expect|event/1.0
 .#-----------------------------------------------------

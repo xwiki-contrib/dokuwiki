@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,18 +45,31 @@ import org.xwiki.rendering.listener.reference.ResourceType;
 public class DokuWikiSyntaxParserHelper
 {
     /**
-     * Builds a string from the buffer list.
+     * Builds a string from a list of characters.
      *
-     * @param list List is input buffer ArrayList.
-     * @return builder Builder to build string of input list.
+     * @param list the list of characters
+     * @return the string representation of the passed list of character
      */
-    public String getStringRepresentation(ArrayList<Character> list)
+    public String getStringRepresentation(List<Character> list)
     {
         StringBuilder builder = new StringBuilder(list.size());
         for (Character ch : list) {
             builder.append(ch);
         }
         return builder.toString();
+    }
+
+    /**
+     * Builds a string from a list of characters.
+     *
+     * @param list the list of characters
+     * @return the string representation of the passed list of character
+     * @deprecated since 1.4 use {@link #getStringRepresentation(List)} instead
+     */
+    @Deprecated
+    public String getStringRepresentation(ArrayList<Character> list)
+    {
+        return getStringRepresentation((List<Character>) list);
     }
 
     /**

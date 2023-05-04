@@ -528,6 +528,7 @@ DokuWiki's syntax can be extended by [[doku>plugins|Plugins]]. How the installed
 ~~INFO:syntaxplugins~~
 .#-----------------------------------------------------
 .expect|event/1.0
+.# Warning: the following is not correct and demonstrates bugs like https://jira.xwiki.org/browse/DOKUWIKI-31.
 .#-----------------------------------------------------
 beginDocument
 beginSection
@@ -739,8 +740,8 @@ onWord [all]
 onSpace
 onWord [these.]
 endParagraph
-onMacroStandalone [code] [] [DokuWiki supports **bold**, //italic//, __underlined__ and ''monospaced'' texts.]
-onMacroStandalone [code] [] [Of course you can **__//''combine''//__** all these.]
+onMacroStandalone [code] [] [DokuWiki supports **bold**, //italic//, __underlined__ and ''monospaced'' texts.
+Of course you can **__//''combine''//__** all these.]
 beginParagraph
 onWord [You]
 onSpace
@@ -911,9 +912,9 @@ onWord [without]
 onSpace
 onWord [it.]
 endParagraph
-onMacroStandalone [code] [] [This is some text with some linebreaks\\ Note that the]
-onMacroStandalone [code] [] [two backslashes are only recognized at the end of a line\\]
-onMacroStandalone [code] [] [or followed by\\ a whitespace \\this happens without it.]
+onMacroStandalone [code] [] [This is some text with some linebreaks\\ Note that the
+two backslashes are only recognized at the end of a line\\
+or followed by\\ a whitespace \\this happens without it.]
 beginParagraph
 onWord [You]
 onSpace
@@ -1034,10 +1035,10 @@ onWord [recognized,]
 onSpace
 onWord [too.]
 endParagraph
-onMacroStandalone [code] [] [DokuWiki supports multiple ways of creating links. External links are recognized]
-onMacroStandalone [code] [] [automagically: http://www.google.com or simply www.google.com - You can set]
-onMacroStandalone [code] [] [link text as well: [[http://www.google.com|This Link points to google]]. Email]
-onMacroStandalone [code] [] [addresses like this one: <andi@splitbrain.org> are recognized, too.]
+onMacroStandalone [code] [] [DokuWiki supports multiple ways of creating links. External links are recognized
+automagically: http://www.google.com or simply www.google.com - You can set
+link text as well: [[http://www.google.com|This Link points to google]]. Email
+addresses like this one: <andi@splitbrain.org> are recognized, too.]
 beginParagraph
 beginSection
 beginHeader [3, ]
@@ -1094,8 +1095,8 @@ onWord [text]
 endLink [Typed = [false] Type = [url] Reference = [pagename]] [false]
 onSpecialSymbol [.]
 endParagraph
-onMacroStandalone [code] [] [Internal links are created by using square brackets. You can either just give]
-onMacroStandalone [code] [] [a [[pagename]] or use an additional [[pagename|link text]].]
+onMacroStandalone [code] [] [Internal links are created by using square brackets. You can either just give
+a [[pagename]] or use an additional [[pagename|link text]].]
 beginParagraph
 beginLink [Typed = [true] Type = [interwiki] Reference = [pagename|Wiki pagenames] Parameters = [[interWikiAlias] = [doku]]] [false]
 endLink [Typed = [true] Type = [interwiki] Reference = [pagename|Wiki pagenames] Parameters = [[interWikiAlias] = [doku]]] [false]
@@ -1221,10 +1222,138 @@ onMacroStandalone [code] [] [This links to [[syntax#internal|this Section]].]
 beginParagraph
 onWord [Notes:]
 endParagraph
-onMacroStandalone [code] [] [* Links to [[syntax|existing pages]] are shown in a different style from [[nonexisting]] ones.]
-onMacroStandalone [code] [] [* DokuWiki does not use [[wp>CamelCase]] to automatically create links by default, but this behavior can be enabled in the [[doku>config]] file. Hint: If DokuWiki is a link, then it's enabled.]
-onMacroStandalone [code] [] [* When a section's heading is changed, its bookmark changes, too. So don't rely on section linking too much.]
-beginParagraph
+beginList [BULLETED]
+beginListItem
+onWord [Links]
+onSpace
+onWord [to]
+onSpace
+beginLink [Typed = [false] Type = [url] Reference = [syntax]] [false]
+onWord [existing]
+onSpace
+onWord [pages]
+endLink [Typed = [false] Type = [url] Reference = [syntax]] [false]
+onSpace
+onWord [are]
+onSpace
+onWord [shown]
+onSpace
+onWord [in]
+onSpace
+onWord [a]
+onSpace
+onWord [different]
+onSpace
+onWord [style]
+onSpace
+onWord [from]
+onSpace
+beginLink [Typed = [false] Type = [url] Reference = [nonexisting]] [false]
+endLink [Typed = [false] Type = [url] Reference = [nonexisting]] [false]
+onSpace
+onWord [ones.]
+endListItem
+beginListItem
+onWord [DokuWiki]
+onSpace
+onWord [does]
+onSpace
+onWord [not]
+onSpace
+onWord [use]
+onSpace
+beginLink [Typed = [true] Type = [interwiki] Reference = [CamelCase] Parameters = [[interWikiAlias] = [wp]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [CamelCase] Parameters = [[interWikiAlias] = [wp]]] [false]
+onSpace
+onWord [to]
+onSpace
+onWord [automatically]
+onSpace
+onWord [create]
+onSpace
+onWord [links]
+onSpace
+onWord [by]
+onSpace
+onWord [default,]
+onSpace
+onWord [but]
+onSpace
+onWord [this]
+onSpace
+onWord [behavior]
+onSpace
+onWord [can]
+onSpace
+onWord [be]
+onSpace
+onWord [enabled]
+onSpace
+onWord [in]
+onSpace
+onWord [the]
+onSpace
+beginLink [Typed = [true] Type = [interwiki] Reference = [config] Parameters = [[interWikiAlias] = [doku]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [config] Parameters = [[interWikiAlias] = [doku]]] [false]
+onSpace
+onWord [file.]
+onSpace
+onWord [Hint:]
+onSpace
+onWord [If]
+onSpace
+onWord [DokuWiki]
+onSpace
+onWord [is]
+onSpace
+onWord [a]
+onSpace
+onWord [link,]
+onSpace
+onWord [then]
+onSpace
+onWord [it's]
+onSpace
+onWord [enabled.]
+endListItem
+beginListItem
+onWord [When]
+onSpace
+onWord [a]
+onSpace
+onWord [section's]
+onSpace
+onWord [heading]
+onSpace
+onWord [is]
+onSpace
+onWord [changed,]
+onSpace
+onWord [its]
+onSpace
+onWord [bookmark]
+onSpace
+onWord [changes,]
+onSpace
+onWord [too.]
+onSpace
+onWord [So]
+onSpace
+onWord [don't]
+onSpace
+onWord [rely]
+onSpace
+onWord [on]
+onSpace
+onWord [section]
+onSpace
+onWord [linking]
+onSpace
+onWord [too]
+onSpace
+onWord [much.]
+endListItem
+endList [BULLETED]
 beginSection
 beginHeader [3, ]
 onSpace
@@ -1232,6 +1361,7 @@ onWord [Interwiki]
 onSpace
 endHeader [3, ]
 endSection
+beginParagraph
 endParagraph
 beginParagraph
 onWord [DokuWiki]
@@ -1283,8 +1413,8 @@ beginLink [Typed = [true] Type = [interwiki] Reference = [Wiki] Parameters = [[i
 endLink [Typed = [true] Type = [interwiki] Reference = [Wiki] Parameters = [[interWikiAlias] = [wp]]] [false]
 onSpecialSymbol [.]
 endParagraph
-onMacroStandalone [code] [] [DokuWiki supports [[doku>Interwiki]] links. These are quick links to other Wikis.]
-onMacroStandalone [code] [] [For example this is a link to Wikipedia's page about Wikis: [[wp>Wiki]].]
+onMacroStandalone [code] [] [DokuWiki supports [[doku>Interwiki]] links. These are quick links to other Wikis.
+For example this is a link to Wikipedia's page about Wikis: [[wp>Wiki]].]
 beginParagraph
 beginSection
 beginHeader [3, ]
@@ -1351,15 +1481,166 @@ onMacroStandalone [code] [] [Windows Shares like [[\\server\share|this]] are rec
 beginParagraph
 onWord [Notes:]
 endParagraph
-onMacroStandalone [code] [] [* For security reasons direct browsing of windows shares only works in Microsoft Internet Explorer per default (and only in the "local zone").]
-onMacroStandalone [code] [] [* For Mozilla and Firefox it can be enabled through different workaround mentioned in the [[http://kb.mozillazine.org/Links_to_local_pages_do_not_work|Mozilla Knowledge Base]]. However, there will still be a JavaScript warning about trying to open a Windows Share. To remove this warning (for all users), put the following line in ''conf/lang/en/lang.php'' (more details at [[doku>localization#changing_some_localized_texts_and_strings_in_your_installation|localization]]):]
-beginParagraph
+beginList [BULLETED]
+beginListItem
+onWord [For]
+onSpace
+onWord [security]
+onSpace
+onWord [reasons]
+onSpace
+onWord [direct]
+onSpace
+onWord [browsing]
+onSpace
+onWord [of]
+onSpace
+onWord [windows]
+onSpace
+onWord [shares]
+onSpace
+onWord [only]
+onSpace
+onWord [works]
+onSpace
+onWord [in]
+onSpace
+onWord [Microsoft]
+onSpace
+onWord [Internet]
+onSpace
+onWord [Explorer]
+onSpace
+onWord [per]
+onSpace
+onWord [default]
+onSpace
+onWord [(and]
+onSpace
+onWord [only]
+onSpace
+onWord [in]
+onSpace
+onWord [the]
+onSpace
+onWord ["local]
+onSpace
+onWord [zone").]
+endListItem
+beginListItem
+onWord [For]
+onSpace
+onWord [Mozilla]
+onSpace
+onWord [and]
+onSpace
+onWord [Firefox]
+onSpace
+onWord [it]
+onSpace
+onWord [can]
+onSpace
+onWord [be]
+onSpace
+onWord [enabled]
+onSpace
+onWord [through]
+onSpace
+onWord [different]
+onSpace
+onWord [workaround]
+onSpace
+onWord [mentioned]
+onSpace
+onWord [in]
+onSpace
+onWord [the]
+onSpace
+beginLink [Typed = [false] Type = [url] Reference = [http://kb.mozillazine.org/Links_to_local_pages_do_not_work]] [false]
+onWord [Mozilla]
+onSpace
+onWord [Knowledge]
+onSpace
+onWord [Base]
+endLink [Typed = [false] Type = [url] Reference = [http://kb.mozillazine.org/Links_to_local_pages_do_not_work]] [false]
+onSpecialSymbol [.]
+onSpace
+onWord [However,]
+onSpace
+onWord [there]
+onSpace
+onWord [will]
+onSpace
+onWord [still]
+onSpace
+onWord [be]
+onSpace
+onWord [a]
+onSpace
+onWord [JavaScript]
+onSpace
+onWord [warning]
+onSpace
+onWord [about]
+onSpace
+onWord [trying]
+onSpace
+onWord [to]
+onSpace
+onWord [open]
+onSpace
+onWord [a]
+onSpace
+onWord [Windows]
+onSpace
+onWord [Share.]
+onSpace
+onWord [To]
+onSpace
+onWord [remove]
+onSpace
+onWord [this]
+onSpace
+onWord [warning]
+onSpace
+onWord [(for]
+onSpace
+onWord [all]
+onSpace
+onWord [users),]
+onSpace
+onWord [put]
+onSpace
+onWord [the]
+onSpace
+onWord [following]
+onSpace
+onWord [line]
+onSpace
+onWord [in]
+onSpace
+beginFormat [MONOSPACE]
+onWord [conf/lang/en/lang.php]
+endFormat [MONOSPACE]
+onSpace
+onWord [(more]
+onSpace
+onWord [details]
+onSpace
+onWord [at]
+onSpace
+beginLink [Typed = [true] Type = [interwiki] Reference = [localization#changing_some_localized_texts_and_strings_in_your_installation|localization] Parameters = [[interWikiAlias] = [doku]]] [false]
+endLink [Typed = [true] Type = [interwiki] Reference = [localization#changing_some_localized_texts_and_strings_in_your_installation|localization] Parameters = [[interWikiAlias] = [doku]]] [false]
+onWord [):]
+endListItem
+endList [BULLETED]
 onMacroStandalone [code] [language=-] [<?php
 /**
  * Customization of the english language file
  * Copy only the strings that needs to be modified
  */
 $lang['js']['nosmblinks'] = '';]
+beginParagraph
 endParagraph
 beginSection
 beginHeader [3, ]
@@ -1662,9 +1943,9 @@ onSpace
 endHeader [5, ]
 endSection
 beginParagraph
-onMacroStandalone [code] [] [==== Headline Level 3 ====]
-onMacroStandalone [code] [] [=== Headline Level 4 ===]
-onMacroStandalone [code] [] [== Headline Level 5 ==]
+onMacroStandalone [code] [] [==== Headline Level 3 ====
+=== Headline Level 4 ===
+== Headline Level 5 ==]
 endParagraph
 beginParagraph
 onWord [By]
@@ -1786,10 +2067,10 @@ onWord [image:]
 onSpace
 onImage [Typed = [false] Type = [attach] Reference = [ttp://php.net/images/php.gif]] [false] [[height]=[200px][width]=[50px]]
 endParagraph
-onMacroStandalone [code] [] [Real size:                        {{wiki:dokuwiki-128.png}}]
-onMacroStandalone [code] [] [Resize to given width:            {{wiki:dokuwiki-128.png?50}}]
-onMacroStandalone [code] [] [Resize to given width and height: {{wiki:dokuwiki-128.png?200x50}}]
-onMacroStandalone [code] [] [Resized external image:           {{http://php.net/images/php.gif?200x50}}]
+onMacroStandalone [code] [] [Real size:                        {{wiki:dokuwiki-128.png}}
+Resize to given width:            {{wiki:dokuwiki-128.png?50}}
+Resize to given width and height: {{wiki:dokuwiki-128.png?200x50}}
+Resized external image:           {{http://php.net/images/php.gif?200x50}}]
 beginParagraph
 endParagraph
 beginParagraph
@@ -1824,9 +2105,9 @@ endParagraph
 beginParagraph
 onImage [Typed = [false] Type = [attach] Reference = [dokuwiki-128.png]] [false] [[align]=[middle]]
 endParagraph
-onMacroStandalone [code] [] [{{ wiki:dokuwiki-128.png}}]
-onMacroStandalone [code] [] [{{wiki:dokuwiki-128.png }}]
-onMacroStandalone [code] [] [{{ wiki:dokuwiki-128.png }}]
+onMacroStandalone [code] [] [{{ wiki:dokuwiki-128.png}}
+{{wiki:dokuwiki-128.png }}
+{{ wiki:dokuwiki-128.png }}]
 beginParagraph
 onWord [Of]
 onSpace
@@ -2369,16 +2650,80 @@ onWord [ordered]
 onSpace
 onWord [ones.]
 endParagraph
-onMacroStandalone [code] [] [* This is a list]
-onMacroStandalone [code] [] [* The second item]
-onMacroStandalone [code] [] [  * You may have different levels]
-onMacroStandalone [code] [] [* Another item]
-beginParagraph
-onMacroStandalone [code] [] [- The same list but ordered]
-onMacroStandalone [code] [] [- Another item]
-onMacroStandalone [code] [] [  - Just use indention for deeper levels]
-onMacroStandalone [code] [] [- That's it]
-endParagraph
+beginList [BULLETED]
+beginListItem
+onWord [This]
+onSpace
+onWord [is]
+onSpace
+onWord [a]
+onSpace
+onWord [list]
+endListItem
+beginListItem
+onWord [The]
+onSpace
+onWord [second]
+onSpace
+onWord [item]
+beginList [BULLETED]
+beginListItem
+onWord [You]
+onSpace
+onWord [may]
+onSpace
+onWord [have]
+onSpace
+onWord [different]
+onSpace
+onWord [levels]
+endListItem
+endList [BULLETED]
+endListItem
+beginListItem
+onWord [Another]
+onSpace
+onWord [item]
+endListItem
+endList [BULLETED]
+beginList [NUMBERED]
+beginListItem
+onWord [The]
+onSpace
+onWord [same]
+onSpace
+onWord [list]
+onSpace
+onWord [but]
+onSpace
+onWord [ordered]
+endListItem
+beginListItem
+onWord [Another]
+onSpace
+onWord [item]
+beginList [NUMBERED]
+beginListItem
+onWord [Just]
+onSpace
+onWord [use]
+onSpace
+onWord [indention]
+onSpace
+onWord [for]
+onSpace
+onWord [deeper]
+onSpace
+onWord [levels]
+endListItem
+endList [NUMBERED]
+endListItem
+beginListItem
+onWord [That's]
+onSpace
+onWord [it]
+endListItem
+endList [NUMBERED]
 onMacroStandalone [code] [] [
   * This is a list
   * The second item
@@ -2389,6 +2734,8 @@ onMacroStandalone [code] [] [
   - Another item
     - Just use indention for deeper levels
   - That's it]
+beginParagraph
+endParagraph
 beginParagraph
 onWord [Also]
 onSpace
@@ -2404,7 +2751,6 @@ onWord [the]
 onSpace
 beginLink [Typed = [true] Type = [interwiki] Reference = [faq:lists|FAQ on list items] Parameters = [[interWikiAlias] = [doku]]] [false]
 endLink [Typed = [true] Type = [interwiki] Reference = [faq:lists|FAQ on list items] Parameters = [[interWikiAlias] = [doku]]] [false]
-onSpace
 onSpecialSymbol [.]
 endParagraph
 beginSection
@@ -2584,29 +2930,148 @@ onWord [in]
 onSpace
 onWord [DokuWiki:]
 endParagraph
-onMacroStandalone [code] [] [* 8-) %%  8-)  %%]
-onMacroStandalone [code] [] [* 8-O %%  8-O  %%]
-onMacroStandalone [code] [] [* :-( %%  :-(  %%]
-onMacroStandalone [code] [] [* :-) %%  :-)  %%]
-onMacroStandalone [code] [] [* =)  %%  =)   %%]
-onMacroStandalone [code] [] [* :-/ %%  :-/  %%]
-onMacroStandalone [code] [] [* :-\ %%  :-\  %%]
-onMacroStandalone [code] [] [* :-? %%  :-?  %%]
-onMacroStandalone [code] [] [* :-D %%  :-D  %%]
-onMacroStandalone [code] [] [* :-P %%  :-P  %%]
-onMacroStandalone [code] [] [* :-O %%  :-O  %%]
-onMacroStandalone [code] [] [* :-X %%  :-X  %%]
-onMacroStandalone [code] [] [* :-| %%  :-|  %%]
-onMacroStandalone [code] [] [* ;-) %%  ;-)  %%]
-onMacroStandalone [code] [] [* ^_^ %%  ^_^  %%]
-onMacroStandalone [code] [] [* :?: %%  :?:  %%]
-onMacroStandalone [code] [] [* :!: %%  :!:  %%]
-onMacroStandalone [code] [] [* LOL %%  LOL  %%]
-onMacroStandalone [code] [] [* FIXME %%  FIXME %%]
-onMacroStandalone [code] [] [* DELETEME %% DELETEME %%]
 beginParagraph
-beginSection
-beginHeader [3, ]
+beginListItem
+onWord [8-)]
+onSpace
+onVerbatim [  8-)  ] [true]
+endListItem
+beginListItem
+onWord [8-O]
+onSpace
+onVerbatim [  8-O  ] [true]
+endListItem
+beginListItem
+onWord [:-(]
+onSpace
+onVerbatim [  :-(  ] [true]
+endListItem
+beginListItem
+onWord [:-)]
+onSpace
+onVerbatim [  :-)  ] [true]
+endListItem
+beginListItem
+onWord [=)]
+onSpace
+onVerbatim [  =)   ] [true]
+endListItem
+beginListItem
+onWord [:-/]
+onSpace
+onVerbatim [  :-/  ] [true]
+endListItem
+beginListItem
+onSpecialSymbol [:]
+onNewLine
+onVerbatim [  :-\  ] [true]
+endListItem
+beginListItem
+onWord [:-?]
+onSpace
+onVerbatim [  :-?  ] [true]
+endListItem
+beginListItem
+onWord [:-D]
+onSpace
+onVerbatim [  :-D  ] [true]
+endListItem
+beginListItem
+onWord [:-P]
+onSpace
+onVerbatim [  :-P  ] [true]
+endListItem
+beginListItem
+onWord [:-O]
+onSpace
+onVerbatim [  :-O  ] [true]
+endListItem
+beginListItem
+onWord [:-X]
+onSpace
+onVerbatim [  :-X  ] [true]
+endListItem
+beginListItem
+onWord [:-|]
+onSpace
+onVerbatim [  :-|  ] [true]
+endListItem
+beginListItem
+onWord [;-)]
+onSpace
+onVerbatim [  ;-)  ] [true]
+endListItem
+beginList [BULLETED]
+beginTable
+beginTableRow
+beginTableHeadCell
+onSpecialSymbol [_]
+endTableHeadCell
+beginTableHeadCell [[align]=[centre]]
+onWord [%%]
+endTableHeadCell [[align]=[centre]]
+beginTableHeadCell
+onSpecialSymbol [_]
+endTableHeadCell
+beginTableHeadCell [[align]=[right]]
+onWord [%%
+]
+onSpace
+onSpecialSymbol [*]
+onSpace
+onWord [:?:]
+onSpace
+onWord [%%]
+onSpace
+onWord [:?:]
+onSpace
+onWord [%%
+]
+onSpace
+onSpecialSymbol [*]
+onSpace
+onWord [:!:]
+onSpace
+onWord [%%]
+onSpace
+onWord [:!:]
+onSpace
+onWord [%%
+]
+onSpace
+onSpecialSymbol [*]
+onSpace
+onWord [LOL]
+onSpace
+onWord [%%]
+onSpace
+onWord [LOL]
+onSpace
+onWord [%%
+]
+onSpace
+onSpecialSymbol [*]
+onSpace
+onWord [FIXME]
+onSpace
+onWord [%%]
+onSpace
+onWord [FIXME]
+onSpace
+onWord [%%
+]
+onSpace
+onSpecialSymbol [*]
+onSpace
+onWord [DELETEME]
+onSpace
+onWord [%%]
+onSpace
+onWord [DELETEME]
+onSpace
+onWord [%%
+
+====]
 onSpace
 onWord [Text]
 onSpace
@@ -2616,14 +3081,11 @@ onWord [HTML]
 onSpace
 onWord [Conversions]
 onSpace
-endHeader [3, ]
-endSection
-endParagraph
-beginParagraph
-onWord [Typography:]
+onWord [====
+
+Typography:]
 onSpace
-beginLink [Typed = [false] Type = [url] Reference = [DokuWiki]] [false]
-endLink [Typed = [false] Type = [url] Reference = [DokuWiki]] [false]
+onWord [[[DokuWiki]]]
 onSpace
 onWord [can]
 onSpace
@@ -2657,48 +3119,22 @@ onWord [of]
 onSpace
 onWord [recognized]
 onSpace
-onWord [characters.]
-endParagraph
-beginQuotation
-beginQuotationLine
-beginQuotation
-beginQuotationLine
-beginQuotation
-beginQuotationLine
-beginQuotation
-beginQuotationLine
-beginQuotation
-beginQuotationLine
-beginQuotation
-beginQuotationLine
-endQuotationLine
-endQuotation
-endQuotationLine
-endQuotation
-endQuotationLine
-endQuotation
-endQuotationLine
-endQuotation
-endQuotationLine
-beginQuotationLine
-beginQuotation
-beginQuotationLine
-beginQuotation
-beginQuotationLine
-beginQuotation
-beginQuotationLine
-beginQuotation
-beginQuotationLine
-endQuotationLine
-endQuotation
-endQuotationLine
-endQuotation
-endQuotationLine
-endQuotation
-endQuotationLine
-endQuotation
-endQuotationLine
-beginQuotationLine
+onWord [characters.
+
+->]
+onSpace
+onWord [<-]
+onSpace
+onWord [<->]
+onSpace
+onWord [=>]
+onSpace
+onWord [<=]
+onSpace
+onWord [<=>]
+onSpace
+onWord [>>]
+onSpace
 onWord [<<]
 onSpace
 onWord [--]
@@ -2711,13 +3147,8 @@ onWord [(c)]
 onSpace
 onWord [(tm)]
 onSpace
-onWord [(r)]
-endQuotationLine
-endQuotation
-endQuotationLine
-endQuotation
-beginParagraph
-onWord ["He]
+onWord [(r)
+"He]
 onSpace
 onWord [thought]
 onSpace
@@ -2727,13 +3158,50 @@ onWord [a]
 onSpace
 onWord [man's]
 onSpace
-onWord [world'..."]
-endParagraph
-onMacroStandalone [code] [] [
--> <- <-> => <= <=> >> << -- --- 640x480 (c) (tm) (r)
-"He thought 'It's a man's world'..."]
-beginParagraph
-onWord [The]
+onWord [world'..."
+
+<code>
+->]
+onSpace
+onWord [<-]
+onSpace
+onWord [<->]
+onSpace
+onWord [=>]
+onSpace
+onWord [<=]
+onSpace
+onWord [<=>]
+onSpace
+onWord [>>]
+onSpace
+onWord [<<]
+onSpace
+onWord [--]
+onSpace
+onWord [---]
+onSpace
+onWord [640x480]
+onSpace
+onWord [(c)]
+onSpace
+onWord [(tm)]
+onSpace
+onWord [(r)
+"He]
+onSpace
+onWord [thought]
+onSpace
+onWord ['It's]
+onSpace
+onWord [a]
+onSpace
+onWord [man's]
+onSpace
+onWord [world'..."
+</code>
+
+The]
 onSpace
 onWord [same]
 onSpace
@@ -2771,13 +3239,14 @@ onWord [to]
 onSpace
 onWord [the]
 onSpace
-beginLink [Typed = [true] Type = [interwiki] Reference = [entities|pattern file] Parameters = [[interWikiAlias] = [doku]]] [false]
-endLink [Typed = [true] Type = [interwiki] Reference = [entities|pattern file] Parameters = [[interWikiAlias] = [doku]]] [false]
+onWord [[[doku>entities]
+endTableHeadCell [[align]=[right]]
+beginTableCell
+onWord [pattern]
 onSpace
-onSpecialSymbol [.]
-endParagraph
-beginParagraph
-onWord [There]
+onWord [file]].
+
+There]
 onSpace
 onWord [are]
 onSpace
@@ -2829,19 +3298,20 @@ onWord [through]
 onSpace
 onWord [a]
 onSpace
-beginLink [Typed = [true] Type = [interwiki] Reference = [config:typography|config option] Parameters = [[interWikiAlias] = [doku]]] [false]
-endLink [Typed = [true] Type = [interwiki] Reference = [config:typography|config option] Parameters = [[interWikiAlias] = [doku]]] [false]
-onSpecialSymbol [.]
-endParagraph
-beginSection
-beginHeader [2, ]
+onWord [[[doku>config:typography]
+endTableCell
+beginTableCell
+onWord [config]
+onSpace
+onWord [option]].
+
+=====]
 onSpace
 onWord [Quoting]
 onSpace
-endHeader [2, ]
-endSection
-beginParagraph
-onWord [Some]
+onWord [=====
+
+Some]
 onSpace
 onWord [times]
 onSpace
@@ -2881,22 +3351,10 @@ onWord [the]
 onSpace
 onWord [following]
 onSpace
-onWord [syntax:]
-endParagraph
-onMacroStandalone [code] [] [
-I think we should do it
+onWord [syntax:
 
-> No we shouldn't
-
->> Well, I say we should
-
-> Really?
-
->> Yes!
-
->>> Then lets do it!]
-beginParagraph
-onWord [I]
+<code>
+I]
 onSpace
 onWord [think]
 onSpace
@@ -2906,21 +3364,18 @@ onWord [should]
 onSpace
 onWord [do]
 onSpace
-onWord [it]
-endParagraph
-beginQuotation
-beginQuotationLine
+onWord [it
+
+>]
+onSpace
 onWord [No]
 onSpace
 onWord [we]
 onSpace
-onWord [shouldn't]
-endQuotationLine
-endQuotation
-beginQuotation
-beginQuotationLine
-beginQuotation
-beginQuotationLine
+onWord [shouldn't
+
+>>]
+onSpace
 onWord [Well,]
 onSpace
 onWord [I]
@@ -2929,55 +3384,84 @@ onWord [say]
 onSpace
 onWord [we]
 onSpace
-onWord [should]
-endQuotationLine
-endQuotation
-endQuotationLine
-endQuotation
-beginQuotation
-beginQuotationLine
-onWord [Really?]
-endQuotationLine
-endQuotation
-beginQuotation
-beginQuotationLine
-beginQuotation
-beginQuotationLine
-onWord [Yes!]
-endQuotationLine
-endQuotation
-endQuotationLine
-endQuotation
-beginQuotation
-beginQuotationLine
-beginQuotation
-beginQuotationLine
-beginQuotation
-beginQuotationLine
+onWord [should
+
+>]
+onSpace
+onWord [Really?
+
+>>]
+onSpace
+onWord [Yes!
+
+>>>]
+onSpace
 onWord [Then]
 onSpace
 onWord [lets]
 onSpace
 onWord [do]
 onSpace
-onWord [it!]
-endQuotationLine
-endQuotation
-endQuotationLine
-endQuotation
-endQuotationLine
-endQuotation
-beginSection
-beginHeader [2, ]
+onWord [it!
+</code>
+
+I]
+onSpace
+onWord [think]
+onSpace
+onWord [we]
+onSpace
+onWord [should]
+onSpace
+onWord [do]
+onSpace
+onWord [it
+
+>]
+onSpace
+onWord [No]
+onSpace
+onWord [we]
+onSpace
+onWord [shouldn't
+
+>>]
+onSpace
+onWord [Well,]
+onSpace
+onWord [I]
+onSpace
+onWord [say]
+onSpace
+onWord [we]
+onSpace
+onWord [should
+
+>]
+onSpace
+onWord [Really?
+
+>>]
+onSpace
+onWord [Yes!
+
+>>>]
+onSpace
+onWord [Then]
+onSpace
+onWord [lets]
+onSpace
+onWord [do]
+onSpace
+onWord [it!
+
+=====]
 onSpace
 onWord [Tables]
 onSpace
-endHeader [2, ]
-endSection
-beginParagraph
-endParagraph
-beginParagraph
-onWord [DokuWiki]
+onWord [=====
+
+DokuWiki]
 onSpace
 onWord [supports]
 onSpace
@@ -2991,10 +3475,10 @@ onWord [to]
 onSpace
 onWord [create]
 onSpace
-onWord [tables.]
-endParagraph
-beginTable
-beginTableRow
+onWord [tables.
+
+]
+endTableCell
 beginTableHeadCell [[align]=[centre]]
 onWord [Heading]
 onSpace
@@ -3096,7 +3580,6 @@ onWord [3]
 endTableCell [[align]=[centre]]
 endTableRow
 endTable
-beginParagraph
 onWord [
 Table]
 onSpace
@@ -3116,7 +3599,7 @@ onWord [with]
 onSpace
 onWord [a]
 onSpace
-beginParagraph
+beginListItem
 beginTable
 beginTableRow
 beginTableCell
@@ -3160,10 +3643,12 @@ onWord [3]
 endTableHeadCell [[align]=[centre]]
 endTableRow
 endTable
-onMacroStandalone [code] [] [| Row 1 Col 1    | Row 1 Col 2     | Row 1 Col 3        |]
-onMacroStandalone [code] [] [| Row 2 Col 1    | some colspan (note the double pipe) ||]
-onMacroStandalone [code] [] [| Row 3 Col 1    | Row 3 Col 2     | Row 3 Col 3        |]
-onSpace
+onMacroStandalone [code] [] [| Row 1 Col 1    | Row 1 Col 2     | Row 1 Col 3        |
+| Row 2 Col 1    | some colspan (note the double pipe) ||
+| Row 3 Col 1    | Row 3 Col 2     | Row 3 Col 3        |]
+endListItem
+endList [BULLETED]
+beginParagraph
 onWord [To]
 onSpace
 onWord [connect]
@@ -3343,10 +3828,10 @@ onWord [the]
 onSpace
 onWord [formatting:]
 endParagraph
-onMacroStandalone [code] [] [|              ^ Heading 1            ^ Heading 2          ^]
-onMacroStandalone [code] [] [^ Heading 3    | Row 1 Col 2          | Row 1 Col 3        |]
-onMacroStandalone [code] [] [^ Heading 4    | no colspan this time |                    |]
-onMacroStandalone [code] [] [^ Heading 5    | Row 2 Col 2          | Row 2 Col 3        |]
+onMacroStandalone [code] [] [|              ^ Heading 1            ^ Heading 2          ^
+^ Heading 3    | Row 1 Col 2          | Row 1 Col 3        |
+^ Heading 4    | no colspan this time |                    |
+^ Heading 5    | Row 2 Col 2          | Row 2 Col 3        |]
 beginFormat [MONOSPACE]
 onWord [You]
 onSpace
@@ -3513,10 +3998,10 @@ onWord [anything]
 onSpace
 onWord [else.]
 endParagraph
-onMacroStandalone [code] [] [^ Heading 1      ^ Heading 2                  ^ Heading 3          ^]
-onMacroStandalone [code] [] [| Row 1 Col 1    | this cell spans vertically | Row 1 Col 3        |]
-onMacroStandalone [code] [] [| Row 2 Col 1    | :::                        | Row 2 Col 3        |]
-onMacroStandalone [code] [] [| Row 3 Col 1    | :::                        | Row 2 Col 3        |]
+onMacroStandalone [code] [] [^ Heading 1      ^ Heading 2                  ^ Heading 3          ^
+| Row 1 Col 1    | this cell spans vertically | Row 1 Col 3        |
+| Row 2 Col 1    | :::                        | Row 2 Col 3        |
+| Row 3 Col 1    | :::                        | Row 2 Col 3        |]
 beginParagraph
 onWord [You]
 onSpace
@@ -3680,10 +4165,10 @@ onWord [the]
 onSpace
 onWord [source:]
 endParagraph
-onMacroStandalone [code] [] [^           Table with alignment           ^^^]
-onMacroStandalone [code] [] [|         right|    center    |left          |]
-onMacroStandalone [code] [] [|left          |         right|    center    |]
-onMacroStandalone [code] [] [| xxxxxxxxxxxx | xxxxxxxxxxxx | xxxxxxxxxxxx |]
+onMacroStandalone [code] [] [^           Table with alignment           ^^^
+|         right|    center    |left          |
+|left          |         right|    center    |
+| xxxxxxxxxxxx | xxxxxxxxxxxx | xxxxxxxxxxxx |]
 beginParagraph
 onWord [Note:]
 onSpace
@@ -3789,10 +4274,10 @@ onVerbatim [//__this__ text// with a smiley ;-)] [true]
 onSpace
 onSpecialSymbol [.]
 endParagraph
-onMacroStandalone [code] [] [<nowiki>]
-onMacroStandalone [code] [] [This is some text which contains addresses like this: http://www.splitbrain.org and **formatting**, but nothing is done with it.]
-onMacroStandalone [code] [] [</nowiki>]
-onMacroStandalone [code] [] [The same is true for %%//__this__ text// with a smiley ;-)%%.]
+onMacroStandalone [code] [] [<nowiki>
+This is some text which contains addresses like this: http://www.splitbrain.org and **formatting**, but nothing is done with it.
+</nowiki>
+The same is true for %%//__this__ text// with a smiley ;-)%%.]
 beginParagraph
 beginSection
 beginHeader [2, ]
@@ -3896,13 +4381,13 @@ onWord [source:]
 endParagraph
 onMacroStandalone [code] [] [  This is text is indented by two spaces.]
 beginParagraph
-onMacroStandalone [code] [] [<code>]
-onMacroStandalone [code] [] [This is preformatted code all spaces are preserved: like              <-this]
-onMacroStandalone [code] [] [</code>]
+onMacroStandalone [code] [] [<code>
+This is preformatted code all spaces are preserved: like              <-this
+</code>]
 endParagraph
-onMacroStandalone [code] [] [<file>]
-onMacroStandalone [code] [] [This is pretty much the same, but you could use it to show that you quoted a file.]
-onMacroStandalone [code] [] [</file>]
+onMacroStandalone [code] [] [<file>
+This is pretty much the same, but you could use it to show that you quoted a file.
+</file>]
 beginParagraph
 beginSection
 beginHeader [3, ]

@@ -105,117 +105,44 @@ All documentation and additional information besides the [[syntax description&gt
 
 About DokuWiki**
 
-{{code}}
-* [[doku&gt;features|A feature list]] :!:
-{{/code}}
+* [[interwiki:doku:features|A feature list]] :!:
+* [[interwiki:doku:users|Happy Users]]
+* [[interwiki:doku:press|Who wrote about it]]
+* [[interwiki:doku:blogroll|What Bloggers think]]
+* [[Compare it with other wiki software&gt;&gt;http://www.wikimatrix.org/show/DokuWiki]]**
 
-{{code}}
-* [[doku&gt;users|Happy Users]]
-{{/code}}
+Installing DokuWiki**
 
-{{code}}
-* [[doku&gt;press|Who wrote about it]]
-{{/code}}
+* [[interwiki:doku:requirements|System Requirements]]
+* [[Download DokuWiki&gt;&gt;http://download.dokuwiki.org/]] :!:
+* [[interwiki:doku:changes|Change Log]]
+* [[interwiki:doku:Install|How to install or upgrade]] :!:
+* [[interwiki:doku:config|Configuration]]**
 
-{{code}}
-* [[doku&gt;blogroll|What Bloggers think]]
-{{/code}}
+Using DokuWiki**
 
-{{code}}
-* [[http://www.wikimatrix.org/show/DokuWiki|Compare it with other wiki software]]
-{{/code}}
+* [[interwiki:doku:syntax|Wiki Syntax]]
+* [[interwiki:doku:manual|The manual]] :!:
+* [[interwiki:doku:FAQ|Frequently Asked Questions (FAQ)]]
+* [[interwiki:doku:glossary|Glossary]]
+* [[Search for DokuWiki help and documentation&gt;&gt;http://search.dokuwiki.org]]**
 
-**Installing DokuWiki**
+Customizing DokuWiki**
 
-{{code}}
-* [[doku&gt;requirements|System Requirements]]
-{{/code}}
+* [[interwiki:doku:tips|Tips and Tricks]]
+* [[interwiki:doku:Template|How to create and use templates]]
+* [[interwiki:doku:plugins|Installing plugins]]
+* [[interwiki:doku:development|Development Resources]]**
 
-{{code}}
-* [[http://download.dokuwiki.org/|Download DokuWiki]] :!:
-{{/code}}
+DokuWiki Feedback and Community**
 
-{{code}}
-* [[doku&gt;changes|Change Log]]
-{{/code}}
-
-{{code}}
-* [[doku&gt;Install|How to install or upgrade]] :!:
-{{/code}}
-
-{{code}}
-* [[doku&gt;config|Configuration]]
-{{/code}}
-
-**Using DokuWiki**
-
-{{code}}
-* [[doku&gt;syntax|Wiki Syntax]]
-{{/code}}
-
-{{code}}
-* [[doku&gt;manual|The manual]] :!:
-{{/code}}
-
-{{code}}
-* [[doku&gt;FAQ|Frequently Asked Questions (FAQ)]]
-{{/code}}
-
-{{code}}
-* [[doku&gt;glossary|Glossary]]
-{{/code}}
-
-{{code}}
-* [[http://search.dokuwiki.org|Search for DokuWiki help and documentation]]
-{{/code}}
-
-**Customizing DokuWiki**
-
-{{code}}
-* [[doku&gt;tips|Tips and Tricks]]
-{{/code}}
-
-{{code}}
-* [[doku&gt;Template|How to create and use templates]]
-{{/code}}
-
-{{code}}
-* [[doku&gt;plugins|Installing plugins]]
-{{/code}}
-
-{{code}}
-* [[doku&gt;development|Development Resources]]
-{{/code}}
-
-**DokuWiki Feedback and Community**
-
-{{code}}
-* [[doku&gt;newsletter|Subscribe to the newsletter]] :!:
-{{/code}}
-
-{{code}}
-* [[doku&gt;mailinglist|Join the mailing list]]
-{{/code}}
-
-{{code}}
-* [[http://forum.dokuwiki.org|Check out the user forum]]
-{{/code}}
-
-{{code}}
-* [[doku&gt;irc|Talk to other users in the IRC channel]]
-{{/code}}
-
-{{code}}
-* [[https://github.com/splitbrain/dokuwiki/issues|Submit bugs and feature wishes]]
-{{/code}}
-
-{{code}}
-* [[http://www.wikimatrix.org/forum/viewforum.php?id=10|Share your experiences in the WikiMatrix forum]]
-{{/code}}
-
-{{code}}
-* [[doku&gt;thanks|Some humble thanks]]
-{{/code}}
+* [[interwiki:doku:newsletter|Subscribe to the newsletter]] :!:
+* [[interwiki:doku:mailinglist|Join the mailing list]]
+* [[Check out the user forum&gt;&gt;http://forum.dokuwiki.org]]
+* [[interwiki:doku:irc|Talk to other users in the IRC channel]]
+* [[Submit bugs and feature wishes&gt;&gt;https://github.com/splitbrain/dokuwiki/issues]]
+* [[Share your experiences in the WikiMatrix forum&gt;&gt;http://www.wikimatrix.org/forum/viewforum.php?id=10]]
+* [[interwiki:doku:thanks|Some humble thanks]]
 
 
 
@@ -748,9 +675,6 @@ DokuWiki supports ** bold**, //italic//, __underlined__ and ##monospaced## texts
 
 {{code}}
 DokuWiki supports **bold**, //italic//, __underlined__ and ''monospaced'' texts.
-{{/code}}
-
-{{code}}
 Of course you can **__//''combine''//__** all these.
 {{/code}}
 
@@ -775,13 +699,7 @@ a whitespace ~\~\this happens without it.
 
 {{code}}
 This is some text with some linebreaks\\ Note that the
-{{/code}}
-
-{{code}}
 two backslashes are only recognized at the end of a line\\
-{{/code}}
-
-{{code}}
 or followed by\\ a whitespace \\this happens without it.
 {{/code}}
 
@@ -797,17 +715,8 @@ External links are recognized automagically: http://www.google.com or simply www
 
 {{code}}
 DokuWiki supports multiple ways of creating links. External links are recognized
-{{/code}}
-
-{{code}}
 automagically: http://www.google.com or simply www.google.com - You can set
-{{/code}}
-
-{{code}}
 link text as well: [[http://www.google.com|This Link points to google]]. Email
-{{/code}}
-
-{{code}}
 addresses like this one: &lt;andi@splitbrain.org&gt; are recognized, too.
 {{/code}}
 
@@ -819,9 +728,6 @@ Internal links are created by using square brackets. You can either just give a 
 
 {{code}}
 Internal links are created by using square brackets. You can either just give
-{{/code}}
-
-{{code}}
 a [[pagename]] or use an additional [[pagename|link text]].
 {{/code}}
 
@@ -843,29 +749,18 @@ This links to [[syntax#internal|this Section]].
 
 Notes:
 
-{{code}}
-* Links to [[syntax|existing pages]] are shown in a different style from [[nonexisting]] ones.
-{{/code}}
-
-{{code}}
-* DokuWiki does not use [[wp&gt;CamelCase]] to automatically create links by default, but this behavior can be enabled in the [[doku&gt;config]] file. Hint: If DokuWiki is a link, then it's enabled.
-{{/code}}
-
-{{code}}
+* Links to [[existing pages&gt;&gt;syntax]] are shown in a different style from [[nonexisting]] ones.
+* DokuWiki does not use [[interwiki:wp:CamelCase]] to automatically create links by default, but this behavior can be enabled in the [[interwiki:doku:config]] file. Hint: If DokuWiki is a link, then it's enabled.
 * When a section's heading is changed, its bookmark changes, too. So don't rely on section linking too much.
-{{/code}}
-
-
 
 ===  Interwiki  ===
+
+
 
 DokuWiki supports [[interwiki:doku:Interwiki]] links. These are quick links to other Wikis. For example this is a link to Wikipedia's page about Wikis: [[interwiki:wp:Wiki]].
 
 {{code}}
 DokuWiki supports [[doku&gt;Interwiki]] links. These are quick links to other Wikis.
-{{/code}}
-
-{{code}}
 For example this is a link to Wikipedia's page about Wikis: [[wp&gt;Wiki]].
 {{/code}}
 
@@ -881,21 +776,17 @@ Windows Shares like [[\\server\share|this]] are recognized, too.
 
 Notes:
 
-{{code}}
 * For security reasons direct browsing of windows shares only works in Microsoft Internet Explorer per default (and only in the "local zone").
-{{/code}}
+* For Mozilla and Firefox it can be enabled through different workaround mentioned in the [[Mozilla Knowledge Base&gt;&gt;http://kb.mozillazine.org/Links_to_local_pages_do_not_work]]. However, there will still be a JavaScript warning about trying to open a Windows Share. To remove this warning (for all users), put the following line in ##conf/lang/en/lang.php## (more details at [[interwiki:doku:localization#changing_some_localized_texts_and_strings_in_your_installation|localization]]): 
 
-{{code}}
-* For Mozilla and Firefox it can be enabled through different workaround mentioned in the [[http://kb.mozillazine.org/Links_to_local_pages_do_not_work|Mozilla Knowledge Base]]. However, there will still be a JavaScript warning about trying to open a Windows Share. To remove this warning (for all users), put the following line in ''conf/lang/en/lang.php'' (more details at [[doku&gt;localization#changing_some_localized_texts_and_strings_in_your_installation|localization]]): &lt;code - conf/lang/en/lang.php&gt;
-{{/code}}&lt;?php
-
+{{code language="-"}}
+&lt;?php
 /**
-
-* 
-** Customization of the english language file
-** Copy only the strings that needs to be modified
-
- */ $lang['js']['nosmblinks'] = ##;&lt;/code&gt;
+ * Customization of the english language file
+ * Copy only the strings that needs to be modified
+ */
+$lang['js']['nosmblinks'] = '';
+{{/code}}
 
 ===  Image Links  ===
 
@@ -935,13 +826,7 @@ You can use up to five different levels of headlines to structure your content. 
 
 {{code}}
 ==== Headline Level 3 ====
-{{/code}}
-
-{{code}}
 === Headline Level 4 ===
-{{/code}}
-
-{{code}}
 == Headline Level 5 ==
 {{/code}}
 
@@ -965,17 +850,8 @@ Resized external image~: [[image:ttp://php.net/images/php.gif||width="50px" heig
 
 {{code}}
 Real size:                        {{wiki:dokuwiki-128.png}}
-{{/code}}
-
-{{code}}
 Resize to given width:            {{wiki:dokuwiki-128.png?50}}
-{{/code}}
-
-{{code}}
 Resize to given width and height: {{wiki:dokuwiki-128.png?200x50}}
-{{/code}}
-
-{{code}}
 Resized external image:           {{http://php.net/images/php.gif?200x50}}
 {{/code}}
 
@@ -991,13 +867,7 @@ By using left or right whitespaces you can choose the alignment.
 
 {{code}}
 {{ wiki:dokuwiki-128.png}}
-{{/code}}
-
-{{code}}
 {{wiki:dokuwiki-128.png }}
-{{/code}}
-
-{{code}}
 {{ wiki:dokuwiki-128.png }}
 {{/code}}
 
@@ -1023,7 +893,7 @@ DokuWiki can embed the following media formats directly.
 |(% align="centre" %)Flash|(% align="centre" %)''swf''
 If you specify a filename that is not a supported media format, then it will be displayed as a link instead.
 
-By adding ##?linkonly'' you provide a link to the media without displaying it inline
+By adding ##?linkonly## you provide a link to the media without displaying it inline
 
 {{code}}
 {{wiki:dokuwiki-128.png?linkonly}}
@@ -1049,39 +919,15 @@ Additionally DokuWiki supports a "poster" image which will be shown before the v
 
 Dokuwiki supports ordered and unordered lists. To create a list item, indent your text by two spaces and use a ## *## for unordered lists or a ##-## for ordered ones.
 
-{{code}}
 * This is a list
-{{/code}}
-
-{{code}}
 * The second item
-{{/code}}
-
-{{code}}
-  * You may have different levels
-{{/code}}
-
-{{code}}
+** You may have different levels
 * Another item
-{{/code}}
 
-
-
-{{code}}
-- The same list but ordered
-{{/code}}
-
-{{code}}
-- Another item
-{{/code}}
-
-{{code}}
-  - Just use indention for deeper levels
-{{/code}}
-
-{{code}}
-- That's it
-{{/code}}
+1. The same list but ordered
+1. Another item
+11. Just use indention for deeper levels
+1. That's it
 
 {{code}}
 
@@ -1096,7 +942,9 @@ Dokuwiki supports ordered and unordered lists. To create a list item, indent you
   - That's it
 {{/code}}
 
-Also take a look at the [[interwiki:doku:faq:lists|FAQ on list items]] .
+
+
+Also take a look at the [[interwiki:doku:faq:lists|FAQ on list items]].
 
 ==  Text Conversions  ==
 
@@ -1108,122 +956,63 @@ The text to image conversion is mainly done for smileys. And the text to HTML co
 
 DokuWiki converts commonly used [[interwiki:wp:emoticon]] s to their graphical equivalents. Those [[interwiki:doku:Smileys]] and other images can be configured and extended. Here is an overview of Smileys included in DokuWiki:
 
-{{code}}
-* 8-) %%  8-)  %%
-{{/code}}
+* 8-) {{{  8-)  }}}
+* 8-O {{{  8-O  }}}
+* :-( {{{  :-(  }}}
+* :-) {{{  :-)  }}}
+* =) {{{  =)   }}}
+* :-/ {{{  :-/  }}}
+* :
+{{{  :-\  }}}
+* :-? {{{  :-?  }}}
+* :-D {{{  :-D  }}}
+* :-P {{{  :-P  }}}
+* :-O {{{  :-O  }}}
+* :-X {{{  :-X  }}}
+* :-| {{{  :-|  }}}
+* ;-) {{{  ;-)  }}}
+* 
 
-{{code}}
-* 8-O %%  8-O  %%
-{{/code}}
+|=_|=(% align="centre" %)%%|=_|=(% align="right" %)%%
+ * :?: %% :?: %%
+ * :!: %% :!: %%
+ * LOL %% LOL %%
+ * FIXME %% FIXME %%
+ * DELETEME %% DELETEME %%
 
-{{code}}
-* :-( %%  :-(  %%
-{{/code}}
+==== Text to HTML Conversions ====
 
-{{code}}
-* :-) %%  :-)  %%
-{{/code}}
+Typography: ~[~[DokuWiki]] can convert simple text characters to their typographically correct entities. Here is an example of recognized characters.
 
-{{code}}
-* =)  %%  =)   %%
-{{/code}}
-
-{{code}}
-* :-/ %%  :-/  %%
-{{/code}}
-
-{{code}}
-* :-\ %%  :-\  %%
-{{/code}}
-
-{{code}}
-* :-? %%  :-?  %%
-{{/code}}
-
-{{code}}
-* :-D %%  :-D  %%
-{{/code}}
-
-{{code}}
-* :-P %%  :-P  %%
-{{/code}}
-
-{{code}}
-* :-O %%  :-O  %%
-{{/code}}
-
-{{code}}
-* :-X %%  :-X  %%
-{{/code}}
-
-{{code}}
-* :-| %%  :-|  %%
-{{/code}}
-
-{{code}}
-* ;-) %%  ;-)  %%
-{{/code}}
-
-{{code}}
-* ^_^ %%  ^_^  %%
-{{/code}}
-
-{{code}}
-* :?: %%  :?:  %%
-{{/code}}
-
-{{code}}
-* :!: %%  :!:  %%
-{{/code}}
-
-{{code}}
-* LOL %%  LOL  %%
-{{/code}}
-
-{{code}}
-* FIXME %%  FIXME %%
-{{/code}}
-
-{{code}}
-* DELETEME %% DELETEME %%
-{{/code}}
-
-
-
-===  Text to HTML Conversions  ===
-
-Typography: [[DokuWiki]] can convert simple text characters to their typographically correct entities. Here is an example of recognized characters.
-
-&gt;
-&gt;&gt;
-&gt;&gt;&gt;
-&gt;&gt;&gt;&gt;
-&gt;&gt;&gt;&gt;&gt;
-&gt;&gt;&gt;&gt;&gt;&gt;
-&gt;&gt;
-&gt;&gt;&gt;
-&gt;&gt;&gt;&gt;
-&gt;&gt;&gt;&gt;&gt;
-&gt;&gt;&gt;&gt;&gt;&gt;
-&gt;&gt;&lt;&lt; ~-~- ~-~-- 640x480 (c) (tm) (r)
-
+-&gt; &lt;- &lt;-&gt; =&gt; &lt;= &lt;=&gt; &gt;&gt; &lt;&lt; ~-~- ~-~-- 640x480 (c) (tm) (r)
 "He thought 'It's a man's world'..."
 
-{{code}}
-
--&gt; &lt;- &lt;-&gt; =&gt; &lt;= &lt;=&gt; &gt;&gt; &lt;&lt; -- --- 640x480 (c) (tm) (r)
+&lt;code&gt;
+-&gt; &lt;- &lt;-&gt; =&gt; &lt;= &lt;=&gt; &gt;&gt; &lt;&lt; ~-~- ~-~-- 640x480 (c) (tm) (r)
 "He thought 'It's a man's world'..."
-{{/code}}
+&lt;/code&gt;
 
-The same can be done to produce any kind of HTML, it just needs to be added to the [[interwiki:doku:entities|pattern file]] .
+The same can be done to produce any kind of HTML, it just needs to be added to the ~[~[doku&gt;entities|pattern file]].
 
-There are three exceptions which do not come from that pattern file: multiplication entity (640x480), 'single' and "double quotes". They can be turned off through a [[interwiki:doku:config:typography|config option]].
+There are three exceptions which do not come from that pattern file: multiplication entity (640x480), 'single' and "double quotes". They can be turned off through a ~[~[doku&gt;config:typography|config option]].
 
-==  Quoting  ==
+===== Quoting =====
 
 Some times you want to mark some text to show it's a reply or comment. You can use the following syntax:
 
-{{code}}
+&lt;code&gt;
+I think we should do it
+
+&gt; No we shouldn't
+
+&gt;&gt; Well, I say we should
+
+&gt; Really?
+
+&gt;&gt; Yes!
+
+&gt;&gt;&gt; Then lets do it!
+&lt;/code&gt;
 
 I think we should do it
 
@@ -1236,27 +1025,8 @@ I think we should do it
 &gt;&gt; Yes!
 
 &gt;&gt;&gt; Then lets do it!
-{{/code}}
 
-I think we should do it
-
-&gt;No we shouldn't
-
-&gt;
-&gt;&gt;Well, I say we should
-
-&gt;Really?
-
-&gt;
-&gt;&gt;Yes!
-
-&gt;
-&gt;&gt;
-&gt;&gt;&gt;Then lets do it!
-
-==  Tables  ==
-
-
+===== Tables =====
 
 DokuWiki supports a simple syntax to create tables.
 
@@ -1264,8 +1034,6 @@ DokuWiki supports a simple syntax to create tables.
 |(% align="centre" %)Row 1 Col 1|(% align="centre" %)Row 1 Col 2|(% align="centre" %)Row 1 Col 3
 |(% align="centre" %)Row 2 Col 1|(% align="centre" %)some colspan (note the double pipe)|
 |(% align="centre" %)Row 3 Col 1|(% align="centre" %)Row 3 Col 2|(% align="centre" %)Row 3 Col 3
-
-
 Table rows have to start and end with a ##
 
 |'' for normal rows or a ''|=(% align="left" %)'' for headers.
@@ -1274,15 +1042,11 @@ Table rows have to start and end with a ##
 
 {{code}}
 | Row 1 Col 1    | Row 1 Col 2     | Row 1 Col 3        |
-{{/code}}
-
-{{code}}
 | Row 2 Col 1    | some colspan (note the double pipe) ||
+| Row 3 Col 1    | Row 3 Col 2     | Row 3 Col 3        |
 {{/code}}
 
-{{code}}
-| Row 3 Col 1    | Row 3 Col 2     | Row 3 Col 3        |
-{{/code}} To connect cells horizontally, just make the next cell completely empty as shown above. Be sure to have always the same amount of cell separators!
+To connect cells horizontally, just make the next cell completely empty as shown above. Be sure to have always the same amount of cell separators!
 
 Vertical tableheaders are possible, too.
 
@@ -1296,17 +1060,8 @@ As you can see, it's the cell separator before a cell which decides about the fo
 
 {{code}}
 |              ^ Heading 1            ^ Heading 2          ^
-{{/code}}
-
-{{code}}
 ^ Heading 3    | Row 1 Col 2          | Row 1 Col 3        |
-{{/code}}
-
-{{code}}
 ^ Heading 4    | no colspan this time |                    |
-{{/code}}
-
-{{code}}
 ^ Heading 5    | Row 2 Col 2          | Row 2 Col 3        |
 {{/code}}
 
@@ -1322,17 +1077,8 @@ Apart from the rowspan syntax those cells should not contain anything else.
 
 {{code}}
 ^ Heading 1      ^ Heading 2                  ^ Heading 3          ^
-{{/code}}
-
-{{code}}
 | Row 1 Col 1    | this cell spans vertically | Row 1 Col 3        |
-{{/code}}
-
-{{code}}
 | Row 2 Col 1    | :::                        | Row 2 Col 3        |
-{{/code}}
-
-{{code}}
 | Row 3 Col 1    | :::                        | Row 2 Col 3        |
 {{/code}}
 
@@ -1348,17 +1094,8 @@ This is how it looks in the source:
 
 {{code}}
 ^           Table with alignment           ^^^
-{{/code}}
-
-{{code}}
 |         right|    center    |left          |
-{{/code}}
-
-{{code}}
 |left          |         right|    center    |
-{{/code}}
-
-{{code}}
 | xxxxxxxxxxxx | xxxxxxxxxxxx | xxxxxxxxxxxx |
 {{/code}}
 
@@ -1376,17 +1113,8 @@ The same is true for {{{//__this__ text// with a smiley ;-)}}} .
 
 {{code}}
 &lt;nowiki&gt;
-{{/code}}
-
-{{code}}
 This is some text which contains addresses like this: http://www.splitbrain.org and **formatting**, but nothing is done with it.
-{{/code}}
-
-{{code}}
 &lt;/nowiki&gt;
-{{/code}}
-
-{{code}}
 The same is true for %%//__this__ text// with a smiley ;-)%%.
 {{/code}}
 
@@ -1422,25 +1150,13 @@ Those blocks were created by this source:
 
 {{code}}
 &lt;code&gt;
-{{/code}}
-
-{{code}}
 This is preformatted code all spaces are preserved: like              &lt;-this
-{{/code}}
-
-{{code}}
 &lt;/code&gt;
 {{/code}}
 
 {{code}}
 &lt;file&gt;
-{{/code}}
-
-{{code}}
 This is pretty much the same, but you could use it to show that you quoted a file.
-{{/code}}
-
-{{code}}
 &lt;/file&gt;
 {{/code}}
 

@@ -57,6 +57,10 @@
             <id>nehagup</id>
             <name>Neha Gupta</name>
         </developer>
+        <developer>
+            <id>michitux</id>
+            <name>Michael Hamann</name>
+        </developer>
     </developers>
     <modules>
         <module>dokuwiki-text</module>
