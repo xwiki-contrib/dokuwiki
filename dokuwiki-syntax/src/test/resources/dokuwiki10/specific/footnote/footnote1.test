@@ -13,6 +13,6 @@ onWord [is]
 onSpace
 onWord [a]
 onSpace
-onMacroInline [foootnote] [] [footnote]
+onMacroInline [footnote] [] [footnote]
 endParagraph
 endDocument

@@ -1804,7 +1804,7 @@ onSpace
 onWord [footnotes]
 onSpace
 onSpace
-onMacroInline [foootnote] [] [This is a footnote]
+onMacroInline [footnote] [] [This is a footnote]
 onSpace
 onWord [by]
 onSpace
@@ -2053,7 +2053,7 @@ onSpace
 onWord [and]
 onSpace
 onWord [height]
-onMacroInline [foootnote] [] [when the aspect ratio of the given width and height doesn't match that of the image, it will be cropped to the new ratio before resizing]
+onMacroInline [footnote] [] [when the aspect ratio of the given width and height doesn't match that of the image, it will be cropped to the new ratio before resizing]
 onSpecialSymbol [:]
 onSpace
 onImage [Typed = [false] Type = [attach] Reference = [dokuwiki-128.png]] [false] [[height]=[200px][width]=[50px]]

@@ -283,7 +283,7 @@ public class DokuWikiIterativeParser
                 if (buffer.get(buffer.size() - 1) == ')' && buffer.get(buffer.size() - 2) == ')') {
                     //ending of footnote
                     buffer.subList(buffer.size() - 2, buffer.size()).clear();
-                    listener.onMacro("foootnote", Listener.EMPTY_PARAMETERS, helper.getStringRepresentation(buffer),
+                    listener.onMacro("footnote", Listener.EMPTY_PARAMETERS, helper.getStringRepresentation(buffer),
                             true);
                     buffer.clear();
                     continue;

@@ -301,7 +301,7 @@ DokuWiki Feedback and Community**
 
 ==  Copyright  ==
 
-2004-2015 (c) Andreas Gohr  mailto:andi@splitbrain.orgPlease do not contact me for help and support ~-~- use the [[interwiki:doku:mailinglist]] or [[forum&gt;&gt;http://forum.dokuwiki.org]]{{foootnote}} instead{{/foootnote}} and the DokuWiki Community
+2004-2015 (c) Andreas Gohr  mailto:andi@splitbrain.orgPlease do not contact me for help and support ~-~- use the [[interwiki:doku:mailinglist]] or [[forum&gt;&gt;http://forum.dokuwiki.org]]{{footnote}} instead{{/footnote}} and the DokuWiki Community
 
 The DokuWiki engine is licensed under [[GNU General Public License&gt;&gt;http://www.gnu.org/licenses/gpl.html]] Version 2. If you use DokuWiki in your company, consider [[interwiki:doku:donate|donating]] a few bucks ;-).
 
@@ -957,7 +957,7 @@ The whole [[image&gt;&gt;#images_and_other_files]] and [[link&gt;&gt;#links]] sy
 
 ==  Footnotes  ==
 
-You can add footnotes  {{foootnote}}This is a footnote{{/foootnote}} by using double parentheses.
+You can add footnotes  {{footnote}}This is a footnote{{/footnote}} by using double parentheses.
 
 {{code}}
 You can add footnotes ((This is a footnote)) by using double parentheses.
@@ -997,7 +997,7 @@ Real size: [[image:dokuwiki-128.png]]
 
 Resize to given width: [[image:dokuwiki-128.png||width="50px"]]
 
-Resize to given width and height{{foootnote}}when the aspect ratio of the given width and height doesn't match that of the image, it will be cropped to the new ratio before resizing{{/foootnote}}: [[image:dokuwiki-128.png||width="50px" height="200px"]]
+Resize to given width and height{{footnote}}when the aspect ratio of the given width and height doesn't match that of the image, it will be cropped to the new ratio before resizing{{/footnote}}: [[image:dokuwiki-128.png||width="50px" height="200px"]]
 
 Resized external image~: [[image:ttp://php.net/images/php.gif||width="50px" height="200px"]]
 
