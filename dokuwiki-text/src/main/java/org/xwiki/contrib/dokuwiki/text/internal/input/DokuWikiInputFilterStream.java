@@ -26,11 +26,18 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 
 import javax.inject.Inject;
@@ -59,6 +66,8 @@ import org.xwiki.filter.input.AbstractBeanInputFilterStream;
 import org.xwiki.filter.input.FileInputSource;
 import org.xwiki.filter.input.InputSource;
 import org.xwiki.filter.input.InputStreamInputSource;
+import org.xwiki.model.reference.EntityReference;
+import org.xwiki.model.reference.LocalDocumentReference;
 import org.xwiki.rendering.parser.ParseException;
 import org.xwiki.rendering.parser.StreamParser;
 import org.xwiki.rendering.renderer.PrintRenderer;
@@ -108,6 +117,10 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
     private static final String KEY_USER = "user";
 
+    private static final String DOKUWIKI_START_PAGE = "start";
+
+    private static final String XWIKI_START_PAGE = "WebHome";
+
     @Inject
     @Named("xwiki/2.1")
     private PrintRendererFactory xwiki21Factory;
@@ -131,15 +144,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                     readUsers(new File(f, "conf" + System.getProperty(KEY_FILE_SEPERATOR) + "users.auth.php"),
                         proxyFilter);
 
-                    // recursively parse documents
-                    proxyFilter.beginWikiSpace(KEY_MAIN_SPACE, FilterEventParameters.EMPTY);
-                    try {
-                        readDocument(new File(dokuwikiDataDirectory, KEY_PAGES_DIRECTORY),
-                            dokuwikiDataDirectory.getAbsolutePath(), proxyFilter);
-                    } catch (IOException e) {
-                        this.logger.error("couldn't read document", e);
-                    }
-                    proxyFilter.endWikiSpace(KEY_MAIN_SPACE, FilterEventParameters.EMPTY);
+                    readAllDocuments(proxyFilter, dokuwikiDataDirectory);
                 } else {
                     read((InputStreamInputSource) inputSource, filter, proxyFilter);
                 }
@@ -218,20 +223,40 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         readUsers(new File(dokuwikiDirectory, "conf" + System.getProperty(KEY_FILE_SEPERATOR) + "users.auth.php"),
             proxyFilter);
 
-        // recursively parse documents
-        proxyFilter.beginWikiSpace(KEY_MAIN_SPACE, FilterEventParameters.EMPTY);
-        try {
-            readDocument(new File(dokuwikiDataDirectory, KEY_PAGES_DIRECTORY), dokuwikiDataDirectory.getAbsolutePath(),
-                proxyFilter);
-        } catch (IOException e) {
-            this.logger.error("couldn't read document", e);
-        }
-        proxyFilter.endWikiSpace(KEY_MAIN_SPACE, FilterEventParameters.EMPTY);
+        readAllDocuments(proxyFilter, dokuwikiDataDirectory);
 
         try {
             FileUtils.deleteDirectory(dokuwikiDirectory);
         } catch (IOException e) {
             this.logger.error("Could not delete dokuwiki folder after completion", e);
+        }
+    }
+
+    private void readAllDocuments(DokuWikiFilter proxyFilter, File dokuwikiDataDirectory) throws FilterException
+    {
+        Map<LocalDocumentReference, Path> pages;
+
+        try {
+            pages = readDocumentMap(new File(dokuwikiDataDirectory, KEY_PAGES_DIRECTORY).toPath());
+        } catch (IOException e) {
+            // This shouldn't happen as this is really just recursively scanning a directory and would thus indicate
+            // a major problem.
+            throw new FilterException("Failed to read page list", e);
+        }
+
+        // Sort pages by path. Store the result to work around limitations of the Java 8 Stream API regarding
+        // checked exceptions from forEach.
+        List<Map.Entry<LocalDocumentReference, Path>> sortedPages =
+            pages.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toList());
+
+        for (Map.Entry<LocalDocumentReference, Path> page : sortedPages) {
+            try {
+                readDocument(page.getKey(), page.getValue().toFile(), dokuwikiDataDirectory.getAbsolutePath(),
+                    proxyFilter);
+            } catch (IOException e) {
+                // Don't fail the whole import if a single page fails.
+                this.logger.error("Failed to read page", e);
+            }
         }
     }
 
@@ -262,79 +287,159 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         }
     }
 
-    private void readDocument(File directory, String dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
-        throws FilterException, IOException
+    private Map<LocalDocumentReference, Path> readDocumentMap(Path pagesDirectory)
+        throws IOException
     {
-        if (this.properties.isVerbose()) {
-            this.logger.info("Reading directory [{}]", directory.getAbsolutePath());
+        Map<LocalDocumentReference, Path> documentMap = new HashMap<>();
+
+        try (Stream<Path> filesStream = Files.walk(pagesDirectory)) {
+            filesStream
+                .filter(Files::isRegularFile)
+                .filter(path -> {
+                    String fileName = path.getFileName().toString();
+                    return fileName.endsWith(KEY_TEXT_FILE_FORMAT) && !fileName.startsWith(KEY_FULL_STOP);
+                })
+                .forEach(path -> {
+                    String fileName = path.getFileName().toString();
+
+                    // Extract all directories from the path excluding pagesDirectory.
+                    List<String> parentPath = new ArrayList<>();
+                    Path parent = path.getParent();
+                    while (!parent.equals(pagesDirectory)) {
+                        parentPath.add(parent.getFileName().toString());
+                        parent = parent.getParent();
+                    }
+
+                    LocalDocumentReference documentReference = getDocumentReference(parentPath, fileName);
+
+                    if (documentMap.containsKey(documentReference)) {
+                        // Conflict resolution: We keep the one where the file is named "start". The
+                        // other one is mapped to a terminal document unless it is in the root directory, in which case
+                        // the only sensible option seems to be to make it a terminal document in the main space.
+                        // Conflict resolution: keep
+                        Path pathToFix;
+                        if (fileName.equals(DOKUWIKI_START_PAGE + KEY_TEXT_FILE_FORMAT)) {
+                            pathToFix = documentMap.get(documentReference);
+                            documentMap.put(documentReference, path);
+                        } else {
+                            pathToFix = path;
+                        }
+
+                        if (documentReference.getParent().getParent() == null) {
+                            documentReference = new LocalDocumentReference(Collections.singletonList(KEY_MAIN_SPACE),
+                                documentReference.getParent().getName());
+                        } else {
+                            documentReference = new LocalDocumentReference(documentReference.getParent().getName(),
+                                documentReference.getParent().getParent());
+                        }
+
+                        documentMap.put(documentReference, pathToFix);
+                    } else {
+                        documentMap.put(documentReference, path);
+                    }
+                });
         }
 
-        File[] directoryFiles = directory.listFiles();
-        // Maintain order across file systems
-        if (directoryFiles != null) {
-            Arrays.sort(directoryFiles);
-            for (File file : directoryFiles) {
-                if (file.isDirectory()) {
-                    proxyFilter.beginWikiSpace(file.getName(), FilterEventParameters.EMPTY);
-                    readDocument(file, dokuwikiDataDirectory, proxyFilter);
-                    proxyFilter.endWikiSpace(file.getName(), FilterEventParameters.EMPTY);
-                } else if (file.getName().endsWith(KEY_TEXT_FILE_FORMAT) && !file.getName().startsWith(KEY_FULL_STOP)) {
-                    if (this.properties.isVerbose()) {
-                        this.logger.info("Reading file [{}]", file.getAbsolutePath());
-                    }
+        return documentMap;
+    }
 
-                    String[] pathArray =
-                        file.getName().split(Matcher.quoteReplacement(System.getProperty(KEY_FILE_SEPERATOR)));
-                    String documentName = pathArray[pathArray.length - 1].replace(KEY_TEXT_FILE_FORMAT, "");
-                    String fileMetadataPath = file.getAbsolutePath()
-                        .replace(dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + KEY_PAGES_DIRECTORY,
-                            dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + "meta")
-                        .replace(KEY_TEXT_FILE_FORMAT, ".meta");
-                    // FilterEventParameters documentParameters = new FilterEventParameters();
-                    // documentParameters.put(WikiDocumentFilter.PARAMETER_LOCALE, Locale.ROOT);
-
-                    // wiki document
-                    proxyFilter.beginWikiDocument(documentName, FilterEventParameters.EMPTY);
-
-                    FilterEventParameters documentLocaleParameters = new FilterEventParameters();
-
-                    File fileMetadata = new File(fileMetadataPath);
-                    if (fileMetadata.exists() && !fileMetadata.isDirectory()) {
-                        String metadataFileContents = FileUtils.readFileToString(fileMetadata, StandardCharsets.UTF_8);
-                        MixedArray documentMetadata = Pherialize.unserialize(metadataFileContents).toArray();
-                        readDocumentParametersFromMetadata(documentMetadata, documentLocaleParameters);
-
-                        // Wiki document revision
-
-                        if ((documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).containsKey(KEY_CREATED)
-                            && documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).containsKey(KEY_MODIFIED))
-                            && documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE)
-                                .getLong(KEY_CREATED) < documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE)
-                                    .getLong(KEY_MODIFIED)) {
-                            // Wiki Document Locale
-                            proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
-                            // read revisions
-                            readPageRevision(file, dokuwikiDataDirectory, proxyFilter);
-                        } else {
-                            documentLocaleParameters =
-                                readDocument(file, documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
-                        }
-                    } else {
-                        this.logger.warn("File [{}] not found (Some datafile's properties (eg. filesize, "
-                            + "last modified date) are not imported. Details can be found on "
-                            + "https://www.dokuwiki.org/devel:metadata)", fileMetadata);
-                        documentLocaleParameters =
-                            readDocument(file, documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
-                    }
-
-                    proxyFilter.endWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
-                    proxyFilter.endWikiDocument(documentName, FilterEventParameters.EMPTY);
-                }
+    private static LocalDocumentReference getDocumentReference(List<String> parentPath, String fileName)
+    {
+        // Extract the document reference from the file path. Convert directory names and the file name
+        // into spaces. If the file name is "start", then the file is the home page of the space.
+        // Otherwise, create a space with the file name as the space name to ensure that only
+        // non-terminal documents are created.
+        String pageName = fileName.substring(0, fileName.length() - KEY_TEXT_FILE_FORMAT.length());
+        LocalDocumentReference documentReference;
+        if (pageName.equals(DOKUWIKI_START_PAGE)) {
+            if (parentPath.isEmpty()) {
+                documentReference = new LocalDocumentReference(Collections.singletonList(KEY_MAIN_SPACE),
+                    XWIKI_START_PAGE);
+            } else {
+                documentReference =
+                    new LocalDocumentReference(parentPath, XWIKI_START_PAGE);
             }
+        } else {
+            List<String> spacePath = new ArrayList<>(parentPath);
+            spacePath.add(pageName);
+            documentReference = new LocalDocumentReference(spacePath, XWIKI_START_PAGE);
+        }
+        return documentReference;
+    }
+
+    private void readDocument(LocalDocumentReference documentReference, File file, String dokuwikiDataDirectory,
+        DokuWikiFilter proxyFilter) throws FilterException, IOException
+    {
+        if (this.properties.isVerbose()) {
+            this.logger.info("Reading file [{}]", file.getAbsolutePath());
+        }
+
+        // Begin the space and document.
+        ArrayList<EntityReference> parentReferences = new ArrayList<>();
+        EntityReference parentReference = documentReference.getParent();
+        while (parentReference != null) {
+            parentReferences.add(parentReference);
+            parentReference = parentReference.getParent();
+        }
+
+        // Open spaces from root to the current document.
+        Collections.reverse(parentReferences);
+        for (EntityReference parent : parentReferences) {
+            proxyFilter.beginWikiSpace(parent.getName(), FilterEventParameters.EMPTY);
+        }
+
+        proxyFilter.beginWikiDocument(documentReference.getName(), FilterEventParameters.EMPTY);
+
+        String fileMetadataPath = file.getAbsolutePath()
+            .replace(dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + KEY_PAGES_DIRECTORY,
+                dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + "meta")
+            .replace(KEY_TEXT_FILE_FORMAT, ".meta");
+        // FilterEventParameters documentParameters = new FilterEventParameters();
+        // documentParameters.put(WikiDocumentFilter.PARAMETER_LOCALE, Locale.ROOT);
+
+        // wiki document
+        FilterEventParameters documentLocaleParameters = new FilterEventParameters();
+
+        File fileMetadata = new File(fileMetadataPath);
+        if (fileMetadata.exists() && !fileMetadata.isDirectory()) {
+            String metadataFileContents = FileUtils.readFileToString(fileMetadata, StandardCharsets.UTF_8);
+            MixedArray documentMetadata = Pherialize.unserialize(metadataFileContents).toArray();
+            readDocumentParametersFromMetadata(documentMetadata, documentLocaleParameters);
+
+            // Wiki document revision
+
+            if ((documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).containsKey(KEY_CREATED)
+                && documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).containsKey(KEY_MODIFIED))
+                && documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE)
+                    .getLong(KEY_CREATED) < documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE)
+                        .getLong(KEY_MODIFIED)) {
+                // Wiki Document Locale
+                proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
+                // read revisions
+                readPageRevision(file, dokuwikiDataDirectory, proxyFilter);
+            } else {
+                documentLocaleParameters =
+                    readDocumentContent(file, documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
+            }
+        } else {
+            this.logger.warn("File [{}] not found (Some datafile's properties (eg. filesize, "
+                + "last modified date) are not imported. Details can be found on "
+                + "https://www.dokuwiki.org/devel:metadata)", fileMetadata);
+            documentLocaleParameters =
+                readDocumentContent(file, documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
+        }
+
+        proxyFilter.endWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
+        proxyFilter.endWikiDocument(documentReference.getName(), FilterEventParameters.EMPTY);
+
+        // Close spaces in reverse order.
+        Collections.reverse(parentReferences);
+        for (EntityReference parent : parentReferences) {
+            proxyFilter.endWikiSpace(parent.getName(), FilterEventParameters.EMPTY);
         }
     }
 
-    private FilterEventParameters readDocument(File file, FilterEventParameters documentLocaleParameters,
+    private FilterEventParameters readDocumentContent(File file, FilterEventParameters documentLocaleParameters,
         String dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
     {
         try {

@@ -55,9 +55,9 @@
     </parameters>
   </p>
 </user>
-<wikiSpace name="Main">
+<wikiSpace name="playground">
   <wikiSpace name="playground">
-    <wikiDocument name="playground">
+    <wikiDocument name="WebHome">
       <wikiDocumentLocale>
         <p>
           <parameters>
@@ -82,7 +82,9 @@
       </wikiDocumentLocale>
     </wikiDocument>
   </wikiSpace>
-  <wikiDocument name="start">
+</wikiSpace>
+<wikiSpace name="Main">
+  <wikiDocument name="WebHome">
     <wikiDocumentLocale>
       <p>
         <parameters>
@@ -223,8 +225,10 @@ Here it is</string>
       </wikiDocumentRevision>
     </wikiDocumentLocale>
   </wikiDocument>
-  <wikiSpace name="wiki">
-    <wikiDocument name="dokuwiki">
+</wikiSpace>
+<wikiSpace name="wiki">
+  <wikiSpace name="dokuwiki">
+    <wikiDocument name="WebHome">
       <wikiDocumentLocale>
         <p>
           <parameters>
@@ -800,7 +804,11 @@ tAAAAABJRU5ErkJggg==</content>
         </wikiAttachment>
       </wikiDocumentLocale>
     </wikiDocument>
-    <wikiDocument name="syntax">
+  </wikiSpace>
+</wikiSpace>
+<wikiSpace name="wiki">
+  <wikiSpace name="syntax">
+    <wikiDocument name="WebHome">
       <wikiDocumentLocale>
         <p>
           <parameters>
@@ -1946,7 +1954,11 @@ tAAAAABJRU5ErkJggg==</content>
         </wikiAttachment>
       </wikiDocumentLocale>
     </wikiDocument>
-    <wikiDocument name="welcome">
+  </wikiSpace>
+</wikiSpace>
+<wikiSpace name="wiki">
+  <wikiSpace name="welcome">
+    <wikiDocument name="WebHome">
       <wikiDocumentLocale>
         <p>
           <parameters>
