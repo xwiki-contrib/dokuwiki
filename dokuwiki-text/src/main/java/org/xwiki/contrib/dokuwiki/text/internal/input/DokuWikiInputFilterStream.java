@@ -119,8 +119,6 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
     private static final String DOKUWIKI_START_PAGE = "start";
 
-    private static final String XWIKI_START_PAGE = "WebHome";
-
     @Inject
     @Named("xwiki/2.1")
     private PrintRendererFactory xwiki21Factory;
@@ -133,7 +131,41 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     private Provider<DokuWikiConverterListener> dokuWikiConverterListenerProvider;
 
     @Inject
+    private DokuWikiReferenceConverter dokuWikiReferenceConverter;
+
+    @Inject
     private Logger logger;
+
+    private static class DokuWikiPageItem
+    {
+        private final String dokuwikiReference;
+
+        private final List<Path> attachments;
+
+        private final Path pageFile;
+
+        DokuWikiPageItem(String dokuwikiReference, Path pageFile)
+        {
+            this.dokuwikiReference = dokuwikiReference;
+            this.attachments = new ArrayList<>();
+            this.pageFile = pageFile;
+        }
+
+        public String getDokuWikiReference()
+        {
+            return dokuwikiReference;
+        }
+
+        public List<Path> getAttachments()
+        {
+            return attachments;
+        }
+
+        public Path getPageFile()
+        {
+            return pageFile;
+        }
+    }
 
     @Override
     protected void read(Object filter, DokuWikiFilter proxyFilter) throws FilterException
@@ -237,7 +269,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
     private void readAllDocuments(DokuWikiFilter proxyFilter, File dokuwikiDataDirectory) throws FilterException
     {
-        Map<LocalDocumentReference, Path> pages;
+        Map<LocalDocumentReference, DokuWikiPageItem> pages;
 
         try {
             pages = readDocumentMap(new File(dokuwikiDataDirectory, KEY_PAGES_DIRECTORY).toPath());
@@ -249,10 +281,12 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
         // Sort pages by path. Store the result to work around limitations of the Java 8 Stream API regarding
         // checked exceptions from forEach.
-        List<Map.Entry<LocalDocumentReference, Path>> sortedPages =
-            pages.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toList());
+        List<Map.Entry<LocalDocumentReference, DokuWikiPageItem>> sortedPages =
+            pages.entrySet().stream()
+                .sorted(Comparator.comparing(e -> e.getValue().getDokuWikiReference()))
+                .collect(Collectors.toList());
 
-        for (Map.Entry<LocalDocumentReference, Path> page : sortedPages) {
+        for (Map.Entry<LocalDocumentReference, DokuWikiPageItem> page : sortedPages) {
             try {
                 readDocument(page.getKey(), page.getValue(), dokuwikiDataDirectory.toPath(),
                     proxyFilter);
@@ -290,10 +324,9 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         }
     }
 
-    private Map<LocalDocumentReference, Path> readDocumentMap(Path pagesDirectory)
-        throws IOException
+    private Map<LocalDocumentReference, DokuWikiPageItem> readDocumentMap(Path pagesDirectory) throws IOException
     {
-        Map<LocalDocumentReference, Path> documentMap = new HashMap<>();
+        Map<LocalDocumentReference, DokuWikiPageItem> documentMap = new HashMap<>();
 
         try (Stream<Path> filesStream = Files.walk(pagesDirectory)) {
             filesStream
@@ -305,26 +338,22 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                 .forEach(path -> {
                     String fileName = path.getFileName().toString();
 
-                    // Extract all directories from the path excluding pagesDirectory.
-                    List<String> parentPath = new ArrayList<>();
-                    Path parent = path.getParent();
-                    while (!parent.equals(pagesDirectory)) {
-                        parentPath.add(parent.getFileName().toString());
-                        parent = parent.getParent();
-                    }
+                    String dokuwikiReference = dokuWikiReferenceConverter.getDokuWikiReference(path, pagesDirectory);
+                    LocalDocumentReference documentReference =
+                        this.dokuWikiReferenceConverter.getDocumentReference(dokuwikiReference);
 
-                    LocalDocumentReference documentReference = getDocumentReference(parentPath, fileName);
+                    DokuWikiPageItem pageItem = new DokuWikiPageItem(dokuwikiReference, path);
 
                     if (documentMap.containsKey(documentReference)) {
                         // Conflict resolution: We keep the one where the file is named "start". The
                         // other one is mapped to a terminal document unless it is in the root directory, in which case
                         // the only sensible option seems to be to make it a terminal document in the main space.
-                        Path pathToFix;
+                        DokuWikiPageItem itemToFix;
                         if (fileName.equals(DOKUWIKI_START_PAGE + KEY_TEXT_FILE_FORMAT)) {
-                            pathToFix = documentMap.get(documentReference);
-                            documentMap.put(documentReference, path);
+                            itemToFix = documentMap.get(documentReference);
+                            documentMap.put(documentReference, pageItem);
                         } else {
-                            pathToFix = path;
+                            itemToFix = pageItem;
                         }
 
                         if (documentReference.getParent().getParent() == null) {
@@ -335,9 +364,9 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                                 documentReference.getParent().getParent());
                         }
 
-                        documentMap.put(documentReference, pathToFix);
+                        documentMap.put(documentReference, itemToFix);
                     } else {
-                        documentMap.put(documentReference, path);
+                        documentMap.put(documentReference, pageItem);
                     }
                 });
         }
@@ -345,33 +374,11 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         return documentMap;
     }
 
-    private static LocalDocumentReference getDocumentReference(List<String> parentPath, String fileName)
+    private void readDocument(LocalDocumentReference documentReference, DokuWikiPageItem pageItem,
+        Path dokuwikiDataDirectory, DokuWikiFilter proxyFilter) throws FilterException, IOException
     {
-        // Extract the document reference from the file path. Convert directory names and the file name
-        // into spaces. If the file name is "start", then the file is the home page of the space.
-        // Otherwise, create a space with the file name as the space name to ensure that only
-        // non-terminal documents are created.
-        String pageName = fileName.substring(0, fileName.length() - KEY_TEXT_FILE_FORMAT.length());
-        LocalDocumentReference documentReference;
-        if (pageName.equals(DOKUWIKI_START_PAGE)) {
-            if (parentPath.isEmpty()) {
-                documentReference = new LocalDocumentReference(Collections.singletonList(KEY_MAIN_SPACE),
-                    XWIKI_START_PAGE);
-            } else {
-                documentReference =
-                    new LocalDocumentReference(parentPath, XWIKI_START_PAGE);
-            }
-        } else {
-            List<String> spacePath = new ArrayList<>(parentPath);
-            spacePath.add(pageName);
-            documentReference = new LocalDocumentReference(spacePath, XWIKI_START_PAGE);
-        }
-        return documentReference;
-    }
+        Path file = pageItem.getPageFile();
 
-    private void readDocument(LocalDocumentReference documentReference, Path file, Path dokuwikiDataDirectory,
-        DokuWikiFilter proxyFilter) throws FilterException, IOException
-    {
         if (this.properties.isVerbose()) {
             this.logger.info("Reading file [{}]", file.toAbsolutePath());
         }
@@ -417,17 +424,17 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                 // Wiki Document Locale
                 proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
                 // read revisions
-                readPageRevision(file, dokuwikiDataDirectory, proxyFilter);
+                readPageRevision(pageItem, dokuwikiDataDirectory, proxyFilter);
             } else {
                 documentLocaleParameters =
-                    readDocumentContent(file, documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
+                    readDocumentContent(pageItem, documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
             }
         } else {
             this.logger.warn("File [{}] not found (Some datafile's properties (eg. filesize, "
                 + "last modified date) are not imported. Details can be found on "
                 + "https://www.dokuwiki.org/devel:metadata)", metaFile);
             documentLocaleParameters =
-                readDocumentContent(file, documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
+                readDocumentContent(pageItem, documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
         }
 
         proxyFilter.endWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
@@ -440,16 +447,15 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         }
     }
 
-    private FilterEventParameters readDocumentContent(Path file, FilterEventParameters documentLocaleParameters,
-        Path dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
+    private FilterEventParameters readDocumentContent(DokuWikiPageItem pageItem,
+        FilterEventParameters documentLocaleParameters, Path dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
     {
+        Path file = pageItem.getPageFile();
+
         try {
             String pageContents = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
 
-            String fileNameWithoutExtension = getFileNameWithoutTxtExtension(file);
-            List<String> dokuWikiPath = extractPagePath(file, dokuwikiDataDirectory, fileNameWithoutExtension);
-
-            String convertedContent = parseContent(pageContents, dokuWikiPath);
+            String convertedContent = parseContent(pageContents, pageItem.getDokuWikiReference());
             documentLocaleParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertedContent);
             // Wiki Document Locale
             proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
@@ -469,13 +475,14 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         return fileName.substring(0, fileName.length() - KEY_TEXT_FILE_FORMAT.length());
     }
 
-    private void readPageRevision(Path file, Path dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
+    private void readPageRevision(DokuWikiPageItem pageItem, Path dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
     {
+        Path file = pageItem.getPageFile();
+
         // check revision exists, check the attic, parse attic files.
         Path atticSubDirectory = getMatchingDirectory(file.getParent(), dokuwikiDataDirectory, KEY_ATTIC_FOLDER);
 
         String fileNameWithoutExtension = getFileNameWithoutTxtExtension(file);
-        List<String> dokuWikiPath = extractPagePath(file, dokuwikiDataDirectory, fileNameWithoutExtension);
 
         if (Files.isDirectory(atticSubDirectory)) {
             try (Stream<Path> stream = Files.list(atticSubDirectory)) {
@@ -485,7 +492,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                         try {
                             long revision = extractRevision(fileNameWithoutExtension, p);
                             String documentContent = extractGZip(p);
-                            String convertedContent = parseContent(documentContent, dokuWikiPath);
+                            String convertedContent = parseContent(documentContent, pageItem.getDokuWikiReference());
                             FilterEventParameters revisionParameters = new FilterEventParameters();
                             revisionParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertedContent);
                             proxyFilter.beginWikiDocumentRevision(String.valueOf(revision), revisionParameters);
@@ -508,23 +515,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         return Long.parseLong(revision);
     }
 
-    private List<String> extractPagePath(Path file, Path dokuwikiDataDirectory, String fileNameWithoutExtension)
-    {
-        Path relativePath = dokuwikiDataDirectory.relativize(file);
-        Path relativePathWithoutPagesDirectory = relativePath.subpath(1, relativePath.getNameCount());
-
-        // Extract all components of the path below the pages directory.
-        List<String> dokuWikiPath = new ArrayList<>();
-        for (int i = 0; i < relativePathWithoutPagesDirectory.getNameCount() - 1; i++) {
-            dokuWikiPath.add(relativePathWithoutPagesDirectory.getName(i).toString());
-        }
-
-        dokuWikiPath.add(fileNameWithoutExtension);
-
-        return dokuWikiPath;
-    }
-
-    private String parseContent(String pageContents, List<String> dokuWikiPath)
+    private String parseContent(String pageContents, String dokuwikiReference)
     {
         String content = "";
         try {
@@ -532,7 +523,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
             DefaultWikiPrinter printer = new DefaultWikiPrinter();
             PrintRenderer renderer = this.xwiki21Factory.createRenderer(printer);
             DokuWikiConverterListener listener = this.dokuWikiConverterListenerProvider.get();
-            listener.setDokuWikiPath(dokuWikiPath);
+            listener.setDokuWikiReference(dokuwikiReference);
             listener.setWrappedListener(renderer);
             dokuWikiParser.parse(new StringReader(pageContents), listener);
             content = renderer.getPrinter().toString();

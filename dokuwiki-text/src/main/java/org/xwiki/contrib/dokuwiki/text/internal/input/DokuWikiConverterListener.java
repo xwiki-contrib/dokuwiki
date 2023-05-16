@@ -31,6 +31,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
+import org.xwiki.model.reference.EntityReferenceSerializer;
+import org.xwiki.model.reference.LocalDocumentReference;
 import org.xwiki.rendering.listener.WrappingListener;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
@@ -72,14 +74,20 @@ public class DokuWikiConverterListener extends WrappingListener
     @Inject
     private DokuWikiDeaccent deaccent;
 
-    private List<String> dokuWikiPath;
+    @Inject
+    private DokuWikiReferenceConverter referenceConverter;
+
+    @Inject
+    private EntityReferenceSerializer<String> serializer;
+
+    private String dokuWikiReference;
 
     /**
-     * @param dokuWikiPath the path to the DokuWiki page reference (e.g., "parenSpace", "space", "page")
+     * @param dokuWikiReference the DokuWiki reference of the current page
      */
-    public void setDokuWikiPath(List<String> dokuWikiPath)
+    public void setDokuWikiReference(String dokuWikiReference)
     {
-        this.dokuWikiPath = dokuWikiPath;
+        this.dokuWikiReference = dokuWikiReference;
     }
 
     @Override
@@ -158,19 +166,13 @@ public class DokuWikiConverterListener extends WrappingListener
             idParts.add(DOKUWIKI_NAMESPACE_INDEX);
         }
 
-        idParts = idParts.stream().map(this::cleanIDPart).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+        String cleanedId = idParts.stream()
+            .map(this::cleanIDPart)
+            .filter(StringUtils::isNotBlank)
+            .collect(Collectors.joining(NAMESPACE_SEPARATOR));
 
-        if (!idParts.isEmpty() && DOKUWIKI_NAMESPACE_INDEX.equals(idParts.get(idParts.size() - 1))) {
-            idParts.remove(idParts.size() - 1);
-        }
-
-        if (idParts.isEmpty()) {
-            idParts.add("Main");
-        }
-
-        idParts.add("WebHome");
-
-        result.setReference(String.join(DOT, idParts));
+        LocalDocumentReference localDocumentReference = this.referenceConverter.getDocumentReference(cleanedId);
+        result.setReference(this.serializer.serialize(localDocumentReference));
 
         return result;
     }
@@ -180,13 +182,12 @@ public class DokuWikiConverterListener extends WrappingListener
         String id = cleanedLinkTarget;
         // "~" means relative to the current page.
         if (id.startsWith("~")) {
-            id = String.join(NAMESPACE_SEPARATOR, this.dokuWikiPath) + NAMESPACE_SEPARATOR + id.substring(1);
+            id = this.dokuWikiReference + NAMESPACE_SEPARATOR + id.substring(1);
         }
 
         String contextNamespace;
-        if (this.dokuWikiPath.size() > 1) {
-            contextNamespace = String.join(NAMESPACE_SEPARATOR, this.dokuWikiPath.subList(0,
-                this.dokuWikiPath.size() - 1));
+        if (this.dokuWikiReference.contains(NAMESPACE_SEPARATOR)) {
+            contextNamespace = StringUtils.substringBeforeLast(this.dokuWikiReference, NAMESPACE_SEPARATOR);
         } else {
             contextNamespace = "";
         }
