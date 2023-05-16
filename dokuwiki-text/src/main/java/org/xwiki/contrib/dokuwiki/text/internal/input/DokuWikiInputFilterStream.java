@@ -21,8 +21,8 @@ package org.xwiki.contrib.dokuwiki.text.internal.input;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -272,12 +272,25 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         Map<LocalDocumentReference, DokuWikiPageItem> pages;
 
         try {
-            pages = readDocumentMap(new File(dokuwikiDataDirectory, KEY_PAGES_DIRECTORY).toPath());
+            pages = readDocumentMap(dokuwikiDataDirectory.toPath().resolve(KEY_PAGES_DIRECTORY));
         } catch (IOException e) {
             // This shouldn't happen as this is really just recursively scanning a directory and would thus indicate
             // a major problem.
             throw new FilterException("Failed to read page list", e);
         }
+
+        Map<LocalDocumentReference, DokuWikiPageItem> attachments =
+            readAttachmentMap(dokuwikiDataDirectory.toPath().resolve(KEY_MEDIA_FOLDER));
+        attachments.forEach((page, attachmentPageItem) ->
+            pages.compute(page, (p, documentPageItem) -> {
+                if (documentPageItem == null) {
+                    return attachmentPageItem;
+                } else {
+                    documentPageItem.getAttachments().addAll(attachmentPageItem.getAttachments());
+                    return documentPageItem;
+                }
+            })
+        );
 
         // Sort pages by path. Store the result to work around limitations of the Java 8 Stream API regarding
         // checked exceptions from forEach.
@@ -374,6 +387,36 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         return documentMap;
     }
 
+    private Map<LocalDocumentReference, DokuWikiPageItem> readAttachmentMap(Path mediaDirectory)
+    {
+        Map<LocalDocumentReference, DokuWikiPageItem> attachmentMap = new HashMap<>();
+
+        try (Stream<Path> filesStream = Files.walk(mediaDirectory)) {
+            filesStream
+                .filter(Files::isRegularFile)
+                .filter(path -> {
+                    String attachmentName = path.getFileName().toString();
+                    return !attachmentName.startsWith(KEY_FULL_STOP) && !attachmentName.startsWith("_");
+                })
+                .forEach(path -> {
+                    Path fakePageFile = path.getParent().resolve(DOKUWIKI_START_PAGE + KEY_TEXT_FILE_FORMAT);
+                    String dokuwikiReference =
+                        this.dokuWikiReferenceConverter.getDokuWikiReference(fakePageFile, mediaDirectory);
+                    LocalDocumentReference documentReference =
+                        this.dokuWikiReferenceConverter.getDocumentReference(dokuwikiReference);
+
+                    List<Path> attachments = attachmentMap.computeIfAbsent(documentReference, k ->
+                        new DokuWikiPageItem(dokuwikiReference, fakePageFile)).getAttachments();
+                    attachments.add(path);
+                });
+        } catch (IOException e) {
+            this.logger.error("Failed to list attachments", e);
+        }
+
+        return attachmentMap;
+    }
+
+
     private void readDocument(LocalDocumentReference documentReference, DokuWikiPageItem pageItem,
         Path dokuwikiDataDirectory, DokuWikiFilter proxyFilter) throws FilterException, IOException
     {
@@ -427,14 +470,14 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                 readPageRevision(pageItem, dokuwikiDataDirectory, proxyFilter);
             } else {
                 documentLocaleParameters =
-                    readDocumentContent(pageItem, documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
+                    readDocumentContent(pageItem, documentLocaleParameters, proxyFilter);
             }
         } else {
             this.logger.warn("File [{}] not found (Some datafile's properties (eg. filesize, "
                 + "last modified date) are not imported. Details can be found on "
                 + "https://www.dokuwiki.org/devel:metadata)", metaFile);
             documentLocaleParameters =
-                readDocumentContent(pageItem, documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
+                readDocumentContent(pageItem, documentLocaleParameters, proxyFilter);
         }
 
         proxyFilter.endWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
@@ -448,18 +491,21 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     }
 
     private FilterEventParameters readDocumentContent(DokuWikiPageItem pageItem,
-        FilterEventParameters documentLocaleParameters, Path dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
+        FilterEventParameters documentLocaleParameters, DokuWikiFilter proxyFilter)
     {
         Path file = pageItem.getPageFile();
 
         try {
-            String pageContents = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
+            // The page might not actually exist if it is just created for storing attachments.
+            if (Files.isRegularFile(file)) {
+                String pageContents = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
 
-            String convertedContent = parseContent(pageContents, pageItem.getDokuWikiReference());
-            documentLocaleParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertedContent);
+                String convertedContent = parseContent(pageContents, pageItem.getDokuWikiReference());
+                documentLocaleParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertedContent);
+            }
             // Wiki Document Locale
             proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
-            readAttachments(pageContents, file, dokuwikiDataDirectory, proxyFilter);
+            readAttachments(pageItem, proxyFilter);
 
             return documentLocaleParameters;
         } catch (Exception e) {
@@ -496,7 +542,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                             FilterEventParameters revisionParameters = new FilterEventParameters();
                             revisionParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertedContent);
                             proxyFilter.beginWikiDocumentRevision(String.valueOf(revision), revisionParameters);
-                            readAttachments(documentContent, p, dokuwikiDataDirectory, proxyFilter);
+                            readAttachments(pageItem, proxyFilter);
                             proxyFilter.endWikiDocumentRevision(String.valueOf(revision), FilterEventParameters.EMPTY);
                         } catch (Exception e) {
                             this.logger.error("Failed to parse file [{}]", p, e);
@@ -533,26 +579,15 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         return content;
     }
 
-    private void readAttachments(String content, Path document, Path dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
+    private void readAttachments(DokuWikiPageItem pageItem, DokuWikiFilter proxyFilter)
     {
-        Path mediaSubDirectory = getMatchingDirectory(document.getParent(), dokuwikiDataDirectory, KEY_MEDIA_FOLDER);
-
-        if (Files.isDirectory(mediaSubDirectory)) {
-            try (Stream<Path> mediaFiles = Files.list(mediaSubDirectory)) {
-                mediaFiles.filter(p -> !Files.isDirectory(p)).forEach(p -> {
-                    String attachmentName = p.getFileName().toString();
-                    if (!attachmentName.startsWith(KEY_FULL_STOP) && !attachmentName.startsWith("_")
-                        && content.contains(attachmentName)) {
-                        try (FileInputStream attachmentStream = FileUtils.openInputStream(p.toFile())) {
-                            proxyFilter.onWikiAttachment(attachmentName, attachmentStream,
-                                FileUtils.sizeOf(p.toFile()), FilterEventParameters.EMPTY);
-                        } catch (IOException | FilterException e) {
-                            this.logger.error("Failed to process attachment [{}]", p, e);
-                        }
-                    }
-                });
-            } catch (IOException e) {
-                this.logger.error("Failed to read media directory [{}]", mediaSubDirectory, e);
+        for (Path path : pageItem.getAttachments()) {
+            String attachmentName = path.getFileName().toString();
+            try (InputStream attachmentStream = Files.newInputStream(path)) {
+                proxyFilter.onWikiAttachment(attachmentName, attachmentStream,
+                    Files.size(path), FilterEventParameters.EMPTY);
+            } catch (IOException | FilterException e) {
+                this.logger.error("Failed to process attachment [{}]", path, e);
             }
         }
     }
