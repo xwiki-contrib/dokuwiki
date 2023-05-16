@@ -1,2 +1,4 @@
 org.xwiki.contrib.dokuwiki.text.internal.input.DokuWikiInputFilterStream
 org.xwiki.contrib.dokuwiki.text.internal.input.DokuWikiInputFilterStreamFactory
+org.xwiki.contrib.dokuwiki.text.internal.input.DokuWikiConverterListener
+org.xwiki.contrib.dokuwiki.text.internal.input.DokuWikiDeaccent

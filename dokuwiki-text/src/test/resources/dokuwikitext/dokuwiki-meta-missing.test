@@ -67,9 +67,9 @@
               <string>content</string>
               <string>=  DokuWiki  =
 
-[[interwiki:doku:wiki:dokuwiki|{{wiki:dokuwiki-128.png }}]] DokuWiki is a simple to use and highly versatile Open Source [[interwiki:wp:wiki]]  software that doesn't require a database. It is loved by users for its clean and readable [[wiki:syntax]]. The ease of maintenance, backup and integration makes it an administrator's favorite. Built in [[interwiki:doku:acl|access controls]] and [[interwiki:doku:auth|authentication connectors]] make DokuWiki especially useful in the enterprise context and the large number of [[interwiki:doku:plugins]] contributed by its vibrant community allow for a broad range of use cases beyond a traditional wiki.
+[[[[image:dokuwiki-128.png||align="right"]]&gt;&gt;interwiki:doku:wiki:dokuwiki]] DokuWiki is a simple to use and highly versatile Open Source [[interwiki:wp:wiki]]  software that doesn't require a database. It is loved by users for its clean and readable [[doc:wiki.syntax.WebHome]]. The ease of maintenance, backup and integration makes it an administrator's favorite. Built in [[access controls&gt;&gt;interwiki:doku:acl]] and [[authentication connectors&gt;&gt;interwiki:doku:auth]] make DokuWiki especially useful in the enterprise context and the large number of [[interwiki:doku:plugins]] contributed by its vibrant community allow for a broad range of use cases beyond a traditional wiki.
 
-Read the [[interwiki:doku:manual|DokuWiki Manual]] to unleash the full power of DokuWiki.
+Read the [[DokuWiki Manual&gt;&gt;interwiki:doku:manual]] to unleash the full power of DokuWiki.
 
 ==  Download  ==
 
@@ -77,48 +77,48 @@ DokuWiki is available at http://download.dokuwiki.org/
 
 ==  Read More  ==
 
-All documentation and additional information besides the [[syntax description&gt;&gt;syntax]]  is maintained in the DokuWiki at [[interwiki:doku:|www.dokuwiki.org]].**
+All documentation and additional information besides the [[syntax description&gt;&gt;doc:wiki.syntax.WebHome]]  is maintained in the DokuWiki at [[www.dokuwiki.org&gt;&gt;interwiki:doku:]].**
 
 About DokuWiki**
 
-* [[interwiki:doku:features|A feature list]] :!:
-* [[interwiki:doku:users|Happy Users]]
-* [[interwiki:doku:press|Who wrote about it]]
-* [[interwiki:doku:blogroll|What Bloggers think]]
+* [[A feature list&gt;&gt;interwiki:doku:features]] :!:
+* [[Happy Users&gt;&gt;interwiki:doku:users]]
+* [[Who wrote about it&gt;&gt;interwiki:doku:press]]
+* [[What Bloggers think&gt;&gt;interwiki:doku:blogroll]]
 * [[Compare it with other wiki software&gt;&gt;http://www.wikimatrix.org/show/DokuWiki]]**
 
 Installing DokuWiki**
 
-* [[interwiki:doku:requirements|System Requirements]]
+* [[System Requirements&gt;&gt;interwiki:doku:requirements]]
 * [[Download DokuWiki&gt;&gt;http://download.dokuwiki.org/]] :!:
-* [[interwiki:doku:changes|Change Log]]
-* [[interwiki:doku:Install|How to install or upgrade]] :!:
-* [[interwiki:doku:config|Configuration]]**
+* [[Change Log&gt;&gt;interwiki:doku:changes]]
+* [[How to install or upgrade&gt;&gt;interwiki:doku:Install]] :!:
+* [[Configuration&gt;&gt;interwiki:doku:config]]**
 
 Using DokuWiki**
 
-* [[interwiki:doku:syntax|Wiki Syntax]]
-* [[interwiki:doku:manual|The manual]] :!:
-* [[interwiki:doku:FAQ|Frequently Asked Questions (FAQ)]]
-* [[interwiki:doku:glossary|Glossary]]
+* [[Wiki Syntax&gt;&gt;interwiki:doku:syntax]]
+* [[The manual&gt;&gt;interwiki:doku:manual]] :!:
+* [[Frequently Asked Questions (FAQ)&gt;&gt;interwiki:doku:FAQ]]
+* [[Glossary&gt;&gt;interwiki:doku:glossary]]
 * [[Search for DokuWiki help and documentation&gt;&gt;http://search.dokuwiki.org]]**
 
 Customizing DokuWiki**
 
-* [[interwiki:doku:tips|Tips and Tricks]]
-* [[interwiki:doku:Template|How to create and use templates]]
-* [[interwiki:doku:plugins|Installing plugins]]
-* [[interwiki:doku:development|Development Resources]]**
+* [[Tips and Tricks&gt;&gt;interwiki:doku:tips]]
+* [[How to create and use templates&gt;&gt;interwiki:doku:Template]]
+* [[Installing plugins&gt;&gt;interwiki:doku:plugins]]
+* [[Development Resources&gt;&gt;interwiki:doku:development]]**
 
 DokuWiki Feedback and Community**
 
-* [[interwiki:doku:newsletter|Subscribe to the newsletter]] :!:
-* [[interwiki:doku:mailinglist|Join the mailing list]]
+* [[Subscribe to the newsletter&gt;&gt;interwiki:doku:newsletter]] :!:
+* [[Join the mailing list&gt;&gt;interwiki:doku:mailinglist]]
 * [[Check out the user forum&gt;&gt;http://forum.dokuwiki.org]]
-* [[interwiki:doku:irc|Talk to other users in the IRC channel]]
+* [[Talk to other users in the IRC channel&gt;&gt;interwiki:doku:irc]]
 * [[Submit bugs and feature wishes&gt;&gt;https://github.com/splitbrain/dokuwiki/issues]]
 * [[Share your experiences in the WikiMatrix forum&gt;&gt;http://www.wikimatrix.org/forum/viewforum.php?id=10]]
-* [[interwiki:doku:thanks|Some humble thanks]]
+* [[Some humble thanks&gt;&gt;interwiki:doku:thanks]]
 
 
 
@@ -126,9 +126,9 @@ DokuWiki Feedback and Community**
 
 2004-2015 (c) Andreas Gohr  mailto:andi@splitbrain.orgPlease do not contact me for help and support ~-~- use the [[interwiki:doku:mailinglist]] or [[forum&gt;&gt;http://forum.dokuwiki.org]]{{footnote}} instead{{/footnote}} and the DokuWiki Community
 
-The DokuWiki engine is licensed under [[GNU General Public License&gt;&gt;http://www.gnu.org/licenses/gpl.html]] Version 2. If you use DokuWiki in your company, consider [[interwiki:doku:donate|donating]] a few bucks ;-).
+The DokuWiki engine is licensed under [[GNU General Public License&gt;&gt;http://www.gnu.org/licenses/gpl.html]] Version 2. If you use DokuWiki in your company, consider [[donating&gt;&gt;interwiki:doku:donate]] a few bucks ;-).
 
-Not sure what this means? See the [[interwiki:doku:faq:license|FAQ on the Licenses]].</string>
+Not sure what this means? See the [[FAQ on the Licenses&gt;&gt;interwiki:doku:faq:license]].</string>
             </entry>
           </parameters>
         </p>
@@ -647,7 +647,7 @@ tAAAAABJRU5ErkJggg==</content>
               <string>content</string>
               <string>=  Formatting Syntax  =
 
-[[interwiki:doku:DokuWiki]] supports some simple markup language, which tries to make the datafiles to be as readable as possible. This page contains all possible syntax you may use when editing the pages. Simply have a look at the source of this page by pressing "Edit this page". If you want to try something, just use the [[playground&gt;&gt;playground:playground]]  page. The simpler markup is easily accessible via [[interwiki:doku:toolbar|quickbuttons]], too.
+[[interwiki:doku:DokuWiki]] supports some simple markup language, which tries to make the datafiles to be as readable as possible. This page contains all possible syntax you may use when editing the pages. Simply have a look at the source of this page by pressing "Edit this page". If you want to try something, just use the [[playground&gt;&gt;doc:playground.playground.WebHome]]  page. The simpler markup is easily accessible via [[quickbuttons&gt;&gt;interwiki:doku:toolbar]], too.
 
 ==  Basic Text Formatting  ==
 
@@ -704,16 +704,16 @@ addresses like this one: &lt;andi@splitbrain.org&gt; are recognized, too.
 
 ===  Internal  ===
 
-Internal links are created by using square brackets. You can either just give a [[pagename]] or use an additional [[link text&gt;&gt;pagename]].
+Internal links are created by using square brackets. You can either just give a [[doc:wiki.pagename.WebHome]] or use an additional [[link text&gt;&gt;doc:wiki.pagename.WebHome]].
 
 {{code}}
 Internal links are created by using square brackets. You can either just give
 a [[pagename]] or use an additional [[pagename|link text]].
 {{/code}}
 
-[[interwiki:doku:pagename|Wiki pagenames]] are converted to lowercase automatically, special characters are not allowed.
+[[Wiki pagenames&gt;&gt;interwiki:doku:pagename]]  are converted to lowercase automatically, special characters are not allowed.
 
-You can use [[some:namespaces]] by using a colon in the pagename.
+You can use [[doc:some.namespaces.WebHome]] by using a colon in the pagename.
 
 {{code}}
 You can use [[some:namespaces]] by using a colon in the pagename.
@@ -721,7 +721,7 @@ You can use [[some:namespaces]] by using a colon in the pagename.
 
 For details about namespaces see [[interwiki:doku:namespaces]] .
 
-Linking to a specific section is possible, too. Just add the section name behind a hash character as known from HTML. This links to [[this Section&gt;&gt;syntax#internal]].
+Linking to a specific section is possible, too. Just add the section name behind a hash character as known from HTML. This links to [[this Section&gt;&gt;doc:wiki.syntax.WebHome||anchor="internal"]].
 
 {{code}}
 This links to [[syntax#internal|this Section]].
@@ -729,7 +729,7 @@ This links to [[syntax#internal|this Section]].
 
 Notes:
 
-* Links to [[existing pages&gt;&gt;syntax]] are shown in a different style from [[nonexisting]] ones.
+* Links to [[existing pages&gt;&gt;doc:wiki.syntax.WebHome]] are shown in a different style from [[doc:wiki.nonexisting.WebHome]] ones.
 * DokuWiki does not use [[interwiki:wp:CamelCase]] to automatically create links by default, but this behavior can be enabled in the [[interwiki:doku:config]] file. Hint: If DokuWiki is a link, then it's enabled.
 * When a section's heading is changed, its bookmark changes, too. So don't rely on section linking too much.
 
@@ -748,7 +748,7 @@ For example this is a link to Wikipedia's page about Wikis: [[wp&gt;Wiki]].
 
 ===  Windows Shares  ===
 
-Windows shares like [[this&gt;&gt;\\server\share]] are recognized, too. Please note that these only make sense in a homogeneous user group like a corporate [[interwiki:wp:Intranet]].
+Windows shares like [[this&gt;&gt;doc:wiki.servershare.WebHome]] are recognized, too. Please note that these only make sense in a homogeneous user group like a corporate [[interwiki:wp:Intranet]].
 
 {{code}}
 Windows Shares like [[\\server\share|this]] are recognized, too.
@@ -757,7 +757,7 @@ Windows Shares like [[\\server\share|this]] are recognized, too.
 Notes:
 
 * For security reasons direct browsing of windows shares only works in Microsoft Internet Explorer per default (and only in the "local zone").
-* For Mozilla and Firefox it can be enabled through different workaround mentioned in the [[Mozilla Knowledge Base&gt;&gt;http://kb.mozillazine.org/Links_to_local_pages_do_not_work]]. However, there will still be a JavaScript warning about trying to open a Windows Share. To remove this warning (for all users), put the following line in ##conf/lang/en/lang.php## (more details at [[interwiki:doku:localization#changing_some_localized_texts_and_strings_in_your_installation|localization]]): 
+* For Mozilla and Firefox it can be enabled through different workaround mentioned in the [[Mozilla Knowledge Base&gt;&gt;http://kb.mozillazine.org/Links_to_local_pages_do_not_work]]. However, there will still be a JavaScript warning about trying to open a Windows Share. To remove this warning (for all users), put the following line in ##conf/lang/en/lang.php## (more details at [[localization&gt;&gt;interwiki:doku:localization#changing_some_localized_texts_and_strings_in_your_installation]]): 
 
 {{code language="-"}}
 &lt;?php
@@ -770,7 +770,7 @@ $lang['js']['nosmblinks'] = '';
 
 ===  Image Links  ===
 
-You can also use an image to link to another internal or external page by combining the syntax for links and [[images&gt;&gt;#images_and_other_files]]  (see below) like this:
+You can also use an image to link to another internal or external page by combining the syntax for links and [[images&gt;&gt;doc:||anchor="images_and_other_files"]]  (see below) like this:
 
 {{code}}
 [[http://php.net|{{wiki:dokuwiki-128.png}}]]
@@ -780,7 +780,7 @@ You can also use an image to link to another internal or external page by combin
 
 Please note: The image formatting is the only formatting syntax accepted in link names.
 
-The whole [[image&gt;&gt;#images_and_other_files]] and [[link&gt;&gt;#links]] syntax is supported (including image resizing, internal and external images and URLs and interwiki links).
+The whole [[image&gt;&gt;doc:||anchor="images_and_other_files"]] and [[link&gt;&gt;doc:||anchor="links"]] syntax is supported (including image resizing, internal and external images and URLs and interwiki links).
 
 ==  Footnotes  ==
 
@@ -818,7 +818,7 @@ By using four or more dashes, you can make a horizontal line:
 
 ==  Media Files  ==
 
-You can include external and internal [[interwiki:doku:images|images, videos and audio files]]  with curly brackets. Optionally you can specify the size of them.
+You can include external and internal [[images, videos and audio files&gt;&gt;interwiki:doku:images]]  with curly brackets. Optionally you can specify the size of them.
 
 Real size: [[image:dokuwiki-128.png]]
 
@@ -859,7 +859,7 @@ Of course, you can add a title (displayed as a tooltip by most browsers), too.
 {{ wiki:dokuwiki-128.png |This is the caption}}
 {{/code}}
 
-For linking an image to another page see [[#Image Links]]  above.
+For linking an image to another page see [[doc:||anchor="Image Links"]]  above.
 
 ===  Supported Media Formats  ===
 
@@ -924,7 +924,7 @@ Dokuwiki supports ordered and unordered lists. To create a list item, indent you
 
 
 
-Also take a look at the [[interwiki:doku:faq:lists|FAQ on list items]].
+Also take a look at the [[FAQ on list items&gt;&gt;interwiki:doku:faq:lists]].
 
 ==  Text Conversions  ==
 
@@ -1144,7 +1144,7 @@ This is pretty much the same, but you could use it to show that you quoted a fil
 
 ===  Syntax Highlighting  ===
 
-[[wiki:DokuWiki]] can highlight sourcecode, which makes it easier to read. It uses the [[GeSHi&gt;&gt;http://qbnz.com/highlighter/]] Generic Syntax Highlighter ~-~- so any language supported by GeSHi is supported. The syntax uses the same code and file blocks described in the previous section, but this time the name of the language syntax to be highlighted is included inside the tag, e.g. ##{{{&lt;c}}}&lt;/nowiki&gt;'' or ##{{{&lt;f}}}&lt;/nowiki&gt;##.
+[[doc:wiki.dokuwiki.WebHome]] can highlight sourcecode, which makes it easier to read. It uses the [[GeSHi&gt;&gt;http://qbnz.com/highlighter/]] Generic Syntax Highlighter ~-~- so any language supported by GeSHi is supported. The syntax uses the same code and file blocks described in the previous section, but this time the name of the language syntax to be highlighted is included inside the tag, e.g. ##{{{&lt;c}}}&lt;/nowiki&gt;'' or ##{{{&lt;f}}}&lt;/nowiki&gt;##.
 
 {{code language="java"}}
 /**
@@ -1242,7 +1242,7 @@ Please Note**: HTML and PHP embedding is disabled by default in the configuratio
 
 ==  RSS/ATOM Feed Aggregation  ==
 
-[[DokuWiki]] can integrate data from external XML feeds. For parsing the XML feeds, [[SimplePie&gt;&gt;http://simplepie.org/]] is used. All formats understood by SimplePie can be used in DokuWiki as well. You can influence the rendering by multiple additional space separated parameters:
+[[doc:wiki.dokuwiki.WebHome]] can integrate data from external XML feeds. For parsing the XML feeds, [[SimplePie&gt;&gt;http://simplepie.org/]] is used. All formats understood by SimplePie can be used in DokuWiki as well. You can influence the rendering by multiple additional space separated parameters:
 
 |=(% align="centre" %)Parameter|=(% align="centre" %)Description
 |(% align="centre" %)any number|(% align="centre" %)will be used as maximum number items to show, defaults to 8
@@ -1254,7 +1254,7 @@ Please Note**: HTML and PHP embedding is disabled by default in the configuratio
 |(% align="centre" %)~/~/n~/~/[dhm]|(% align="centre" %)refresh period, where d=days, h=hours, m=minutes. (e.g. 12h = 12 hours).
 
 
-The refresh period defaults to 4 hours. Any value below 10 minutes will be treated as 10 minutes. [[wiki:DokuWiki]] will generally try to supply a cached version of a page, obviously this is inappropriate when the page contains dynamic external content. The parameter tells [[wiki:DokuWiki]] to re-render the page if it is more than //refresh period// since the page was last rendered.
+The refresh period defaults to 4 hours. Any value below 10 minutes will be treated as 10 minutes. [[doc:wiki.dokuwiki.WebHome]] will generally try to supply a cached version of a page, obviously this is inappropriate when the page contains dynamic external content. The parameter tells [[doc:wiki.dokuwiki.WebHome]] to re-render the page if it is more than //refresh period// since the page was last rendered.
 
 By default the feed will be sorted by date, newest items first. You can sort it by oldest first using the ##reverse## parameter, or display the feed as is with ##nosort##.**
 
@@ -1276,7 +1276,7 @@ Some syntax influences how DokuWiki renders a page without creating any output i
 
 ==  Syntax Plugins  ==
 
-DokuWiki's syntax can be extended by [[interwiki:doku:plugins|Plugins]] . How the installed plugins are used is described on their appropriate description pages. The following syntax plugins are available in this particular DokuWiki installation:
+DokuWiki's syntax can be extended by [[Plugins&gt;&gt;interwiki:doku:plugins]] . How the installed plugins are used is described on their appropriate description pages. The following syntax plugins are available in this particular DokuWiki installation:
 
 ~~~~INFO:syntaxplugins~~~~</string>
             </entry>
@@ -1804,27 +1804,27 @@ Enjoy your work with DokuWiki,
 
 ==  Create your first pages  ==
 
-Your wiki needs to have a start page. As long as it doesn't exist, this link will be red: [[:start]] .
+Your wiki needs to have a start page. As long as it doesn't exist, this link will be red: [[doc:Main.WebHome]] .
 
-Go on, follow that link and create the page. If you need help with using the syntax you can always refer to the [[syntax page&gt;&gt;wiki:syntax]].
+Go on, follow that link and create the page. If you need help with using the syntax you can always refer to the [[syntax page&gt;&gt;doc:wiki.syntax.WebHome]].
 
-You might also want to use a sidebar. To create it, just edit the [[:sidebar]] page. Everything in that page will be shown in a margin column on the side. Read our [[interwiki:doku:faq:sidebar|FAQ on sidebars]] to learn more.
+You might also want to use a sidebar. To create it, just edit the [[doc:sidebar.WebHome]] page. Everything in that page will be shown in a margin column on the side. Read our [[FAQ on sidebars&gt;&gt;interwiki:doku:faq:sidebar]] to learn more.
 
 Please be aware that not all templates support sidebars.
 
 ==  Customize your Wiki  ==
 
-Once you're comfortable with creating and editing pages you might want to have a look at the [[configuration settings&gt;&gt;this&gt;doku.php?do=admin&amp;page=config]]  (be sure to login as superuser first).
+Once you're comfortable with creating and editing pages you might want to have a look at the [[configuration settings&gt;&gt;interwiki:this:doku.php?do=admin&amp;page=config]]  (be sure to login as superuser first).
 
-You may also want to see what [[interwiki:doku:plugins|plugins]] and [[interwiki:doku:templates|templates]] are available at DokuWiki.org to extend the functionality and looks of your DokuWiki installation.
+You may also want to see what [[plugins&gt;&gt;interwiki:doku:plugins]] and [[templates&gt;&gt;interwiki:doku:templates]] are available at DokuWiki.org to extend the functionality and looks of your DokuWiki installation.
 
 ==  Join the Community  ==
 
 DokuWiki is an Open Source project that thrives through user contributions. A good way to stay informed on what's going on and to get useful tips in using DokuWiki is subscribing to the [[interwiki:doku:newsletter]] .
 
-The [[DokuWiki User Forum&gt;&gt;http://forum.dokuwiki.org]] is an excellent way to get in contact with other DokuWiki users and is just one of the many ways to get [[interwiki:doku:faq:support|support]].
+The [[DokuWiki User Forum&gt;&gt;http://forum.dokuwiki.org]] is an excellent way to get in contact with other DokuWiki users and is just one of the many ways to get [[support&gt;&gt;interwiki:doku:faq:support]].
 
-Of course we'd be more than happy to have you [[interwiki:doku:teams:getting_involved|getting involved]] with DokuWiki.</string>
+Of course we'd be more than happy to have you [[getting involved&gt;&gt;interwiki:doku:teams:getting_involved]] with DokuWiki.</string>
             </entry>
           </parameters>
         </p>

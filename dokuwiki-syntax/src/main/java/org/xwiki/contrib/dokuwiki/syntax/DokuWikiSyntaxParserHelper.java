@@ -49,6 +49,7 @@ public class DokuWikiSyntaxParserHelper
      *
      * @param list the list of characters
      * @return the string representation of the passed list of character
+     * @since 1.4
      */
     public String getStringRepresentation(List<Character> list)
     {
@@ -80,9 +81,27 @@ public class DokuWikiSyntaxParserHelper
      * @param argumentTrimSize : Number of characters removed from input buffer.
      * @param listener Listener calls the java events.
      * @return paragraphOpenedLocal Returns the current status of paragraph tag.
+     * @deprecated since 1.4 use {@link #getStringRepresentation(List)} instead
      */
+    @Deprecated
     public boolean processWords(int argumentTrimSize, ArrayList<Character> buffer, Listener listener,
             boolean paragraphJustOpened)
+    {
+        return processWords(argumentTrimSize, (List<Character>) buffer, listener, paragraphJustOpened);
+    }
+
+    /**
+     * Process words based on space split.
+     *
+     * @param buffer Buffer stores list of characters.
+     * @param paragraphJustOpened Keeps track of paragraph tag.
+     * @param argumentTrimSize : Number of characters removed from input buffer.
+     * @param listener Listener calls the java events.
+     * @return paragraphOpenedLocal Returns the current status of paragraph tag.
+     * @since 1.4
+     */
+    public boolean processWords(int argumentTrimSize, List<Character> buffer, Listener listener,
+        boolean paragraphJustOpened)
     {
         buffer.subList(buffer.size() - argumentTrimSize, buffer.size()).clear();
         StringBuilder word = new StringBuilder();

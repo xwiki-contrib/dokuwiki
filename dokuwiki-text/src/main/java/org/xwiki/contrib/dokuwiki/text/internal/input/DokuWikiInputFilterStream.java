@@ -22,15 +22,14 @@ package org.xwiki.contrib.dokuwiki.text.internal.input;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +41,7 @@ import java.util.zip.GZIPInputStream;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -128,6 +128,9 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     @Inject
     @Named(org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiStreamParser.SYNTAX_STRING)
     private StreamParser dokuWikiParser;
+
+    @Inject
+    private Provider<DokuWikiConverterListener> dokuWikiConverterListenerProvider;
 
     @Inject
     private Logger logger;
@@ -251,7 +254,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
         for (Map.Entry<LocalDocumentReference, Path> page : sortedPages) {
             try {
-                readDocument(page.getKey(), page.getValue().toFile(), dokuwikiDataDirectory.getAbsolutePath(),
+                readDocument(page.getKey(), page.getValue(), dokuwikiDataDirectory.toPath(),
                     proxyFilter);
             } catch (IOException e) {
                 // Don't fail the whole import if a single page fails.
@@ -316,7 +319,6 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
                         // Conflict resolution: We keep the one where the file is named "start". The
                         // other one is mapped to a terminal document unless it is in the root directory, in which case
                         // the only sensible option seems to be to make it a terminal document in the main space.
-                        // Conflict resolution: keep
                         Path pathToFix;
                         if (fileName.equals(DOKUWIKI_START_PAGE + KEY_TEXT_FILE_FORMAT)) {
                             pathToFix = documentMap.get(documentReference);
@@ -367,11 +369,11 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         return documentReference;
     }
 
-    private void readDocument(LocalDocumentReference documentReference, File file, String dokuwikiDataDirectory,
+    private void readDocument(LocalDocumentReference documentReference, Path file, Path dokuwikiDataDirectory,
         DokuWikiFilter proxyFilter) throws FilterException, IOException
     {
         if (this.properties.isVerbose()) {
-            this.logger.info("Reading file [{}]", file.getAbsolutePath());
+            this.logger.info("Reading file [{}]", file.toAbsolutePath());
         }
 
         // Begin the space and document.
@@ -390,19 +392,18 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
         proxyFilter.beginWikiDocument(documentReference.getName(), FilterEventParameters.EMPTY);
 
-        String fileMetadataPath = file.getAbsolutePath()
-            .replace(dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + KEY_PAGES_DIRECTORY,
-                dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + "meta")
-            .replace(KEY_TEXT_FILE_FORMAT, ".meta");
-        // FilterEventParameters documentParameters = new FilterEventParameters();
-        // documentParameters.put(WikiDocumentFilter.PARAMETER_LOCALE, Locale.ROOT);
+        // Extract the filename without the file extension.
+        String fileNameWithoutExtension = getFileNameWithoutTxtExtension(file);
+
+        // Extract path below the data directory and replace the pages directory with the meta directory.
+        Path metaSubDirectory = getMatchingDirectory(file.getParent(), dokuwikiDataDirectory, "meta");
+        Path metaFile = metaSubDirectory.resolve(fileNameWithoutExtension + ".meta");
 
         // wiki document
         FilterEventParameters documentLocaleParameters = new FilterEventParameters();
 
-        File fileMetadata = new File(fileMetadataPath);
-        if (fileMetadata.exists() && !fileMetadata.isDirectory()) {
-            String metadataFileContents = FileUtils.readFileToString(fileMetadata, StandardCharsets.UTF_8);
+        if (Files.isRegularFile(metaFile)) {
+            String metadataFileContents = new String(Files.readAllBytes(metaFile), StandardCharsets.UTF_8);
             MixedArray documentMetadata = Pherialize.unserialize(metadataFileContents).toArray();
             readDocumentParametersFromMetadata(documentMetadata, documentLocaleParameters);
 
@@ -424,7 +425,7 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         } else {
             this.logger.warn("File [{}] not found (Some datafile's properties (eg. filesize, "
                 + "last modified date) are not imported. Details can be found on "
-                + "https://www.dokuwiki.org/devel:metadata)", fileMetadata);
+                + "https://www.dokuwiki.org/devel:metadata)", metaFile);
             documentLocaleParameters =
                 readDocumentContent(file, documentLocaleParameters, dokuwikiDataDirectory, proxyFilter);
         }
@@ -439,12 +440,16 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         }
     }
 
-    private FilterEventParameters readDocumentContent(File file, FilterEventParameters documentLocaleParameters,
-        String dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
+    private FilterEventParameters readDocumentContent(Path file, FilterEventParameters documentLocaleParameters,
+        Path dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
     {
         try {
-            String pageContents = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-            String convertedContent = parseContent(pageContents);
+            String pageContents = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
+
+            String fileNameWithoutExtension = getFileNameWithoutTxtExtension(file);
+            List<String> dokuWikiPath = extractPagePath(file, dokuwikiDataDirectory, fileNameWithoutExtension);
+
+            String convertedContent = parseContent(pageContents, dokuWikiPath);
             documentLocaleParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertedContent);
             // Wiki Document Locale
             proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
@@ -452,58 +457,84 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
             return documentLocaleParameters;
         } catch (Exception e) {
-            this.logger.error("Failed to parse DockuWiki file [{}]", file, e);
+            this.logger.error("Failed to parse DokuWiki file [{}]", file, e);
         }
 
         return documentLocaleParameters;
     }
 
-    private void readPageRevision(File file, String dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
+    private static String getFileNameWithoutTxtExtension(Path file)
+    {
+        String fileName = file.getFileName().toString();
+        return fileName.substring(0, fileName.length() - KEY_TEXT_FILE_FORMAT.length());
+    }
+
+    private void readPageRevision(Path file, Path dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
     {
         // check revision exists, check the attic, parse attic files.
-        String fileName = file.getName().replace(KEY_TEXT_FILE_FORMAT, "");
-        String fileRevisionDirectory = file.getAbsolutePath()
-            .replace(dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + KEY_PAGES_DIRECTORY,
-                dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + KEY_ATTIC_FOLDER)
-            .replace(System.getProperty(KEY_FILE_SEPERATOR) + file.getName(), "");
+        Path atticSubDirectory = getMatchingDirectory(file.getParent(), dokuwikiDataDirectory, KEY_ATTIC_FOLDER);
 
-        File atticDirectoryForFile = new File(fileRevisionDirectory);
-        File[] revisionFiles = atticDirectoryForFile.listFiles(new FilenameFilter()
-        {
-            @Override
-            public boolean accept(File dir, String name)
-            {
-                return name.startsWith(fileName);
-            }
-        });
-        if (revisionFiles != null) {
-            // Maintain the order of files
-            Arrays.sort(revisionFiles);
-            for (File revisionFile : revisionFiles) {
-                String revision = revisionFile.getName().replace(fileName + KEY_FULL_STOP, "").replace(".txt.gz", "");
-                try {
-                    String documentContent = extractGZip(revisionFile);
-                    String convertedContent = parseContent(documentContent);
-                    FilterEventParameters revisionParameters = new FilterEventParameters();
-                    revisionParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertedContent);
-                    proxyFilter.beginWikiDocumentRevision(revision, revisionParameters);
-                    readAttachments(documentContent, revisionFile, dokuwikiDataDirectory, proxyFilter);
-                    proxyFilter.endWikiDocumentRevision(revision, revisionParameters);
-                } catch (Exception e) {
-                    this.logger.error("Failed to parse file [{}]", revisionFile.getAbsolutePath(), e);
-                }
+        String fileNameWithoutExtension = getFileNameWithoutTxtExtension(file);
+        List<String> dokuWikiPath = extractPagePath(file, dokuwikiDataDirectory, fileNameWithoutExtension);
+
+        if (Files.isDirectory(atticSubDirectory)) {
+            try (Stream<Path> stream = Files.list(atticSubDirectory)) {
+                stream.filter(p -> p.getFileName().toString().startsWith(fileNameWithoutExtension))
+                    .sorted(Comparator.comparing(p -> extractRevision(fileNameWithoutExtension, p)))
+                    .forEach(p -> {
+                        try {
+                            long revision = extractRevision(fileNameWithoutExtension, p);
+                            String documentContent = extractGZip(p);
+                            String convertedContent = parseContent(documentContent, dokuWikiPath);
+                            FilterEventParameters revisionParameters = new FilterEventParameters();
+                            revisionParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertedContent);
+                            proxyFilter.beginWikiDocumentRevision(String.valueOf(revision), revisionParameters);
+                            readAttachments(documentContent, p, dokuwikiDataDirectory, proxyFilter);
+                            proxyFilter.endWikiDocumentRevision(String.valueOf(revision), FilterEventParameters.EMPTY);
+                        } catch (Exception e) {
+                            this.logger.error("Failed to parse file [{}]", p, e);
+                        }
+                    });
+            } catch (IOException e) {
+                this.logger.error("Failed to read attic directory [{}]", atticSubDirectory, e);
             }
         }
     }
 
-    private String parseContent(String pageContents)
+    private static long extractRevision(String fileNameWithoutExtension, Path p)
+    {
+        String revision = p.getFileName().toString().replace(fileNameWithoutExtension + KEY_FULL_STOP, "")
+            .replace(".txt.gz", "");
+        return Long.parseLong(revision);
+    }
+
+    private List<String> extractPagePath(Path file, Path dokuwikiDataDirectory, String fileNameWithoutExtension)
+    {
+        Path relativePath = dokuwikiDataDirectory.relativize(file);
+        Path relativePathWithoutPagesDirectory = relativePath.subpath(1, relativePath.getNameCount());
+
+        // Extract all components of the path below the pages directory.
+        List<String> dokuWikiPath = new ArrayList<>();
+        for (int i = 0; i < relativePathWithoutPagesDirectory.getNameCount() - 1; i++) {
+            dokuWikiPath.add(relativePathWithoutPagesDirectory.getName(i).toString());
+        }
+
+        dokuWikiPath.add(fileNameWithoutExtension);
+
+        return dokuWikiPath;
+    }
+
+    private String parseContent(String pageContents, List<String> dokuWikiPath)
     {
         String content = "";
         try {
             // parse pageContent
             DefaultWikiPrinter printer = new DefaultWikiPrinter();
             PrintRenderer renderer = this.xwiki21Factory.createRenderer(printer);
-            dokuWikiParser.parse(new StringReader(pageContents), renderer);
+            DokuWikiConverterListener listener = this.dokuWikiConverterListenerProvider.get();
+            listener.setDokuWikiPath(dokuWikiPath);
+            listener.setWrappedListener(renderer);
+            dokuWikiParser.parse(new StringReader(pageContents), listener);
             content = renderer.getPrinter().toString();
         } catch (ParseException e) {
             this.logger.error("Failed to parse page content", e);
@@ -511,36 +542,49 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         return content;
     }
 
-    private void readAttachments(String content, File document, String dokuwikiDataDirectory,
-        DokuWikiFilter proxyFilter)
+    private void readAttachments(String content, Path document, Path dokuwikiDataDirectory, DokuWikiFilter proxyFilter)
     {
-        String mediaNameSpaceDirectoryPath = document.getAbsolutePath()
-            .replace(dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + KEY_PAGES_DIRECTORY,
-                dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + KEY_MEDIA_FOLDER)
-            .replace(dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + KEY_ATTIC_FOLDER,
-                dokuwikiDataDirectory + System.getProperty(KEY_FILE_SEPERATOR) + KEY_MEDIA_FOLDER)
-            .replace(document.getName(), "");
+        Path mediaSubDirectory = getMatchingDirectory(document.getParent(), dokuwikiDataDirectory, KEY_MEDIA_FOLDER);
 
-        File mediaSpace = new File(mediaNameSpaceDirectoryPath);
-        if (mediaSpace.exists() && mediaSpace.isDirectory()) {
-            File[] mediaFiles = mediaSpace.listFiles();
-            if (mediaFiles != null) {
-                for (File attachment : mediaFiles) {
-                    String attachmentName = attachment.getName();
+        if (Files.isDirectory(mediaSubDirectory)) {
+            try (Stream<Path> mediaFiles = Files.list(mediaSubDirectory)) {
+                mediaFiles.filter(p -> !Files.isDirectory(p)).forEach(p -> {
+                    String attachmentName = p.getFileName().toString();
                     if (!attachmentName.startsWith(KEY_FULL_STOP) && !attachmentName.startsWith("_")
-                        && content.contains(attachmentName) && !attachment.isDirectory()) {
-                        try {
-                            FileInputStream attachmentStream = FileUtils.openInputStream(attachment);
-                            proxyFilter.onWikiAttachment(attachment.getName(), attachmentStream,
-                                FileUtils.sizeOf(attachment), FilterEventParameters.EMPTY);
-                            attachmentStream.close();
-                        } catch (FilterException | IOException e) {
-                            this.logger.error("Failed to process attachment", e);
+                        && content.contains(attachmentName)) {
+                        try (FileInputStream attachmentStream = FileUtils.openInputStream(p.toFile())) {
+                            proxyFilter.onWikiAttachment(attachmentName, attachmentStream,
+                                FileUtils.sizeOf(p.toFile()), FilterEventParameters.EMPTY);
+                        } catch (IOException | FilterException e) {
+                            this.logger.error("Failed to process attachment [{}]", p, e);
                         }
                     }
-                }
+                });
+            } catch (IOException e) {
+                this.logger.error("Failed to read media directory [{}]", mediaSubDirectory, e);
             }
         }
+    }
+
+    /**
+     * For a given pages, attic, ... subdirectory return the same subdirectory in another base directory (like meta).
+     *
+     * @param originDirectory the original directory to convert
+     * @param dokuWikiDataDirectory the data directory, must be an ancestor of the originDirectory
+     * @param directoryName the new base directory name
+     * @return the subdirectory in the wanted base directory
+     */
+    private Path getMatchingDirectory(Path originDirectory, Path dokuWikiDataDirectory, String directoryName)
+    {
+        Path relativePath = dokuWikiDataDirectory.relativize(originDirectory);
+        Path result;
+        if (relativePath.getNameCount() == 1) {
+            result = dokuWikiDataDirectory.resolve(directoryName);
+        } else {
+            Path relativePathWithoutPagesDirectory = relativePath.subpath(1, relativePath.getNameCount());
+            result = dokuWikiDataDirectory.resolve(directoryName).resolve(relativePathWithoutPagesDirectory);
+        }
+        return result;
     }
 
     private void readDocumentParametersFromMetadata(MixedArray documentMetadata,
@@ -589,12 +633,11 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         }
     }
 
-    private String extractGZip(File file) throws IOException
+    private String extractGZip(Path file) throws IOException
     {
-        GZIPInputStream gzipInputStream = new GZIPInputStream(new FileInputStream(file));
-        String content = IOUtils.toString(gzipInputStream, StandardCharsets.UTF_8);
-        gzipInputStream.close();
-        return content;
+        try (GZIPInputStream gzipInputStream = new GZIPInputStream(Files.newInputStream(file))) {
+            return IOUtils.toString(gzipInputStream, StandardCharsets.UTF_8);
+        }
     }
 
     @Override

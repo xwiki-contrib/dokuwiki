@@ -28,12 +28,14 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentLookupException;
@@ -79,6 +81,8 @@ public class DokuWikiIterativeParser
 
     private static final String TAG_CODE = "code";
 
+    private static final Pattern INTERWIKI_PATTERN = Pattern.compile("^[a-zA-Z0-9.]+>");
+
     private static Character[] specialSymbols =
             new Character[]{ '@', '#', '$', '*', '%', '\'', '(', '!', ')', '-', '_', '^', '`', '?', ',', ';',
                     '.', '/', ':', '=', '+', '<', '|', '>' };
@@ -96,21 +100,25 @@ public class DokuWikiIterativeParser
     @Inject
     private DokuWikiSyntaxParserHelper helper;
 
-    private static class ListState {
+    private static class ListState
+    {
         private final int depth;
 
         private final ListType type;
 
-        ListState(int depth, ListType type) {
+        ListState(int depth, ListType type)
+        {
             this.depth = depth;
             this.type = type;
         }
 
-        int getDepth() {
+        int getDepth()
+        {
             return depth;
         }
 
-        ListType getType() {
+        ListType getType()
+        {
             return type;
         }
     }
@@ -557,7 +565,7 @@ public class DokuWikiIterativeParser
             if (helper.getStringRepresentation(buffer).endsWith("[[")) {
                 //handle link
                 this.paragraphJustOpened = helper.processWords(2, buffer, listener, this.paragraphJustOpened);
-                processLink(source, listener);
+                readLink(source, listener);
                 buffer.clear();
                 continue;
             }
@@ -565,7 +573,7 @@ public class DokuWikiIterativeParser
             if (helper.getStringRepresentation(buffer).startsWith("{{")) {
                 buffer.remove(0);
                 buffer.remove(0);
-                processImage(buffer, source, listener);
+                processImage(buffer, listener);
             }
 
             if (buffer.size() > 0 && (buffer.get(0) == '|' || buffer.get(0) == '^')) {
@@ -870,187 +878,135 @@ public class DokuWikiIterativeParser
         }
     }
 
-    private void processWordsFromReader(char ch, Reader source, Listener listener, String endString) throws IOException
-    {
-        ArrayList<Character> buffer = new ArrayList<>();
-        buffer.add(ch);
-        int c = source.read();
-        while (source.ready() && c != -1) {
-            buffer.add((char) c);
-            String readString = helper.getStringRepresentation(buffer);
-            if (readString.endsWith(endString)) {
-                buffer.subList(buffer.size() - endString.length(), buffer.size()).clear();
-                //StringBuilder here has no utility.
-                this.paragraphJustOpened = helper.processWords(0, buffer, listener, this.paragraphJustOpened);
-                break;
-            }
-            c = source.read();
-        }
-    }
-
-    private void processImage(
-            ArrayList<Character> buffer, Reader source, Listener listener)
-            throws IOException
+    private void processImage(List<Character> buffer, Listener listener)
     {
         String imageArgument = helper.getStringRepresentation(buffer);
-        boolean internalImage = true;
-        Map<String, String> param = new HashMap<>();
         if (imageArgument.startsWith(TAG_RSS_GREATER_THAN_SYMBOL)) {
             return;
         }
 
         if (imageArgument.endsWith("}}")) {
-            String imageName;
-            if (!imageArgument.contains("wiki:")) {
-                internalImage = false;
-            }
-            if (imageArgument.startsWith(" ")
-                    && imageArgument.endsWith(TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS))
-            {
-                //align centre
-                param.put(TAG_ALIGN, "middle");
-                imageArgument = imageArgument.substring(1);
-            } else if (imageArgument.startsWith(" ")) {
-                //align left
-                param.put(TAG_ALIGN, TAG_LEFT);
-                imageArgument = imageArgument.substring(1);
-            } else if (imageArgument.endsWith(TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS)) {
-                //align right
-                param.put(TAG_ALIGN, TAG_RIGHT);
-            }
-            if (internalImage) {
-                imageName = imageArgument.substring(5, imageArgument.length() - 2);
-            } else {
-                imageName = imageArgument.substring(1, imageArgument.length() - 2);
-            }
-            imageName = imageName.trim();
-            if (imageName.contains("|")) {
-                //there's a caption
-                String caption = imageName.substring(imageName.indexOf('|') + 1);
-                imageName = imageName.substring(0, imageName.indexOf('|'));
-                param.put("alt", caption);
-                param.put("title", caption);
-            }
-            if (imageName.contains("?")) {
-                //there's size information
-                String size = imageName.substring(imageName.indexOf('?') + 1);
-                imageName = imageName.substring(0, imageName.indexOf('?'));
-                if (size.contains(TAG_X)) {
-                    param.put("height", size.substring(0, size.indexOf(TAG_X)) + TAG_PX);
-                    param.put(TAG_WIDTH, size.substring(size.indexOf(TAG_X) + 1) + TAG_PX);
-                } else {
-                    param.put(TAG_WIDTH, size + TAG_PX);
-                }
-            }
-            ResourceReference reference = new ResourceReference(imageName, ResourceType.ATTACHMENT);
-            reference.setTyped(false);
-            listener.onImage(reference, false, param);
+            parseImageSyntax(listener, imageArgument);
             buffer.clear();
-            return;
         }
     }
 
-    private void processLink(Reader source, Listener listener) throws IOException
+    private static void parseImageSyntax(Listener listener, String imageArgument)
     {
-        int c;
-        ArrayList<Character> functionBuffer = new ArrayList<>();
-        c = source.read();
+        boolean internalImage = true;
+        Map<String, String> param = new HashMap<>();
+        String imageName;
+        if (!imageArgument.contains("wiki:")) {
+            internalImage = false;
+        }
+        if (imageArgument.startsWith(" ")
+                && imageArgument.endsWith(TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS))
+        {
+            //align centre
+            param.put(TAG_ALIGN, "middle");
+            imageArgument = imageArgument.substring(1);
+        } else if (imageArgument.startsWith(" ")) {
+            //align left
+            param.put(TAG_ALIGN, TAG_LEFT);
+            imageArgument = imageArgument.substring(1);
+        } else if (imageArgument.endsWith(TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS)) {
+            //align right
+            param.put(TAG_ALIGN, TAG_RIGHT);
+        }
+        if (internalImage) {
+            imageName = imageArgument.substring(5, imageArgument.length() - 2);
+        } else {
+            imageName = imageArgument.substring(1, imageArgument.length() - 2);
+        }
+        imageName = imageName.trim();
+        if (imageName.contains("|")) {
+            //there's a caption
+            String caption = imageName.substring(imageName.indexOf('|') + 1);
+            imageName = imageName.substring(0, imageName.indexOf('|'));
+            param.put("alt", caption);
+            param.put("title", caption);
+        }
+        if (imageName.contains("?")) {
+            //there's size information
+            String size = imageName.substring(imageName.indexOf('?') + 1);
+            imageName = imageName.substring(0, imageName.indexOf('?'));
+            if (size.contains(TAG_X)) {
+                param.put("height", size.substring(0, size.indexOf(TAG_X)) + TAG_PX);
+                param.put(TAG_WIDTH, size.substring(size.indexOf(TAG_X) + 1) + TAG_PX);
+            } else {
+                param.put(TAG_WIDTH, size + TAG_PX);
+            }
+        }
+        ResourceReference reference = new ResourceReference(imageName, ResourceType.ATTACHMENT);
+        reference.setTyped(false);
+        listener.onImage(reference, false, param);
+    }
+
+    private void readLink(PushbackReader source, Listener listener) throws IOException
+    {
+        List<Character> functionBuffer = new ArrayList<>();
+        // Read into functionBuffer until it ends with two closing square brackets and the next character is not a
+        // closing square bracket.
+        int c = source.read();
         while (source.ready() && c != -1) {
+            if (functionBuffer.size() >= 2 && functionBuffer.get(functionBuffer.size() - 1) == ']'
+                && functionBuffer.get(functionBuffer.size() - 2) == ']' && c != ']') {
+                source.unread(c);
+                break;
+            }
             functionBuffer.add((char) c);
-            String bufferString = helper.getStringRepresentation(functionBuffer);
-            if (bufferString.endsWith("doku>") || bufferString.endsWith("wp>") || bufferString.endsWith("phpfn>") ||
-                    bufferString.endsWith("google>") || bufferString.endsWith("skype>"))
-            {
-                InterWikiResourceReference reference;
-                functionBuffer.remove(functionBuffer.size() - 1);
-                functionBuffer.add(':');
-                ArrayList<Character> Buffer = new ArrayList<>();
-                while (c != ']') {
-                    c = source.read();
-                    Buffer.add((char) c);
-                }
-                source.read();
-                Buffer.remove(Buffer.size() - 1);
-                reference = new InterWikiResourceReference(helper.getStringRepresentation(Buffer));
-
-                if (helper.getStringRepresentation(functionBuffer).startsWith("doku")) {
-                    reference.setInterWikiAlias("doku");
-                } else if (helper.getStringRepresentation(functionBuffer).startsWith("wp")) {
-
-                    reference.setInterWikiAlias("wp");
-                } else if (helper.getStringRepresentation(functionBuffer).startsWith("phpfn")) {
-                    reference.setInterWikiAlias("phpfn");
-                } else if (helper.getStringRepresentation(functionBuffer).startsWith("google")) {
-                    reference.setInterWikiAlias("google");
-                } else if (helper.getStringRepresentation(functionBuffer).startsWith("skype")) {
-                    reference.setInterWikiAlias("skype");
-                } else {
-                    continue;
-                }
-
-                reference.setTyped(true);
-                listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
-                listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
-                break;
-            }
-
-            ResourceReference reference;
-            if ((char) c == '|') {
-                c = (char) source.read();
-                if (functionBuffer.get(0) == '<' && functionBuffer.get(functionBuffer.size() - 2) == '>'
-                        && functionBuffer.contains('@'))
-                {
-                    //process mailto
-                    reference = new ResourceReference(helper.getStringRepresentation(
-                            new ArrayList<>(functionBuffer
-                                    .subList(1, functionBuffer.size() - 2))), ResourceType.MAILTO);
-                    reference.setTyped(true);
-                    listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
-                    processWordsFromReader((char) c, source, listener, TAG_DOUBLE_CLOSING_SQUARE_BRACKETS);
-                    listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
-                    break;
-                } else {
-                    if (c != '{') {
-                        reference = new ResourceReference(helper.getStringRepresentation(
-                                new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() - 1))),
-                                ResourceType.URL);
-                        reference.setTyped(false);
-                        listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
-                        functionBuffer.add((char) c);
-                        processWordsFromReader((char) c, source, listener, TAG_DOUBLE_CLOSING_SQUARE_BRACKETS);
-                        listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
-                        break;
-                    } else {
-                        functionBuffer.add((char) c);
-                    }
-                }
-            }
-
-            if (helper.getStringRepresentation(functionBuffer).endsWith("{{")) {
-                reference = new ResourceReference(
-                        helper.getStringRepresentation(
-                                new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() - 3))),
-                        ResourceType.URL);
-                reference.setTyped(false);
-                listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
-                functionBuffer.clear();
-                functionBuffer = helper.readIntoBuffer(functionBuffer, source);
-                processImage(functionBuffer, source, listener);
-                source.skip(2);
-                listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
-                break;
-            }
-
-            if (helper.getStringRepresentation(functionBuffer).endsWith(TAG_DOUBLE_CLOSING_SQUARE_BRACKETS)) {
-                reference = new ResourceReference(helper.getStringRepresentation(
-                        new ArrayList<>(functionBuffer.subList(0, functionBuffer.size() - 2))), ResourceType.URL);
-                reference.setTyped(false);
-                listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
-                listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
-                break;
-            }
             c = source.read();
         }
+
+        String linkString = helper.getStringRepresentation(functionBuffer);
+        if (linkString.endsWith(TAG_DOUBLE_CLOSING_SQUARE_BRACKETS)) {
+            String link = linkString.substring(0, linkString.length() - 2);
+            parseLinkContent(listener, link);
+        } else {
+            // The link is not closed properly, so we just print it as text
+            this.paragraphJustOpened = helper.processWords(0, functionBuffer, listener, this.paragraphJustOpened);
+        }
+    }
+
+    private void parseLinkContent(Listener listener, String link)
+    {
+        // Split the string at "|"
+        String[] linkParts = StringUtils.splitByWholeSeparatorPreserveAllTokens(link, "|", 2);
+        String linkTarget = linkParts[0].trim();
+
+        ResourceReference reference;
+
+        // Check if the link is an interwiki link
+        if (INTERWIKI_PATTERN.matcher(linkTarget).find()) {
+            String[] interWikiParts = StringUtils.splitByWholeSeparatorPreserveAllTokens(linkTarget, ">", 2);
+            InterWikiResourceReference interWikiReference = new InterWikiResourceReference(interWikiParts[1]);
+            interWikiReference.setInterWikiAlias(interWikiParts[0]);
+            reference = interWikiReference;
+        } else {
+            // Store as untyped reference, let the converter deal with the special cases for DokuWiki import.
+            reference = new ResourceReference(linkTarget, ResourceType.URL);
+            reference.setTyped(false);
+        }
+
+        listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
+
+        if (linkParts.length == 2 && StringUtils.isNotBlank(linkParts[1])) {
+            String linkLabel = linkParts[1];
+            // Check if the link label is an image
+            if (linkLabel.startsWith("{{") && linkLabel.endsWith("}}")) {
+                parseImageSyntax(listener, linkLabel.substring(2));
+            } else {
+                // Convert the link label to a list of characters and process it
+                List<Character> labelBuffer = new ArrayList<>(linkLabel.length());
+                for (char ch : linkLabel.toCharArray()) {
+                    labelBuffer.add(ch);
+                }
+                this.paragraphJustOpened = helper.processWords(0, labelBuffer, listener,
+                    this.paragraphJustOpened);
+            }
+        }
+
+        listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
     }
 
     private void processTableCell(boolean inCell, boolean inHeadCell, ArrayList<Character> buffer, Listener listener)
