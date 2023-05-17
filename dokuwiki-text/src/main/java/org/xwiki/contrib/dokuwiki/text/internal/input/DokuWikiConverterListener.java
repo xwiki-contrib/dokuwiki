@@ -55,7 +55,7 @@ public class DokuWikiConverterListener extends WrappingListener
     private static final Pattern EXTERNAL_URL_PATTERN =
         Pattern.compile("^([a-z0-9\\-.+]+?)://", Pattern.CASE_INSENSITIVE);
 
-    private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile("^\\S+@\\S+$");
+    private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile("^\\S+@\\S+(?:\\?.*)?$");
 
     private static final String NAMESPACE_SEPARATOR = ":";
 

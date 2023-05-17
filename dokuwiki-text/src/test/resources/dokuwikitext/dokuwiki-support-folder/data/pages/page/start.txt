@@ -1,1 +1,3 @@
 Hello from page/start.txt
+
+[[hello@example.com?subject=Testing]]

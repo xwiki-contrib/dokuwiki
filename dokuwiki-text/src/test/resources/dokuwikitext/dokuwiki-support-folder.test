@@ -52,7 +52,9 @@
         <parameters>
           <entry>
             <string>content</string>
-            <string>Hello from page/start.txt</string>
+            <string>Hello from page/start.txt
+
+[[mailto:hello@example.com?subject=Testing]]</string>
           </entry>
         </parameters>
       </p>
