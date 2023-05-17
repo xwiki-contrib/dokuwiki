@@ -75,6 +75,8 @@ public class DokuWikiConverterListener extends WrappingListener
 
     private static final String ANCHOR_SEPARATOR = "#";
 
+    private static final String UNDERSCORE = "_";
+
     @Inject
     private DokuWikiDeaccent deaccent;
 
@@ -280,9 +282,9 @@ public class DokuWikiConverterListener extends WrappingListener
         // This assumes the default setting, i.e., $conf['deaccent'] = 1 in DokuWiki
         id = this.deaccent.deaccent(id);
 
-        id = SPECIAL_PATTERN.matcher(id).replaceAll("");
+        id = SPECIAL_PATTERN.matcher(id).replaceAll(UNDERSCORE);
 
-        id = REPEATED_UNDERSCORE_PATTERN.matcher(id).replaceAll("_");
+        id = REPEATED_UNDERSCORE_PATTERN.matcher(id).replaceAll(UNDERSCORE);
 
         id = StringUtils.strip(id, ":._-");
 

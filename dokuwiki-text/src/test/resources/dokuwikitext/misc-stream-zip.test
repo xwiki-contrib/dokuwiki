@@ -935,7 +935,7 @@ For example this is a link to Wikipedia's page about Wikis: [[wp&gt;Wiki]].
 
 ===  Windows Shares  ===
 
-Windows shares like [[this&gt;&gt;doc:wiki.servershare.WebHome]] are recognized, too. Please note that these only make sense in a homogeneous user group like a corporate [[interwiki:wp:Intranet]].
+Windows shares like [[this&gt;&gt;doc:wiki.server_share.WebHome]] are recognized, too. Please note that these only make sense in a homogeneous user group like a corporate [[interwiki:wp:Intranet]].
 
 {{code}}
 Windows Shares like [[\\server\share|this]] are recognized, too.
