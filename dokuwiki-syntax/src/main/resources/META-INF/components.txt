@@ -6,3 +6,4 @@ org.xwiki.contrib.dokuwiki.syntax.plugins.internal.curlyBrackets.Rss
 org.xwiki.contrib.dokuwiki.syntax.plugins.internal.angleBrackets.Code
 org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxParserHelper
 org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiIterativeParser
+org.xwiki.contrib.dokuwiki.syntax.internal.parser.MimeTypeDetector

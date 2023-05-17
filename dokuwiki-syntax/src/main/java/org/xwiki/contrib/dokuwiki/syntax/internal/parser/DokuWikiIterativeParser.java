@@ -28,6 +28,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
@@ -47,6 +48,7 @@ import org.xwiki.rendering.listener.HeaderLevel;
 import org.xwiki.rendering.listener.ListType;
 import org.xwiki.rendering.listener.Listener;
 import org.xwiki.rendering.listener.MetaData;
+import org.xwiki.rendering.listener.reference.AttachmentResourceReference;
 import org.xwiki.rendering.listener.reference.InterWikiResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
@@ -61,13 +63,9 @@ public class DokuWikiIterativeParser
 
     private static final String TAG_DOUBLE_CLOSING_SQUARE_BRACKETS = "]]";
 
-    private static final String TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS = " }}";
+    private static final String CLOSING_DOUBLE_CURLEY_BRACE = "}}";
 
     private static final String TAG_WIDTH = "width";
-
-    private static final String TAG_PX = "px";
-
-    private static final String TAG_X = "x";
 
     private static final String TAG_RIGHT = "right";
 
@@ -83,6 +81,18 @@ public class DokuWikiIterativeParser
 
     private static final Pattern INTERWIKI_PATTERN = Pattern.compile("^[a-zA-Z0-9.]+>");
 
+    private static final String STYLE_ATTRIBUTE = "style";
+
+    private static final Pattern IMAGE_SIZE_PATTERN = Pattern.compile("(\\d+)(?:x(\\d+))?", Pattern.CASE_INSENSITIVE);
+
+    private static final String QUERY_SEPARATOR = "?";
+
+    private static final String ANCHOR_SEPARATOR = "#";
+
+    private static final String NAMESPACE_SEPARATOR = ":";
+
+    private static final String LABEL_SEPARATOR = "|";
+
     private static Character[] specialSymbols =
             new Character[]{ '@', '#', '$', '*', '%', '\'', '(', '!', ')', '-', '_', '^', '`', '?', ',', ';',
                     '.', '/', ':', '=', '+', '<', '|', '>' };
@@ -96,6 +106,9 @@ public class DokuWikiIterativeParser
     @Inject
     @Named("context")
     private Provider<ComponentManager> componentManagerProvider;
+
+    @Inject
+    private MimeTypeDetector mimeTypeDetector;
 
     @Inject
     private DokuWikiSyntaxParserHelper helper;
@@ -885,61 +898,143 @@ public class DokuWikiIterativeParser
             return;
         }
 
-        if (imageArgument.endsWith("}}")) {
-            parseImageSyntax(listener, imageArgument);
+        if (imageArgument.endsWith(CLOSING_DOUBLE_CURLEY_BRACE)) {
+            parseImageSyntax(listener, imageArgument.substring(0, imageArgument.length() - 2));
             buffer.clear();
         }
     }
 
-    private static void parseImageSyntax(Listener listener, String imageArgument)
+    private void parseImageSyntax(Listener listener, String imageArgument)
     {
-        boolean internalImage = true;
         Map<String, String> param = new HashMap<>();
-        String imageName;
-        if (!imageArgument.contains("wiki:")) {
-            internalImage = false;
-        }
-        if (imageArgument.startsWith(" ")
-                && imageArgument.endsWith(TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS))
-        {
-            //align centre
-            param.put(TAG_ALIGN, "middle");
-            imageArgument = imageArgument.substring(1);
-        } else if (imageArgument.startsWith(" ")) {
-            //align left
-            param.put(TAG_ALIGN, TAG_LEFT);
-            imageArgument = imageArgument.substring(1);
-        } else if (imageArgument.endsWith(TAG_SPACE_DOUBLE_CLOSING_CURLY_BRACKETS)) {
-            //align right
-            param.put(TAG_ALIGN, TAG_RIGHT);
-        }
-        if (internalImage) {
-            imageName = imageArgument.substring(5, imageArgument.length() - 2);
-        } else {
-            imageName = imageArgument.substring(1, imageArgument.length() - 2);
-        }
-        imageName = imageName.trim();
-        if (imageName.contains("|")) {
+
+        String imageName = imageArgument;
+
+        String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens(imageName, LABEL_SEPARATOR, 2);
+        if (parts.length == 2) {
             //there's a caption
-            String caption = imageName.substring(imageName.indexOf('|') + 1);
-            imageName = imageName.substring(0, imageName.indexOf('|'));
-            param.put("alt", caption);
-            param.put("title", caption);
+            param.put("alt", parts[1]);
+            param.put("title", parts[1]);
+            imageName = parts[0];
         }
-        if (imageName.contains("?")) {
+
+        maybeSetAlignmentParameter(param, imageName);
+
+        imageName = imageName.trim();
+
+        boolean generateLink = false;
+        boolean generateImage = true;
+
+        if (imageName.contains(QUERY_SEPARATOR)) {
             //there's size information
-            String size = imageName.substring(imageName.indexOf('?') + 1);
-            imageName = imageName.substring(0, imageName.indexOf('?'));
-            if (size.contains(TAG_X)) {
-                param.put("height", size.substring(0, size.indexOf(TAG_X)) + TAG_PX);
-                param.put(TAG_WIDTH, size.substring(size.indexOf(TAG_X) + 1) + TAG_PX);
-            } else {
-                param.put(TAG_WIDTH, size + TAG_PX);
+            String params = StringUtils.substringAfterLast(imageName, QUERY_SEPARATOR);
+            imageName = StringUtils.substringBeforeLast(imageName, QUERY_SEPARATOR);
+
+            maybeSetSizeParameter(param, params);
+
+            if (StringUtils.containsIgnoreCase(params, "direct")) {
+                generateLink = true;
+            } else if (StringUtils.containsIgnoreCase(params, "linkonly")) {
+                generateLink = true;
+                generateImage = false;
             }
         }
-        ResourceReference reference = new ResourceReference(imageName, ResourceType.ATTACHMENT);
-        reference.setTyped(false);
-        listener.onImage(reference, false, param);
+
+        // extract the anchor part of the link
+        String anchor;
+        if (imageName.contains(ANCHOR_SEPARATOR)) {
+            anchor = StringUtils.substringAfterLast(imageName, ANCHOR_SEPARATOR);
+            imageName = StringUtils.substringBeforeLast(imageName, ANCHOR_SEPARATOR);
+        } else {
+            anchor = null;
+        }
+
+        // Only generate an image if the mime type is an image
+        if (generateImage) {
+            String mimeType = this.mimeTypeDetector.detectMimeType(imageName);
+            generateImage = mimeType != null && mimeType.startsWith("image/");
+            if (!generateImage) {
+                // If the mime type is not an image, then we should generate a link
+                generateLink = true;
+            }
+        }
+
+        generateLinkAndImageEvents(listener, param, imageName, generateLink, generateImage, anchor);
+    }
+
+    private void generateLinkAndImageEvents(Listener listener, Map<String, String> param, String imageName,
+        boolean generateLink, boolean generateImage, String anchor)
+    {
+        ResourceReference reference = getMediaResourceReference(imageName, anchor);
+
+        if (generateLink) {
+            listener.beginLink(reference, false, Listener.EMPTY_PARAMETERS);
+        }
+
+        if (generateImage) {
+            ResourceReference imageReference = getMediaResourceReference(imageName, anchor);
+            // No need to type the attachment reference for images (but do type it for the link as it won't be
+            // recognized otherwise).
+            if (ResourceType.ATTACHMENT.equals(imageReference.getType())) {
+                imageReference.setTyped(false);
+            }
+            listener.onImage(imageReference, false, param);
+        }
+
+        if (generateLink) {
+            listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
+        }
+    }
+
+    private ResourceReference getMediaResourceReference(String imageName, String anchor)
+    {
+        ResourceReference reference;
+        String imageNameWithAnchor = anchor != null ? imageName + ANCHOR_SEPARATOR + anchor : imageName;
+        if (isHttpOrFtpURL(imageName)) {
+            reference = new ResourceReference(imageNameWithAnchor, ResourceType.URL);
+            reference.setTyped(false);
+        } else if (INTERWIKI_PATTERN.matcher(imageName).matches()) {
+            reference = parseInterWikiReference(imageNameWithAnchor);
+        } else {
+            AttachmentResourceReference attachmentResourceReference = new AttachmentResourceReference(imageName);
+            if (anchor != null) {
+                attachmentResourceReference.setAnchor(anchor);
+            }
+            reference = attachmentResourceReference;
+        }
+        return reference;
+    }
+
+    private static boolean isHttpOrFtpURL(String imageName)
+    {
+        return StringUtils.startsWithIgnoreCase(imageName, "http://")
+            || StringUtils.startsWithIgnoreCase(imageName, "https://")
+            || StringUtils.startsWithIgnoreCase(imageName, "ftp://");
+    }
+
+    private static void maybeSetSizeParameter(Map<String, String> param, String parameterString)
+    {
+        Matcher sizeMatcher = IMAGE_SIZE_PATTERN.matcher(parameterString);
+        if (sizeMatcher.find()) {
+            param.put(TAG_WIDTH, sizeMatcher.group(1));
+            if (sizeMatcher.group(2) != null) {
+                param.put("height", sizeMatcher.group(2));
+            }
+        }
+    }
+
+    private static void maybeSetAlignmentParameter(Map<String, String> param, String imageName)
+    {
+        if (imageName.startsWith(" ") && imageName.endsWith(" ")) {
+            //align centre
+            param.put(STYLE_ATTRIBUTE, "display: block; margin-left: auto; margin-right: auto;");
+        } else if (imageName.startsWith(" ")) {
+            //align left
+            param.put(STYLE_ATTRIBUTE, "float: left;");
+        } else if (imageName.endsWith(" ")) {
+            //align right
+            param.put(STYLE_ATTRIBUTE, "float: right;");
+        }
     }
 
     private void readLink(PushbackReader source, Listener listener) throws IOException
@@ -971,17 +1066,14 @@ public class DokuWikiIterativeParser
     private void parseLinkContent(Listener listener, String link)
     {
         // Split the string at "|"
-        String[] linkParts = StringUtils.splitByWholeSeparatorPreserveAllTokens(link, "|", 2);
+        String[] linkParts = StringUtils.splitByWholeSeparatorPreserveAllTokens(link, LABEL_SEPARATOR, 2);
         String linkTarget = linkParts[0].trim();
 
         ResourceReference reference;
 
         // Check if the link is an interwiki link
         if (INTERWIKI_PATTERN.matcher(linkTarget).find()) {
-            String[] interWikiParts = StringUtils.splitByWholeSeparatorPreserveAllTokens(linkTarget, ">", 2);
-            InterWikiResourceReference interWikiReference = new InterWikiResourceReference(interWikiParts[1]);
-            interWikiReference.setInterWikiAlias(interWikiParts[0]);
-            reference = interWikiReference;
+            reference = parseInterWikiReference(linkTarget);
         } else {
             // Store as untyped reference, let the converter deal with the special cases for DokuWiki import.
             reference = new ResourceReference(linkTarget, ResourceType.URL);
@@ -993,8 +1085,8 @@ public class DokuWikiIterativeParser
         if (linkParts.length == 2 && StringUtils.isNotBlank(linkParts[1])) {
             String linkLabel = linkParts[1];
             // Check if the link label is an image
-            if (linkLabel.startsWith("{{") && linkLabel.endsWith("}}")) {
-                parseImageSyntax(listener, linkLabel.substring(2));
+            if (linkLabel.startsWith("{{") && linkLabel.endsWith(CLOSING_DOUBLE_CURLEY_BRACE)) {
+                parseImageSyntax(listener, linkLabel.substring(2, linkLabel.length() - 2));
             } else {
                 // Convert the link label to a list of characters and process it
                 List<Character> labelBuffer = new ArrayList<>(linkLabel.length());
@@ -1007,6 +1099,14 @@ public class DokuWikiIterativeParser
         }
 
         listener.endLink(reference, false, Listener.EMPTY_PARAMETERS);
+    }
+
+    private static ResourceReference parseInterWikiReference(String linkTarget)
+    {
+        String[] interWikiParts = StringUtils.splitByWholeSeparatorPreserveAllTokens(linkTarget, ">", 2);
+        InterWikiResourceReference interWikiReference = new InterWikiResourceReference(interWikiParts[1]);
+        interWikiReference.setInterWikiAlias(interWikiParts[0]);
+        return interWikiReference;
     }
 
     private void processTableCell(boolean inCell, boolean inHeadCell, ArrayList<Character> buffer, Listener listener)

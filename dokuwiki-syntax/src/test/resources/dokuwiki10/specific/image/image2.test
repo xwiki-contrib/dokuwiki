@@ -7,6 +7,6 @@
 .#-----------------------------------------------------
 beginDocument
 beginParagraph
-onImage [Typed = [false] Type = [attach] Reference = [image.png]] [false] [[alt]=[caption][title]=[caption]]
+onImage [Typed = [false] Type = [attach] Reference = [wiki:image.png]] [false] [[alt]=[caption][title]=[caption]]
 endParagraph
 endDocument

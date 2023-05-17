@@ -7,6 +7,6 @@
 .#------------------------------------------------------------------------------
 beginDocument
 beginParagraph
-onImage [Typed = [false] Type = [attach] Reference = [image.png]] [false] [[height]=[50px][width]=[60px]]
+onImage [Typed = [false] Type = [attach] Reference = [wiki:image.png]] [false] [[height]=[60][width]=[50]]
 endParagraph
 endDocument

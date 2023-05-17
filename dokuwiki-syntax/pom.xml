@@ -95,6 +95,10 @@
             <version>${rendering.version}</version>
             <optional>true</optional>
         </dependency>
+        <dependency>
+           <groupId>org.apache.tika</groupId>
+           <artifactId>tika-core</artifactId>
+        </dependency>
 
 
         <!-- Test dependencies -->

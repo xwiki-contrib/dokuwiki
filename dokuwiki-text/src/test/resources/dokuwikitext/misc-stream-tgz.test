@@ -248,7 +248,7 @@ Here it is</string>
               <string>content</string>
               <string>=  DokuWiki  =
 
-[[[[image:dokuwiki-128.png||align="right"]]&gt;&gt;interwiki:doku:wiki:dokuwiki]] DokuWiki is a simple to use and highly versatile Open Source [[interwiki:wp:wiki]]  software that doesn't require a database. It is loved by users for its clean and readable [[doc:wiki.syntax.WebHome]]. The ease of maintenance, backup and integration makes it an administrator's favorite. Built in [[access controls&gt;&gt;interwiki:doku:acl]] and [[authentication connectors&gt;&gt;interwiki:doku:auth]] make DokuWiki especially useful in the enterprise context and the large number of [[interwiki:doku:plugins]] contributed by its vibrant community allow for a broad range of use cases beyond a traditional wiki.
+[[[[image:wiki.WebHome@dokuwiki-128.png||style="float: right;"]]&gt;&gt;interwiki:doku:wiki:dokuwiki]] DokuWiki is a simple to use and highly versatile Open Source [[interwiki:wp:wiki]]  software that doesn't require a database. It is loved by users for its clean and readable [[doc:wiki.syntax.WebHome]]. The ease of maintenance, backup and integration makes it an administrator's favorite. Built in [[access controls&gt;&gt;interwiki:doku:acl]] and [[authentication connectors&gt;&gt;interwiki:doku:auth]] make DokuWiki especially useful in the enterprise context and the large number of [[interwiki:doku:plugins]] contributed by its vibrant community allow for a broad range of use cases beyond a traditional wiki.
 
 Read the [[DokuWiki Manual&gt;&gt;interwiki:doku:manual]] to unleash the full power of DokuWiki.
 
@@ -963,7 +963,7 @@ You can also use an image to link to another internal or external page by combin
 [[http://php.net|{{wiki:dokuwiki-128.png}}]]
 {{/code}}
 
-[[[[image:dokuwiki-128.png]]&gt;&gt;http://php.net]]
+[[[[image:wiki.WebHome@dokuwiki-128.png]]&gt;&gt;http://php.net]]
 
 Please note: The image formatting is the only formatting syntax accepted in link names.
 
@@ -1007,13 +1007,13 @@ By using four or more dashes, you can make a horizontal line:
 
 You can include external and internal [[images, videos and audio files&gt;&gt;interwiki:doku:images]]  with curly brackets. Optionally you can specify the size of them.
 
-Real size: [[image:dokuwiki-128.png]]
+Real size: [[image:wiki.WebHome@dokuwiki-128.png]]
 
-Resize to given width: [[image:dokuwiki-128.png||width="50px"]]
+Resize to given width: [[image:wiki.WebHome@dokuwiki-128.png||width="50"]]
 
-Resize to given width and height{{footnote}}when the aspect ratio of the given width and height doesn't match that of the image, it will be cropped to the new ratio before resizing{{/footnote}}: [[image:dokuwiki-128.png||width="50px" height="200px"]]
+Resize to given width and height{{footnote}}when the aspect ratio of the given width and height doesn't match that of the image, it will be cropped to the new ratio before resizing{{/footnote}}: [[image:wiki.WebHome@dokuwiki-128.png||width="200" height="50"]]
 
-Resized external image~: [[image:ttp://php.net/images/php.gif||width="50px" height="200px"]]
+Resized external image~: [[image:http://php.net/images/php.gif||width="200" height="50"]]
 
 {{code}}
 Real size:                        {{wiki:dokuwiki-128.png}}
@@ -1026,11 +1026,11 @@ Resized external image:           {{http://php.net/images/php.gif?200x50}}
 
 By using left or right whitespaces you can choose the alignment.
 
-[[image:dokuwiki-128.png||align="left"]]
+[[image:wiki.WebHome@dokuwiki-128.png||style="float: left;"]]
 
-[[image:dokuwiki-128.png||align="right"]]
+[[image:wiki.WebHome@dokuwiki-128.png||style="float: right;"]]
 
-[[image:dokuwiki-128.png||align="middle"]]
+[[image:wiki.WebHome@dokuwiki-128.png||style="display: block; margin-left: auto; margin-right: auto;"]]
 
 {{code}}
 {{ wiki:dokuwiki-128.png}}
@@ -1040,7 +1040,7 @@ By using left or right whitespaces you can choose the alignment.
 
 Of course, you can add a title (displayed as a tooltip by most browsers), too.
 
-[[image:dokuwiki-128.png ||alt="This is the caption" align="left" title="This is the caption"]]
+[[image:wiki.WebHome@dokuwiki-128.png||alt="This is the caption" style="display: block; margin-left: auto; margin-right: auto;" title="This is the caption"]]
 
 {{code}}
 {{ wiki:dokuwiki-128.png |This is the caption}}
@@ -1066,7 +1066,7 @@ By adding ##?linkonly## you provide a link to the media without displaying it in
 {{wiki:dokuwiki-128.png?linkonly}}
 {{/code}}
 
-[[image:dokuwiki-128.png||width="linkonlypx"]] This is just a link to the image.
+[[attach:wiki.WebHome@dokuwiki-128.png]] This is just a link to the image.
 
 ===  Fallback Formats  ===
 

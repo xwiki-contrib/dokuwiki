@@ -20,6 +20,7 @@
 package org.xwiki.contrib.dokuwiki.text.internal.input;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -31,8 +32,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
+import org.xwiki.model.reference.AttachmentReference;
+import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.model.reference.LocalDocumentReference;
+import org.xwiki.model.reference.WikiReference;
 import org.xwiki.rendering.listener.WrappingListener;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
@@ -102,11 +106,25 @@ public class DokuWikiConverterListener extends WrappingListener
         super.endLink(convertLink(reference, freestanding), freestanding, parameters);
     }
 
+    @Override
+    public void onImage(ResourceReference reference, boolean freestanding, Map<String, String> parameters)
+    {
+        ResourceReference resolvedReference;
+        if (reference.getType() == ResourceType.ATTACHMENT) {
+            // Convert DokuWiki media reference to XWiki attachment reference
+            resolvedReference = resolveDokuWikiMediaReferenceToAttachmentReference(reference);
+        } else {
+            resolvedReference = reference;
+        }
+
+        super.onImage(resolvedReference, freestanding, parameters);
+    }
+
     private ResourceReference convertLink(ResourceReference reference, boolean freestanding)
     {
         ResourceReference result;
 
-        if (reference.getType() != ResourceType.INTERWIKI && !freestanding) {
+        if (reference.getType() == ResourceType.URL && !freestanding) {
             String linkTarget = reference.getReference().trim();
             if (EXTERNAL_URL_PATTERN.matcher(linkTarget).find()) {
                 // External link as defined in DokuWiki.
@@ -126,10 +144,37 @@ public class DokuWikiConverterListener extends WrappingListener
                 // Link to a page in the wiki
                 result = resolveDokuWikiReference(linkTarget);
             }
+        } else if (reference.getType() == ResourceType.ATTACHMENT) {
+            result = resolveDokuWikiMediaReferenceToAttachmentReference(reference);
         } else {
             result = reference;
         }
 
+        return result;
+    }
+
+    private ResourceReference resolveDokuWikiMediaReferenceToAttachmentReference(ResourceReference reference)
+    {
+        ResourceReference result;
+        String linkTarget = reference.getReference().trim();
+        String cleanedLinkTarget = resolveAndCleanDokuWikiId(linkTarget);
+
+        // Split into parts again to construct the reference to the page that contains the attachment.
+        String[] linkTargetParts = StringUtils.split(cleanedLinkTarget, NAMESPACE_SEPARATOR);
+        List<String> linkTargetPartsList = new ArrayList<>(Arrays.asList(linkTargetParts));
+
+        // The last part is the attachment name.
+        String attachmentName = linkTargetPartsList.remove(linkTargetPartsList.size() - 1);
+
+        linkTargetPartsList.add(DOKUWIKI_NAMESPACE_INDEX);
+        String pageId = StringUtils.join(linkTargetPartsList, NAMESPACE_SEPARATOR);
+        LocalDocumentReference pageReference = this.referenceConverter.getDocumentReference(pageId);
+        DocumentReference documentReference = new DocumentReference(pageReference, new WikiReference("xwiki"));
+        AttachmentReference attachmentReference = new AttachmentReference(attachmentName, documentReference);
+        String absoluteAttachmentReference = this.serializer.serialize(attachmentReference);
+        String relativeAttachmentReference = StringUtils.removeStart(absoluteAttachmentReference, "xwiki:");
+        result = reference.clone();
+        result.setReference(relativeAttachmentReference);
         return result;
     }
 
@@ -155,8 +200,18 @@ public class DokuWikiConverterListener extends WrappingListener
             }
         }
 
+        String cleanedId = resolveAndCleanDokuWikiId(cleanedLinkTarget);
+
+        LocalDocumentReference localDocumentReference = this.referenceConverter.getDocumentReference(cleanedId);
+        result.setReference(this.serializer.serialize(localDocumentReference));
+
+        return result;
+    }
+
+    private String resolveAndCleanDokuWikiId(String linkTarget)
+    {
         // Replace "/" and ";" by ":" in the link target to conform with DokuWiki cleaning.
-        cleanedLinkTarget = cleanedLinkTarget.replace('/', ':').replace(';', ':');
+        String cleanedLinkTarget = linkTarget.replace('/', ':').replace(';', ':');
 
         cleanedLinkTarget = resolvePrefix(cleanedLinkTarget);
 
@@ -166,15 +221,10 @@ public class DokuWikiConverterListener extends WrappingListener
             idParts.add(DOKUWIKI_NAMESPACE_INDEX);
         }
 
-        String cleanedId = idParts.stream()
+        return idParts.stream()
             .map(this::cleanIDPart)
             .filter(StringUtils::isNotBlank)
             .collect(Collectors.joining(NAMESPACE_SEPARATOR));
-
-        LocalDocumentReference localDocumentReference = this.referenceConverter.getDocumentReference(cleanedId);
-        result.setReference(this.serializer.serialize(localDocumentReference));
-
-        return result;
     }
 
     private String resolvePrefix(String cleanedLinkTarget)
