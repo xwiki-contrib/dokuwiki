@@ -1,0 +1,27 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.0
+.#-----------------------------------------------------
+  * [[Link 1]]  
+  * [[Link 2]]      
+  * [[Link 3]]
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginList [BULLETED]
+beginListItem
+beginLink [Typed = [false] Type = [url] Reference = [Link 1]] [false]
+endLink [Typed = [false] Type = [url] Reference = [Link 1]] [false]
+onSpace
+endListItem
+beginListItem
+beginLink [Typed = [false] Type = [url] Reference = [Link 2]] [false]
+endLink [Typed = [false] Type = [url] Reference = [Link 2]] [false]
+onSpace
+endListItem
+beginListItem
+beginLink [Typed = [false] Type = [url] Reference = [Link 3]] [false]
+endLink [Typed = [false] Type = [url] Reference = [Link 3]] [false]
+endListItem
+endList [BULLETED]
+endDocument

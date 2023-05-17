@@ -407,9 +407,10 @@ public class DokuWikiIterativeParser
 
                 // If the buffer starts with at least two spaces or at least one tab followed by another character,
                 // it is a preformatted text.
-                if ((buffer.size() > 1 && buffer.get(0) == '\t' && buffer.get(buffer.size() - 1) != '\t')
+                if ((buffer.size() > 1 && buffer.get(0) == '\t'
+                    && !Character.isWhitespace(buffer.get(buffer.size() - 1)))
                     || (buffer.size() > 2 && buffer.get(0) == ' ' && buffer.get(1) == ' '
-                    && buffer.get(buffer.size() - 1) != ' '))
+                    && !Character.isWhitespace(buffer.get(buffer.size() - 1))))
                 {
                     // Remove the indentation.
                     buffer.remove(0);
