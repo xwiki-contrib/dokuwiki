@@ -24,11 +24,14 @@ import java.io.Reader;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import org.slf4j.Logger;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.apache.commons.io.IOUtils;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.rendering.listener.Listener;
 import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.parser.ParseException;
@@ -63,11 +66,10 @@ public class DokuWikiStreamParser implements StreamParser
      */
     static final Syntax SYNTAX = new Syntax(SYNTAX_TYPE, "1.0");
 
-    @Inject
-    private Logger logger;
+    private static final String LINE_BREAK = "\n";
 
     @Inject
-    private DokuWikiIterativeParser parser;
+    private Provider<DokuWikiParserVisitor> dokuWikiParserVisitorProvider;
 
     @Override
     public Syntax getSyntax()
@@ -80,13 +82,19 @@ public class DokuWikiStreamParser implements StreamParser
     {
         MetaData metaData = new MetaData();
         metaData.addMetaData("syntax", SYNTAX);
+
         try {
-            parser.parse(source, listener, metaData);
-        } catch (ComponentLookupException e) {
-            this.logger.error("Failed to get component list");
-            throw new ParseException("Failed to parse input");
+            // Pad with line breaks to make sure all rules match nicely.
+            String input = LINE_BREAK + IOUtils.toString(source) + LINE_BREAK;
+            DokuWikiGrammarLexer grammarLexer = new DokuWikiGrammarLexer(CharStreams.fromString(input));
+            DokuWikiGrammarParser grammarParser = new DokuWikiGrammarParser(new CommonTokenStream(grammarLexer));
+            ParseTree tree = grammarParser.document();
+            DokuWikiParserVisitor dokuWikiParserVisitor = this.dokuWikiParserVisitorProvider.get();
+            dokuWikiParserVisitor.setListener(listener);
+            dokuWikiParserVisitor.setMetaData(metaData);
+            dokuWikiParserVisitor.visit(tree);
         } catch (IOException e) {
-            this.logger.error("Failed to parse input");
+            throw new ParseException("Failed to read input", e);
         }
     }
 }

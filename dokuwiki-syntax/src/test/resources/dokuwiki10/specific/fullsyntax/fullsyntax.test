@@ -528,18 +528,14 @@ DokuWiki's syntax can be extended by [[doku>plugins|Plugins]]. How the installed
 ~~INFO:syntaxplugins~~
 .#-----------------------------------------------------
 .expect|event/1.0
-.# Warning: the following is not correct and demonstrates bugs like https://jira.xwiki.org/browse/DOKUWIKI-31.
 .#-----------------------------------------------------
 beginDocument
 beginSection
-beginHeader [1, ]
-onSpace
+beginHeader [1, HFormattingSyntax]
 onWord [Formatting]
 onSpace
 onWord [Syntax]
-onSpace
-endHeader [1, ]
-endSection
+endHeader [1, HFormattingSyntax]
 beginParagraph
 beginLink [Typed = [true] Type = [interwiki] Reference = [DokuWiki] Parameters = [[interWikiAlias] = [doku]]] [false]
 endLink [Typed = [true] Type = [interwiki] Reference = [DokuWiki] Parameters = [[interWikiAlias] = [doku]]] [false]
@@ -552,7 +548,8 @@ onWord [simple]
 onSpace
 onWord [markup]
 onSpace
-onWord [language,]
+onWord [language]
+onSpecialSymbol [,]
 onSpace
 onWord [which]
 onSpace
@@ -576,7 +573,8 @@ onWord [readable]
 onSpace
 onWord [as]
 onSpace
-onWord [possible.]
+onWord [possible]
+onSpecialSymbol [.]
 onSpace
 onWord [This]
 onSpace
@@ -602,7 +600,8 @@ onWord [editing]
 onSpace
 onWord [the]
 onSpace
-onWord [pages.]
+onWord [pages]
+onSpecialSymbol [.]
 onSpace
 onWord [Simply]
 onSpace
@@ -628,11 +627,14 @@ onWord [by]
 onSpace
 onWord [pressing]
 onSpace
-onWord ["Edit]
+onSpecialSymbol ["]
+onWord [Edit]
 onSpace
 onWord [this]
 onSpace
-onWord [page".]
+onWord [page]
+onSpecialSymbol ["]
+onSpecialSymbol [.]
 onSpace
 onWord [If]
 onSpace
@@ -644,7 +646,8 @@ onWord [to]
 onSpace
 onWord [try]
 onSpace
-onWord [something,]
+onWord [something]
+onSpecialSymbol [,]
 onSpace
 onWord [just]
 onSpace
@@ -656,8 +659,8 @@ beginLink [Typed = [false] Type = [url] Reference = [playground:playground]] [fa
 onWord [playground]
 endLink [Typed = [false] Type = [url] Reference = [playground:playground]] [false]
 onSpace
-onSpace
-onWord [page.]
+onWord [page]
+onSpecialSymbol [.]
 onSpace
 onWord [The]
 onSpace
@@ -678,26 +681,23 @@ onWord [quickbuttons]
 endLink [Typed = [true] Type = [interwiki] Reference = [toolbar] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpecialSymbol [,]
 onSpace
-onWord [too.]
+onWord [too]
+onSpecialSymbol [.]
 endParagraph
 beginSection
-beginHeader [2, ]
-onSpace
+beginHeader [2, HBasicTextFormatting]
 onWord [Basic]
 onSpace
 onWord [Text]
 onSpace
 onWord [Formatting]
-onSpace
-endHeader [2, ]
-endSection
+endHeader [2, HBasicTextFormatting]
 beginParagraph
 onWord [DokuWiki]
 onSpace
 onWord [supports]
 onSpace
 beginFormat [BOLD]
-onSpace
 onWord [bold]
 endFormat [BOLD]
 onSpecialSymbol [,]
@@ -717,7 +717,8 @@ beginFormat [MONOSPACE]
 onWord [monospaced]
 endFormat [MONOSPACE]
 onSpace
-onWord [texts.]
+onWord [texts]
+onSpecialSymbol [.]
 onSpace
 onWord [Of]
 onSpace
@@ -739,7 +740,8 @@ endFormat [BOLD]
 onSpace
 onWord [all]
 onSpace
-onWord [these.]
+onWord [these]
+onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [DokuWiki supports **bold**, //italic//, __underlined__ and ''monospaced'' texts.
 Of course you can **__//''combine''//__** all these.]
@@ -751,7 +753,6 @@ onSpace
 onWord [use]
 onSpace
 beginFormat [SUBSCRIPT]
-onSpace
 onWord [subscript]
 endFormat [SUBSCRIPT]
 onSpace
@@ -762,7 +763,8 @@ onWord [superscript]
 endFormat [SUPERSCRIPT]
 onSpecialSymbol [,]
 onSpace
-onWord [too.]
+onWord [too]
+onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [You can use <sub>subscript</sub> and <sup>superscript</sup>, too.]
 beginParagraph
@@ -777,20 +779,19 @@ onSpace
 onWord [as]
 onSpace
 beginFormat [STRIKEDOUT]
-onSpace
 onWord [deleted]
 endFormat [STRIKEDOUT]
 onSpace
 onWord [as]
 onSpace
-onWord [well.]
+onWord [well]
+onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [You can mark something as <del>deleted</del> as well.]
 beginParagraph
 beginFormat [BOLD]
 onWord [Paragraphs]
 endFormat [BOLD]
-onSpace
 onSpace
 onWord [are]
 onSpace
@@ -800,7 +801,8 @@ onWord [from]
 onSpace
 onWord [blank]
 onSpace
-onWord [lines.]
+onWord [lines]
+onSpecialSymbol [.]
 onSpace
 onWord [If]
 onSpace
@@ -822,7 +824,8 @@ onWord [without]
 onSpace
 onWord [a]
 onSpace
-onWord [paragraph,]
+onWord [paragraph]
+onSpecialSymbol [,]
 onSpace
 onWord [you]
 onSpace
@@ -850,7 +853,8 @@ onWord [end]
 onSpace
 onWord [of]
 onSpace
-onWord [line.]
+onWord [line]
+onSpecialSymbol [.]
 endParagraph
 beginParagraph
 onWord [This]
@@ -905,13 +909,16 @@ onWord [a]
 onSpace
 onWord [whitespace]
 onSpace
-onWord [\\this]
+onSpecialSymbol [\]
+onSpecialSymbol [\]
+onWord [this]
 onSpace
 onWord [happens]
 onSpace
 onWord [without]
 onSpace
-onWord [it.]
+onWord [it]
+onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [This is some text with some linebreaks\\ Note that the
 two backslashes are only recognized at the end of a line\\
@@ -933,15 +940,14 @@ onWord [if]
 onSpace
 onWord [really]
 onSpace
-onWord [needed.]
+onWord [needed]
+onSpecialSymbol [.]
 endParagraph
-beginSection
-beginHeader [2, ]
-onSpace
-onWord [Links]
-onSpace
-endHeader [2, ]
 endSection
+beginSection
+beginHeader [2, HLinks]
+onWord [Links]
+endHeader [2, HLinks]
 beginParagraph
 onWord [DokuWiki]
 onSpace
@@ -955,15 +961,13 @@ onWord [of]
 onSpace
 onWord [creating]
 onSpace
-onWord [links.]
+onWord [links]
+onSpecialSymbol [.]
 endParagraph
 beginSection
-beginHeader [3, ]
-onSpace
+beginHeader [3, HExternal]
 onWord [External]
-onSpace
-endHeader [3, ]
-endSection
+endHeader [3, HExternal]
 beginParagraph
 onWord [External]
 onSpace
@@ -973,7 +977,8 @@ onWord [are]
 onSpace
 onWord [recognized]
 onSpace
-onWord [automagically:]
+onWord [automagically]
+onSpecialSymbol [:]
 onSpace
 beginLink [Typed = [false] Type = [url] Reference = [http://www.google.com]] [true]
 endLink [Typed = [false] Type = [url] Reference = [http://www.google.com]] [true]
@@ -982,8 +987,8 @@ onWord [or]
 onSpace
 onWord [simply]
 onSpace
-beginLink [Typed = [false] Type = [url] Reference = [www.google.com]] [true]
-endLink [Typed = [false] Type = [url] Reference = [www.google.com]] [true]
+beginLink [Typed = [false] Type = [url] Reference = [http://www.google.com]] [true]
+endLink [Typed = [false] Type = [url] Reference = [http://www.google.com]] [true]
 onSpace
 onSpecialSymbol [-]
 onSpace
@@ -1001,7 +1006,8 @@ onWord [text]
 onSpace
 onWord [as]
 onSpace
-onWord [well:]
+onWord [well]
+onSpecialSymbol [:]
 onSpace
 beginLink [Typed = [false] Type = [url] Reference = [http://www.google.com]] [false]
 onWord [This]
@@ -1014,7 +1020,6 @@ onWord [to]
 onSpace
 onWord [google]
 endLink [Typed = [false] Type = [url] Reference = [http://www.google.com]] [false]
-onSpace
 onSpecialSymbol [.]
 onSpace
 onWord [Email]
@@ -1025,30 +1030,29 @@ onWord [like]
 onSpace
 onWord [this]
 onSpace
-onWord [one:]
+onWord [one]
+onSpecialSymbol [:]
 onSpace
 beginLink [Typed = [true] Type = [mailto] Reference = [andi@splitbrain.org]] [true]
 endLink [Typed = [true] Type = [mailto] Reference = [andi@splitbrain.org]] [true]
 onSpace
 onWord [are]
 onSpace
-onWord [recognized,]
+onWord [recognized]
+onSpecialSymbol [,]
 onSpace
-onWord [too.]
+onWord [too]
+onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [DokuWiki supports multiple ways of creating links. External links are recognized
 automagically: http://www.google.com or simply www.google.com - You can set
 link text as well: [[http://www.google.com|This Link points to google]]. Email
 addresses like this one: <andi@splitbrain.org> are recognized, too.]
-beginParagraph
-beginSection
-beginHeader [3, ]
-onSpace
-onWord [Internal]
-onSpace
-endHeader [3, ]
 endSection
-endParagraph
+beginSection
+beginHeader [3, HInternal]
+onWord [Internal]
+endHeader [3, HInternal]
 beginParagraph
 onWord [Internal]
 onSpace
@@ -1064,7 +1068,8 @@ onWord [using]
 onSpace
 onWord [square]
 onSpace
-onWord [brackets.]
+onWord [brackets]
+onSpecialSymbol [.]
 onSpace
 onWord [You]
 onSpace
@@ -1105,7 +1110,6 @@ onSpace
 onWord [pagenames]
 endLink [Typed = [true] Type = [interwiki] Reference = [pagename] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpace
-onSpace
 onWord [are]
 onSpace
 onWord [converted]
@@ -1114,7 +1118,8 @@ onWord [to]
 onSpace
 onWord [lowercase]
 onSpace
-onWord [automatically,]
+onWord [automatically]
+onSpecialSymbol [,]
 onSpace
 onWord [special]
 onSpace
@@ -1124,7 +1129,8 @@ onWord [are]
 onSpace
 onWord [not]
 onSpace
-onWord [allowed.]
+onWord [allowed]
+onSpecialSymbol [.]
 endParagraph
 beginParagraph
 onWord [You]
@@ -1148,7 +1154,8 @@ onWord [in]
 onSpace
 onWord [the]
 onSpace
-onWord [pagename.]
+onWord [pagename]
+onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [You can use [[some:namespaces]] by using a colon in the pagename.]
 beginParagraph
@@ -1164,7 +1171,6 @@ onWord [see]
 onSpace
 beginLink [Typed = [true] Type = [interwiki] Reference = [namespaces] Parameters = [[interWikiAlias] = [doku]]] [false]
 endLink [Typed = [true] Type = [interwiki] Reference = [namespaces] Parameters = [[interWikiAlias] = [doku]]] [false]
-onSpace
 onSpecialSymbol [.]
 endParagraph
 beginParagraph
@@ -1180,9 +1186,11 @@ onWord [section]
 onSpace
 onWord [is]
 onSpace
-onWord [possible,]
+onWord [possible]
+onSpecialSymbol [,]
 onSpace
-onWord [too.]
+onWord [too]
+onSpecialSymbol [.]
 onSpace
 onWord [Just]
 onSpace
@@ -1208,7 +1216,8 @@ onWord [known]
 onSpace
 onWord [from]
 onSpace
-onWord [HTML.]
+onWord [HTML]
+onSpecialSymbol [.]
 onSpace
 onWord [This]
 onSpace
@@ -1225,7 +1234,8 @@ onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [This links to [[syntax#internal|this Section]].]
 beginParagraph
-onWord [Notes:]
+onWord [Notes]
+onSpecialSymbol [:]
 endParagraph
 beginList [BULLETED]
 beginListItem
@@ -1256,7 +1266,8 @@ onSpace
 beginLink [Typed = [false] Type = [url] Reference = [nonexisting]] [false]
 endLink [Typed = [false] Type = [url] Reference = [nonexisting]] [false]
 onSpace
-onWord [ones.]
+onWord [ones]
+onSpecialSymbol [.]
 endListItem
 beginListItem
 onWord [DokuWiki]
@@ -1280,7 +1291,8 @@ onWord [links]
 onSpace
 onWord [by]
 onSpace
-onWord [default,]
+onWord [default]
+onSpecialSymbol [,]
 onSpace
 onWord [but]
 onSpace
@@ -1301,9 +1313,11 @@ onSpace
 beginLink [Typed = [true] Type = [interwiki] Reference = [config] Parameters = [[interWikiAlias] = [doku]]] [false]
 endLink [Typed = [true] Type = [interwiki] Reference = [config] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpace
-onWord [file.]
+onWord [file]
+onSpecialSymbol [.]
 onSpace
-onWord [Hint:]
+onWord [Hint]
+onSpecialSymbol [:]
 onSpace
 onWord [If]
 onSpace
@@ -1313,38 +1327,49 @@ onWord [is]
 onSpace
 onWord [a]
 onSpace
-onWord [link,]
+onWord [link]
+onSpecialSymbol [,]
 onSpace
 onWord [then]
 onSpace
-onWord [it's]
+onWord [it]
+onSpecialSymbol [']
+onWord [s]
 onSpace
-onWord [enabled.]
+onWord [enabled]
+onSpecialSymbol [.]
 endListItem
 beginListItem
 onWord [When]
 onSpace
 onWord [a]
 onSpace
-onWord [section's]
+onWord [section]
+onSpecialSymbol [']
+onWord [s]
 onSpace
 onWord [heading]
 onSpace
 onWord [is]
 onSpace
-onWord [changed,]
+onWord [changed]
+onSpecialSymbol [,]
 onSpace
 onWord [its]
 onSpace
 onWord [bookmark]
 onSpace
-onWord [changes,]
+onWord [changes]
+onSpecialSymbol [,]
 onSpace
-onWord [too.]
+onWord [too]
+onSpecialSymbol [.]
 onSpace
 onWord [So]
 onSpace
-onWord [don't]
+onWord [don]
+onSpecialSymbol [']
+onWord [t]
 onSpace
 onWord [rely]
 onSpace
@@ -1356,18 +1381,15 @@ onWord [linking]
 onSpace
 onWord [too]
 onSpace
-onWord [much.]
+onWord [much]
+onSpecialSymbol [.]
 endListItem
 endList [BULLETED]
-beginSection
-beginHeader [3, ]
-onSpace
-onWord [Interwiki]
-onSpace
-endHeader [3, ]
 endSection
-beginParagraph
-endParagraph
+beginSection
+beginHeader [3, HInterwiki]
+onWord [Interwiki]
+endHeader [3, HInterwiki]
 beginParagraph
 onWord [DokuWiki]
 onSpace
@@ -1376,7 +1398,8 @@ onSpace
 beginLink [Typed = [true] Type = [interwiki] Reference = [Interwiki] Parameters = [[interWikiAlias] = [doku]]] [false]
 endLink [Typed = [true] Type = [interwiki] Reference = [Interwiki] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpace
-onWord [links.]
+onWord [links]
+onSpecialSymbol [.]
 onSpace
 onWord [These]
 onSpace
@@ -1390,7 +1413,8 @@ onWord [to]
 onSpace
 onWord [other]
 onSpace
-onWord [Wikis.]
+onWord [Wikis]
+onSpecialSymbol [.]
 onSpace
 onWord [For]
 onSpace
@@ -1406,13 +1430,16 @@ onWord [link]
 onSpace
 onWord [to]
 onSpace
-onWord [Wikipedia's]
+onWord [Wikipedia]
+onSpecialSymbol [']
+onWord [s]
 onSpace
 onWord [page]
 onSpace
 onWord [about]
 onSpace
-onWord [Wikis:]
+onWord [Wikis]
+onSpecialSymbol [:]
 onSpace
 beginLink [Typed = [true] Type = [interwiki] Reference = [Wiki] Parameters = [[interWikiAlias] = [wp]]] [false]
 endLink [Typed = [true] Type = [interwiki] Reference = [Wiki] Parameters = [[interWikiAlias] = [wp]]] [false]
@@ -1420,17 +1447,13 @@ onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [DokuWiki supports [[doku>Interwiki]] links. These are quick links to other Wikis.
 For example this is a link to Wikipedia's page about Wikis: [[wp>Wiki]].]
-beginParagraph
+endSection
 beginSection
-beginHeader [3, ]
-onSpace
+beginHeader [3, HWindowsShares]
 onWord [Windows]
 onSpace
 onWord [Shares]
-onSpace
-endHeader [3, ]
-endSection
-endParagraph
+endHeader [3, HWindowsShares]
 beginParagraph
 onWord [Windows]
 onSpace
@@ -1444,9 +1467,11 @@ endLink [Typed = [false] Type = [url] Reference = [\\server\share]] [false]
 onSpace
 onWord [are]
 onSpace
-onWord [recognized,]
+onWord [recognized]
+onSpecialSymbol [,]
 onSpace
-onWord [too.]
+onWord [too]
+onSpecialSymbol [.]
 onSpace
 onWord [Please]
 onSpace
@@ -1484,7 +1509,8 @@ onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [Windows Shares like [[\\server\share|this]] are recognized, too.]
 beginParagraph
-onWord [Notes:]
+onWord [Notes]
+onSpecialSymbol [:]
 endParagraph
 beginList [BULLETED]
 beginListItem
@@ -1520,7 +1546,8 @@ onWord [per]
 onSpace
 onWord [default]
 onSpace
-onWord [(and]
+onSpecialSymbol [(]
+onWord [and]
 onSpace
 onWord [only]
 onSpace
@@ -1528,9 +1555,13 @@ onWord [in]
 onSpace
 onWord [the]
 onSpace
-onWord ["local]
+onSpecialSymbol ["]
+onWord [local]
 onSpace
-onWord [zone").]
+onWord [zone]
+onSpecialSymbol ["]
+onSpecialSymbol [)]
+onSpecialSymbol [.]
 endListItem
 beginListItem
 onWord [For]
@@ -1570,7 +1601,8 @@ onWord [Base]
 endLink [Typed = [false] Type = [url] Reference = [http://kb.mozillazine.org/Links_to_local_pages_do_not_work]] [false]
 onSpecialSymbol [.]
 onSpace
-onWord [However,]
+onWord [However]
+onSpecialSymbol [,]
 onSpace
 onWord [there]
 onSpace
@@ -1598,7 +1630,8 @@ onWord [a]
 onSpace
 onWord [Windows]
 onSpace
-onWord [Share.]
+onWord [Share]
+onSpecialSymbol [.]
 onSpace
 onWord [To]
 onSpace
@@ -1608,11 +1641,14 @@ onWord [this]
 onSpace
 onWord [warning]
 onSpace
-onWord [(for]
+onSpecialSymbol [(]
+onWord [for]
 onSpace
 onWord [all]
 onSpace
-onWord [users),]
+onWord [users]
+onSpecialSymbol [)]
+onSpecialSymbol [,]
 onSpace
 onWord [put]
 onSpace
@@ -1625,10 +1661,19 @@ onSpace
 onWord [in]
 onSpace
 beginFormat [MONOSPACE]
-onWord [conf/lang/en/lang.php]
+onWord [conf]
+onSpecialSymbol [/]
+onWord [lang]
+onSpecialSymbol [/]
+onWord [en]
+onSpecialSymbol [/]
+onWord [lang]
+onSpecialSymbol [.]
+onWord [php]
 endFormat [MONOSPACE]
 onSpace
-onWord [(more]
+onSpecialSymbol [(]
+onWord [more]
 onSpace
 onWord [details]
 onSpace
@@ -1637,26 +1682,23 @@ onSpace
 beginLink [Typed = [true] Type = [interwiki] Reference = [localization#changing_some_localized_texts_and_strings_in_your_installation] Parameters = [[interWikiAlias] = [doku]]] [false]
 onWord [localization]
 endLink [Typed = [true] Type = [interwiki] Reference = [localization#changing_some_localized_texts_and_strings_in_your_installation] Parameters = [[interWikiAlias] = [doku]]] [false]
-onWord [):]
+onSpecialSymbol [)]
+onSpecialSymbol [:]
 endListItem
 endList [BULLETED]
-onMacroStandalone [code] [language=-] [<?php
+onMacroStandalone [code] [] [<?php
 /**
  * Customization of the english language file
  * Copy only the strings that needs to be modified
  */
 $lang['js']['nosmblinks'] = '';]
-beginParagraph
-endParagraph
+endSection
 beginSection
-beginHeader [3, ]
-onSpace
+beginHeader [3, HImageLinks]
 onWord [Image]
 onSpace
 onWord [Links]
-onSpace
-endHeader [3, ]
-endSection
+endHeader [3, HImageLinks]
 beginParagraph
 onWord [You]
 onSpace
@@ -1704,14 +1746,16 @@ beginLink [Typed = [false] Type = [url] Reference = [#images_and_other_files]] [
 onWord [images]
 endLink [Typed = [false] Type = [url] Reference = [#images_and_other_files]] [false]
 onSpace
+onSpecialSymbol [(]
+onWord [see]
 onSpace
-onWord [(see]
-onSpace
-onWord [below)]
+onWord [below]
+onSpecialSymbol [)]
 onSpace
 onWord [like]
 onSpace
-onWord [this:]
+onWord [this]
+onSpecialSymbol [:]
 endParagraph
 onMacroStandalone [code] [] [[[http://php.net|{{wiki:dokuwiki-128.png}}]]]
 beginParagraph
@@ -1722,7 +1766,8 @@ endParagraph
 beginParagraph
 onWord [Please]
 onSpace
-onWord [note:]
+onWord [note]
+onSpecialSymbol [:]
 onSpace
 onWord [The]
 onSpace
@@ -1746,7 +1791,8 @@ onWord [in]
 onSpace
 onWord [link]
 onSpace
-onWord [names.]
+onWord [names]
+onSpecialSymbol [.]
 endParagraph
 beginParagraph
 onWord [The]
@@ -1769,11 +1815,13 @@ onWord [is]
 onSpace
 onWord [supported]
 onSpace
-onWord [(including]
+onSpecialSymbol [(]
+onWord [including]
 onSpace
 onWord [image]
 onSpace
-onWord [resizing,]
+onWord [resizing]
+onSpecialSymbol [,]
 onSpace
 onWord [internal]
 onSpace
@@ -1791,15 +1839,16 @@ onWord [and]
 onSpace
 onWord [interwiki]
 onSpace
-onWord [links).]
+onWord [links]
+onSpecialSymbol [)]
+onSpecialSymbol [.]
 endParagraph
-beginSection
-beginHeader [2, ]
-onSpace
-onWord [Footnotes]
-onSpace
-endHeader [2, ]
 endSection
+endSection
+beginSection
+beginHeader [2, HFootnotes]
+onWord [Footnotes]
+endHeader [2, HFootnotes]
 beginParagraph
 onWord [You]
 onSpace
@@ -1809,7 +1858,6 @@ onWord [add]
 onSpace
 onWord [footnotes]
 onSpace
-onSpace
 onMacroInline [footnote] [] [This is a footnote]
 onSpace
 onWord [by]
@@ -1818,18 +1866,15 @@ onWord [using]
 onSpace
 onWord [double]
 onSpace
-onWord [parentheses.]
+onWord [parentheses]
+onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [You can add footnotes ((This is a footnote)) by using double parentheses.]
-beginParagraph
-beginSection
-beginHeader [2, ]
-onSpace
-onWord [Sectioning]
-onSpace
-endHeader [2, ]
 endSection
-endParagraph
+beginSection
+beginHeader [2, HSectioning]
+onWord [Sectioning]
+endHeader [2, HSectioning]
 beginParagraph
 onWord [You]
 onSpace
@@ -1857,7 +1902,8 @@ onWord [structure]
 onSpace
 onWord [your]
 onSpace
-onWord [content.]
+onWord [content]
+onSpecialSymbol [.]
 onSpace
 onWord [If]
 onSpace
@@ -1871,7 +1917,8 @@ onWord [than]
 onSpace
 onWord [three]
 onSpace
-onWord [headlines,]
+onWord [headlines]
+onSpecialSymbol [,]
 onSpace
 onWord [a]
 onSpace
@@ -1887,7 +1934,8 @@ onWord [generated]
 onSpace
 onWord [automatically]
 onSpace
-onWord [--]
+onSpecialSymbol [-]
+onSpecialSymbol [-]
 onSpace
 onWord [this]
 onSpace
@@ -1913,46 +1961,36 @@ onWord [in]
 onSpace
 onWord [the]
 onSpace
-onWord [document.]
+onWord [document]
+onSpecialSymbol [.]
 endParagraph
 beginSection
-beginHeader [3, ]
-onSpace
+beginHeader [3, HHeadlineLevel3]
 onWord [Headline]
 onSpace
 onWord [Level]
 onSpace
 onWord [3]
-onSpace
-endHeader [3, ]
-endSection
+endHeader [3, HHeadlineLevel3]
 beginSection
-beginHeader [4, ]
-onSpace
+beginHeader [4, HHeadlineLevel4]
 onWord [Headline]
 onSpace
 onWord [Level]
 onSpace
 onWord [4]
-onSpace
-endHeader [4, ]
-endSection
+endHeader [4, HHeadlineLevel4]
 beginSection
-beginHeader [5, ]
-onSpace
+beginHeader [5, HHeadlineLevel5]
 onWord [Headline]
 onSpace
 onWord [Level]
 onSpace
 onWord [5]
-onSpace
-endHeader [5, ]
-endSection
-beginParagraph
+endHeader [5, HHeadlineLevel5]
 onMacroStandalone [code] [] [==== Headline Level 3 ====
 === Headline Level 4 ===
 == Headline Level 5 ==]
-endParagraph
 beginParagraph
 onWord [By]
 onSpace
@@ -1964,7 +2002,8 @@ onWord [or]
 onSpace
 onWord [more]
 onSpace
-onWord [dashes,]
+onWord [dashes]
+onSpecialSymbol [,]
 onSpace
 onWord [you]
 onSpace
@@ -1976,20 +2015,20 @@ onWord [a]
 onSpace
 onWord [horizontal]
 onSpace
-onWord [line:]
+onWord [line]
+onSpecialSymbol [:]
 endParagraph
 onHorizontalLine
-beginParagraph
-endParagraph
+endSection
+endSection
+endSection
+endSection
 beginSection
-beginHeader [2, ]
-onSpace
+beginHeader [2, HMediaFiles]
 onWord [Media]
 onSpace
 onWord [Files]
-onSpace
-endHeader [2, ]
-endSection
+endHeader [2, HMediaFiles]
 beginParagraph
 onWord [You]
 onSpace
@@ -2004,7 +2043,8 @@ onSpace
 onWord [internal]
 onSpace
 beginLink [Typed = [true] Type = [interwiki] Reference = [images] Parameters = [[interWikiAlias] = [doku]]] [false]
-onWord [images,]
+onWord [images]
+onSpecialSymbol [,]
 onSpace
 onWord [videos]
 onSpace
@@ -2015,12 +2055,12 @@ onSpace
 onWord [files]
 endLink [Typed = [true] Type = [interwiki] Reference = [images] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpace
-onSpace
 onWord [with]
 onSpace
 onWord [curly]
 onSpace
-onWord [brackets.]
+onWord [brackets]
+onSpecialSymbol [.]
 onSpace
 onWord [Optionally]
 onSpace
@@ -2036,12 +2076,14 @@ onWord [size]
 onSpace
 onWord [of]
 onSpace
-onWord [them.]
+onWord [them]
+onSpecialSymbol [.]
 endParagraph
 beginParagraph
 onWord [Real]
 onSpace
-onWord [size:]
+onWord [size]
+onSpecialSymbol [:]
 onSpace
 onImage [Typed = [false] Type = [attach] Reference = [wiki:dokuwiki-128.png]] [false]
 endParagraph
@@ -2052,7 +2094,8 @@ onWord [to]
 onSpace
 onWord [given]
 onSpace
-onWord [width:]
+onWord [width]
+onSpecialSymbol [:]
 onSpace
 onImage [Typed = [false] Type = [attach] Reference = [wiki:dokuwiki-128.png]] [false] [[width]=[50]]
 endParagraph
@@ -2078,7 +2121,8 @@ onWord [Resized]
 onSpace
 onWord [external]
 onSpace
-onWord [image:]
+onWord [image]
+onSpecialSymbol [:]
 onSpace
 onImage [Typed = [false] Type = [url] Reference = [http://php.net/images/php.gif]] [false] [[height]=[50][width]=[200]]
 endParagraph
@@ -2086,8 +2130,6 @@ onMacroStandalone [code] [] [Real size:                        {{wiki:dokuwiki-1
 Resize to given width:            {{wiki:dokuwiki-128.png?50}}
 Resize to given width and height: {{wiki:dokuwiki-128.png?200x50}}
 Resized external image:           {{http://php.net/images/php.gif?200x50}}]
-beginParagraph
-endParagraph
 beginParagraph
 onWord [By]
 onSpace
@@ -2109,7 +2151,8 @@ onWord [choose]
 onSpace
 onWord [the]
 onSpace
-onWord [alignment.]
+onWord [alignment]
+onSpecialSymbol [.]
 endParagraph
 beginParagraph
 onImage [Typed = [false] Type = [attach] Reference = [wiki:dokuwiki-128.png]] [false] [[style]=[float: left;]]
@@ -2126,7 +2169,8 @@ onMacroStandalone [code] [] [{{ wiki:dokuwiki-128.png}}
 beginParagraph
 onWord [Of]
 onSpace
-onWord [course,]
+onWord [course]
+onSpecialSymbol [,]
 onSpace
 onWord [you]
 onSpace
@@ -2138,7 +2182,8 @@ onWord [a]
 onSpace
 onWord [title]
 onSpace
-onWord [(displayed]
+onSpecialSymbol [(]
+onWord [displayed]
 onSpace
 onWord [as]
 onSpace
@@ -2150,9 +2195,12 @@ onWord [by]
 onSpace
 onWord [most]
 onSpace
-onWord [browsers),]
+onWord [browsers]
+onSpecialSymbol [)]
+onSpecialSymbol [,]
 onSpace
-onWord [too.]
+onWord [too]
+onSpecialSymbol [.]
 endParagraph
 beginParagraph
 onImage [Typed = [false] Type = [attach] Reference = [wiki:dokuwiki-128.png]] [false] [[alt]=[This is the caption][style]=[display: block; margin-left: auto; margin-right: auto;][title]=[This is the caption]]
@@ -2178,20 +2226,17 @@ onSpace
 beginLink [Typed = [false] Type = [url] Reference = [#Image Links]] [false]
 endLink [Typed = [false] Type = [url] Reference = [#Image Links]] [false]
 onSpace
-onSpace
-onWord [above.]
+onWord [above]
+onSpecialSymbol [.]
 endParagraph
 beginSection
-beginHeader [3, ]
-onSpace
+beginHeader [3, HSupportedMediaFormats]
 onWord [Supported]
 onSpace
 onWord [Media]
 onSpace
 onWord [Formats]
-onSpace
-endHeader [3, ]
-endSection
+endHeader [3, HSupportedMediaFormats]
 beginParagraph
 onWord [DokuWiki]
 onSpace
@@ -2207,57 +2252,83 @@ onWord [media]
 onSpace
 onWord [formats]
 onSpace
-onWord [directly.]
+onWord [directly]
+onSpecialSymbol [.]
 endParagraph
-beginParagraph
 beginTable
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Image]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-onWord [''gif'',]
+endTableCell
+beginTableCell
+beginFormat [MONOSPACE]
+onWord [gif]
+endFormat [MONOSPACE]
+onSpecialSymbol [,]
 onSpace
-onWord [''jpg'',]
+beginFormat [MONOSPACE]
+onWord [jpg]
+endFormat [MONOSPACE]
+onSpecialSymbol [,]
 onSpace
-onWord [''png'']
-endTableCell [[align]=[centre]]
+beginFormat [MONOSPACE]
+onWord [png]
+endFormat [MONOSPACE]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Video]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-onWord [''webm'',]
+endTableCell
+beginTableCell
+beginFormat [MONOSPACE]
+onWord [webm]
+endFormat [MONOSPACE]
+onSpecialSymbol [,]
 onSpace
-onWord [''ogv'',]
+beginFormat [MONOSPACE]
+onWord [ogv]
+endFormat [MONOSPACE]
+onSpecialSymbol [,]
 onSpace
-onWord [''mp4'']
-endTableCell [[align]=[centre]]
+beginFormat [MONOSPACE]
+onWord [mp4]
+endFormat [MONOSPACE]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Audio]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-onWord [''ogg'',]
+endTableCell
+beginTableCell
+beginFormat [MONOSPACE]
+onWord [ogg]
+endFormat [MONOSPACE]
+onSpecialSymbol [,]
 onSpace
-onWord [''mp3'',]
+beginFormat [MONOSPACE]
+onWord [mp3]
+endFormat [MONOSPACE]
+onSpecialSymbol [,]
 onSpace
-onWord [''wav'']
-endTableCell [[align]=[centre]]
+beginFormat [MONOSPACE]
+onWord [wav]
+endFormat [MONOSPACE]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Flash]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-onWord [''swf'']
-endTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
+beginFormat [MONOSPACE]
+onWord [swf]
+endFormat [MONOSPACE]
+endTableCell
 endTableRow
 endTable
-onWord [
-If]
+beginParagraph
+onWord [If]
 onSpace
 onWord [you]
 onSpace
@@ -2279,7 +2350,8 @@ onWord [supported]
 onSpace
 onWord [media]
 onSpace
-onWord [format,]
+onWord [format]
+onSpecialSymbol [,]
 onSpace
 onWord [then]
 onSpace
@@ -2297,7 +2369,8 @@ onWord [a]
 onSpace
 onWord [link]
 onSpace
-onWord [instead.]
+onWord [instead]
+onSpecialSymbol [.]
 endParagraph
 beginParagraph
 onWord [By]
@@ -2305,7 +2378,8 @@ onSpace
 onWord [adding]
 onSpace
 beginFormat [MONOSPACE]
-onWord [?linkonly]
+onSpecialSymbol [?]
+onWord [linkonly]
 endFormat [MONOSPACE]
 onSpace
 onWord [you]
@@ -2349,17 +2423,16 @@ onWord [to]
 onSpace
 onWord [the]
 onSpace
-onWord [image.]
+onWord [image]
+onSpecialSymbol [.]
 endParagraph
+endSection
 beginSection
-beginHeader [3, ]
-onSpace
+beginHeader [3, HFallbackFormats]
 onWord [Fallback]
 onSpace
 onWord [Formats]
-onSpace
-endHeader [3, ]
-endSection
+endHeader [3, HFallbackFormats]
 beginParagraph
 onWord [Unfortunately]
 onSpace
@@ -2379,7 +2452,8 @@ onWord [and]
 onSpace
 onWord [audio]
 onSpace
-onWord [formats.]
+onWord [formats]
+onSpecialSymbol [.]
 onSpace
 onWord [To]
 onSpace
@@ -2387,7 +2461,8 @@ onWord [mitigate]
 onSpace
 onWord [the]
 onSpace
-onWord [problem,]
+onWord [problem]
+onSpecialSymbol [,]
 onSpace
 onWord [you]
 onSpace
@@ -2411,7 +2486,8 @@ onWord [maximum]
 onSpace
 onWord [browser]
 onSpace
-onWord [compatibility.]
+onWord [compatibility]
+onSpecialSymbol [.]
 endParagraph
 beginParagraph
 onWord [For]
@@ -2426,7 +2502,8 @@ onWord [embedded]
 onSpace
 onWord [mp4]
 onSpace
-onWord [video:]
+onWord [video]
+onSpecialSymbol [:]
 endParagraph
 onMacroStandalone [code] [] [{{video.mp4|A funny video}}]
 beginParagraph
@@ -2439,16 +2516,17 @@ onSpace
 onWord [a]
 onSpace
 beginFormat [MONOSPACE]
-onSpace
-beginLink [Typed = [false] Type = [url] Reference = [video.webm]] [true]
-endLink [Typed = [false] Type = [url] Reference = [video.webm]] [true]
+onWord [video]
+onSpecialSymbol [.]
+onWord [webm]
 endFormat [MONOSPACE]
 onSpace
 onWord [and]
 onSpace
 beginFormat [MONOSPACE]
-beginLink [Typed = [false] Type = [url] Reference = [video.ogv]] [true]
-endLink [Typed = [false] Type = [url] Reference = [video.ogv]] [true]
+onWord [video]
+onSpecialSymbol [.]
+onWord [ogv]
 endFormat [MONOSPACE]
 onSpace
 onWord [next]
@@ -2460,8 +2538,9 @@ onSpace
 onWord [referenced]
 onSpace
 beginFormat [MONOSPACE]
-beginLink [Typed = [false] Type = [url] Reference = [video.mp4]] [true]
-endLink [Typed = [false] Type = [url] Reference = [video.mp4]] [true]
+onWord [video]
+onSpecialSymbol [.]
+onWord [mp4]
 endFormat [MONOSPACE]
 onSpecialSymbol [,]
 onSpace
@@ -2501,7 +2580,8 @@ onWord [by]
 onSpace
 onWord [your]
 onSpace
-onWord [browser.]
+onWord [browser]
+onSpecialSymbol [.]
 endParagraph
 beginParagraph
 onWord [Additionally]
@@ -2512,7 +2592,9 @@ onWord [supports]
 onSpace
 onWord [a]
 onSpace
-onWord ["poster"]
+onSpecialSymbol ["]
+onWord [poster]
+onSpecialSymbol ["]
 onSpace
 onWord [image]
 onSpace
@@ -2532,7 +2614,8 @@ onWord [video]
 onSpace
 onWord [has]
 onSpace
-onWord [started.]
+onWord [started]
+onSpecialSymbol [.]
 onSpace
 onWord [That]
 onSpace
@@ -2570,7 +2653,8 @@ onWord [or]
 onSpace
 onWord [png]
 onSpace
-onWord [file.]
+onWord [file]
+onSpecialSymbol [.]
 onSpace
 onWord [In]
 onSpace
@@ -2583,23 +2667,24 @@ onSpace
 onWord [a]
 onSpace
 beginFormat [MONOSPACE]
-beginLink [Typed = [false] Type = [url] Reference = [video.jpg]] [true]
-endLink [Typed = [false] Type = [url] Reference = [video.jpg]] [true]
+onWord [video]
+onSpecialSymbol [.]
+onWord [jpg]
 endFormat [MONOSPACE]
 onSpace
 onWord [file]
 onSpace
 onWord [would]
 onSpace
-onWord [work.]
+onWord [work]
+onSpecialSymbol [.]
 endParagraph
-beginSection
-beginHeader [2, ]
-onSpace
-onWord [Lists]
-onSpace
-endHeader [2, ]
 endSection
+endSection
+beginSection
+beginHeader [2, HLists]
+onWord [Lists]
+endHeader [2, HLists]
 beginParagraph
 onWord [Dokuwiki]
 onSpace
@@ -2611,7 +2696,8 @@ onWord [and]
 onSpace
 onWord [unordered]
 onSpace
-onWord [lists.]
+onWord [lists]
+onSpecialSymbol [.]
 onSpace
 onWord [To]
 onSpace
@@ -2621,7 +2707,8 @@ onWord [a]
 onSpace
 onWord [list]
 onSpace
-onWord [item,]
+onWord [item]
+onSpecialSymbol [,]
 onSpace
 onWord [indent]
 onSpace
@@ -2642,7 +2729,6 @@ onSpace
 onWord [a]
 onSpace
 beginFormat [MONOSPACE]
-onSpace
 onSpecialSymbol [*]
 endFormat [MONOSPACE]
 onSpace
@@ -2664,7 +2750,8 @@ onWord [for]
 onSpace
 onWord [ordered]
 onSpace
-onWord [ones.]
+onWord [ones]
+onSpecialSymbol [.]
 endParagraph
 beginList [BULLETED]
 beginListItem
@@ -2735,13 +2822,14 @@ endListItem
 endList [NUMBERED]
 endListItem
 beginListItem
-onWord [That's]
+onWord [That]
+onSpecialSymbol [']
+onWord [s]
 onSpace
 onWord [it]
 endListItem
 endList [NUMBERED]
-onMacroStandalone [code] [] [
-  * This is a list
+onMacroStandalone [code] [] [  * This is a list
   * The second item
     * You may have different levels
   * Another item
@@ -2750,8 +2838,6 @@ onMacroStandalone [code] [] [
   - Another item
     - Just use indention for deeper levels
   - That's it]
-beginParagraph
-endParagraph
 beginParagraph
 onWord [Also]
 onSpace
@@ -2776,15 +2862,13 @@ onWord [items]
 endLink [Typed = [true] Type = [interwiki] Reference = [faq:lists] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpecialSymbol [.]
 endParagraph
+endSection
 beginSection
-beginHeader [2, ]
-onSpace
+beginHeader [2, HTextConversions]
 onWord [Text]
 onSpace
 onWord [Conversions]
-onSpace
-endHeader [2, ]
-endSection
+endHeader [2, HTextConversions]
 beginParagraph
 onWord [DokuWiki]
 onSpace
@@ -2794,7 +2878,9 @@ onWord [convert]
 onSpace
 onWord [certain]
 onSpace
-onWord [pre-defined]
+onWord [pre]
+onSpecialSymbol [-]
+onWord [defined]
 onSpace
 onWord [characters]
 onSpace
@@ -2814,7 +2900,8 @@ onWord [text]
 onSpace
 onWord [or]
 onSpace
-onWord [HTML.]
+onWord [HTML]
+onSpecialSymbol [.]
 endParagraph
 beginParagraph
 onWord [The]
@@ -2835,7 +2922,8 @@ onWord [done]
 onSpace
 onWord [for]
 onSpace
-onWord [smileys.]
+onWord [smileys]
+onSpecialSymbol [.]
 onSpace
 onWord [And]
 onSpace
@@ -2857,7 +2945,8 @@ onWord [for]
 onSpace
 onWord [typography]
 onSpace
-onWord [replacements,]
+onWord [replacements]
+onSpecialSymbol [,]
 onSpace
 onWord [but]
 onSpace
@@ -2877,11 +2966,11 @@ onWord [HTML]
 onSpace
 onWord [as]
 onSpace
-onWord [well.]
+onWord [well]
+onSpecialSymbol [.]
 endParagraph
 beginSection
-beginHeader [3, ]
-onSpace
+beginHeader [3, HTexttoImageConversions]
 onWord [Text]
 onSpace
 onWord [to]
@@ -2889,9 +2978,7 @@ onSpace
 onWord [Image]
 onSpace
 onWord [Conversions]
-onSpace
-endHeader [3, ]
-endSection
+endHeader [3, HTexttoImageConversions]
 beginParagraph
 onWord [DokuWiki]
 onSpace
@@ -2903,7 +2990,6 @@ onWord [used]
 onSpace
 beginLink [Typed = [true] Type = [interwiki] Reference = [emoticon] Parameters = [[interWikiAlias] = [wp]]] [false]
 endLink [Typed = [true] Type = [interwiki] Reference = [emoticon] Parameters = [[interWikiAlias] = [wp]]] [false]
-onSpace
 onWord [s]
 onSpace
 onWord [to]
@@ -2912,7 +2998,8 @@ onWord [their]
 onSpace
 onWord [graphical]
 onSpace
-onWord [equivalents.]
+onWord [equivalents]
+onSpecialSymbol [.]
 onSpace
 onWord [Those]
 onSpace
@@ -2933,7 +3020,8 @@ onWord [configured]
 onSpace
 onWord [and]
 onSpace
-onWord [extended.]
+onWord [extended]
+onSpecialSymbol [.]
 onSpace
 onWord [Here]
 onSpace
@@ -2951,151 +3039,147 @@ onWord [included]
 onSpace
 onWord [in]
 onSpace
-onWord [DokuWiki:]
+onWord [DokuWiki]
+onSpecialSymbol [:]
 endParagraph
-beginParagraph
+beginList [BULLETED]
 beginListItem
-onWord [8-)]
+onWord [8]
+onSpecialSymbol [-]
+onSpecialSymbol [)]
 onSpace
 onVerbatim [  8-)  ] [true]
 endListItem
 beginListItem
-onWord [8-O]
+onWord [8]
+onSpecialSymbol [-]
+onWord [O]
 onSpace
 onVerbatim [  8-O  ] [true]
 endListItem
 beginListItem
-onWord [:-(]
+onSpecialSymbol [:]
+onSpecialSymbol [-]
+onSpecialSymbol [(]
 onSpace
 onVerbatim [  :-(  ] [true]
 endListItem
 beginListItem
-onWord [:-)]
+onSpecialSymbol [:]
+onSpecialSymbol [-]
+onSpecialSymbol [)]
 onSpace
 onVerbatim [  :-)  ] [true]
 endListItem
 beginListItem
-onWord [=)]
+onSpecialSymbol [=]
+onSpecialSymbol [)]
 onSpace
 onVerbatim [  =)   ] [true]
 endListItem
 beginListItem
-onWord [:-/]
+onSpecialSymbol [:]
+onSpecialSymbol [-]
+onSpecialSymbol [/]
 onSpace
 onVerbatim [  :-/  ] [true]
 endListItem
 beginListItem
 onSpecialSymbol [:]
-onNewLine
+onSpecialSymbol [-]
+onSpecialSymbol [\]
+onSpace
 onVerbatim [  :-\  ] [true]
 endListItem
 beginListItem
-onWord [:-?]
+onSpecialSymbol [:]
+onSpecialSymbol [-]
+onSpecialSymbol [?]
 onSpace
 onVerbatim [  :-?  ] [true]
 endListItem
 beginListItem
-onWord [:-D]
+onSpecialSymbol [:]
+onSpecialSymbol [-]
+onWord [D]
 onSpace
 onVerbatim [  :-D  ] [true]
 endListItem
 beginListItem
-onWord [:-P]
+onSpecialSymbol [:]
+onSpecialSymbol [-]
+onWord [P]
 onSpace
 onVerbatim [  :-P  ] [true]
 endListItem
 beginListItem
-onWord [:-O]
+onSpecialSymbol [:]
+onSpecialSymbol [-]
+onWord [O]
 onSpace
 onVerbatim [  :-O  ] [true]
 endListItem
 beginListItem
-onWord [:-X]
+onSpecialSymbol [:]
+onSpecialSymbol [-]
+onWord [X]
 onSpace
 onVerbatim [  :-X  ] [true]
 endListItem
 beginListItem
-onWord [:-|]
+onSpecialSymbol [:]
+onSpecialSymbol [-]
+onSpecialSymbol [|]
 onSpace
 onVerbatim [  :-|  ] [true]
 endListItem
 beginListItem
-onWord [;-)]
+onSpecialSymbol [;]
+onSpecialSymbol [-]
+onSpecialSymbol [)]
 onSpace
 onVerbatim [  ;-)  ] [true]
 endListItem
-beginList [BULLETED]
-beginTable
-beginTableRow
-beginTableHeadCell
+beginListItem
+onSpecialSymbol [^]
 onSpecialSymbol [_]
-endTableHeadCell
-beginTableHeadCell [[align]=[centre]]
-onWord [%%]
-endTableHeadCell [[align]=[centre]]
-beginTableHeadCell
-onSpecialSymbol [_]
-endTableHeadCell
-beginTableHeadCell [[align]=[right]]
-onWord [%%
-]
+onSpecialSymbol [^]
 onSpace
-onSpecialSymbol [*]
+onVerbatim [  ^_^  ] [true]
+endListItem
+beginListItem
+onSpecialSymbol [:]
+onSpecialSymbol [?]
+onSpecialSymbol [:]
 onSpace
-onWord [:?:]
+onVerbatim [  :?:  ] [true]
+endListItem
+beginListItem
+onSpecialSymbol [:]
+onSpecialSymbol [!]
+onSpecialSymbol [:]
 onSpace
-onWord [%%]
-onSpace
-onWord [:?:]
-onSpace
-onWord [%%
-]
-onSpace
-onSpecialSymbol [*]
-onSpace
-onWord [:!:]
-onSpace
-onWord [%%]
-onSpace
-onWord [:!:]
-onSpace
-onWord [%%
-]
-onSpace
-onSpecialSymbol [*]
-onSpace
+onVerbatim [  :!:  ] [true]
+endListItem
+beginListItem
 onWord [LOL]
 onSpace
-onWord [%%]
-onSpace
-onWord [LOL]
-onSpace
-onWord [%%
-]
-onSpace
-onSpecialSymbol [*]
-onSpace
+onVerbatim [  LOL  ] [true]
+endListItem
+beginListItem
 onWord [FIXME]
 onSpace
-onWord [%%]
-onSpace
-onWord [FIXME]
-onSpace
-onWord [%%
-]
-onSpace
-onSpecialSymbol [*]
-onSpace
+onVerbatim [  FIXME ] [true]
+endListItem
+beginListItem
 onWord [DELETEME]
 onSpace
-onWord [%%]
-onSpace
-onWord [DELETEME]
-onSpace
-onWord [%%
-
-====]
-onSpace
+onVerbatim [ DELETEME ] [true]
+endListItem
+endList [BULLETED]
+endSection
+beginSection
+beginHeader [3, HTexttoHTMLConversions]
 onWord [Text]
 onSpace
 onWord [to]
@@ -3103,12 +3187,13 @@ onSpace
 onWord [HTML]
 onSpace
 onWord [Conversions]
+endHeader [3, HTexttoHTMLConversions]
+beginParagraph
+onWord [Typography]
+onSpecialSymbol [:]
 onSpace
-onWord [====
-
-Typography:]
-onSpace
-onWord [[[DokuWiki]]]
+beginLink [Typed = [false] Type = [url] Reference = [DokuWiki]] [false]
+endLink [Typed = [false] Type = [url] Reference = [DokuWiki]] [false]
 onSpace
 onWord [can]
 onSpace
@@ -3128,7 +3213,8 @@ onWord [typographically]
 onSpace
 onWord [correct]
 onSpace
-onWord [entities.]
+onWord [entities]
+onSpecialSymbol [.]
 onSpace
 onWord [Here]
 onSpace
@@ -3142,89 +3228,84 @@ onWord [of]
 onSpace
 onWord [recognized]
 onSpace
-onWord [characters.
-
-->]
+onWord [characters]
+onSpecialSymbol [.]
+endParagraph
+beginParagraph
+onSpecialSymbol [-]
+onSpecialSymbol [>]
 onSpace
-onWord [<-]
+onSpecialSymbol [<]
+onSpecialSymbol [-]
 onSpace
-onWord [<->]
+onSpecialSymbol [<]
+onSpecialSymbol [-]
+onSpecialSymbol [>]
 onSpace
-onWord [=>]
+onSpecialSymbol [=]
+onSpecialSymbol [>]
 onSpace
-onWord [<=]
+onSpecialSymbol [<]
+onSpecialSymbol [=]
 onSpace
-onWord [<=>]
+onSpecialSymbol [<]
+onSpecialSymbol [=]
+onSpecialSymbol [>]
 onSpace
-onWord [>>]
+onSpecialSymbol [>]
+onSpecialSymbol [>]
 onSpace
-onWord [<<]
+onSpecialSymbol [<]
+onSpecialSymbol [<]
 onSpace
-onWord [--]
+onSpecialSymbol [-]
+onSpecialSymbol [-]
 onSpace
-onWord [---]
-onSpace
-onWord [640x480]
-onSpace
-onWord [(c)]
-onSpace
-onWord [(tm)]
-onSpace
-onWord [(r)
-"He]
-onSpace
-onWord [thought]
-onSpace
-onWord ['It's]
-onSpace
-onWord [a]
-onSpace
-onWord [man's]
-onSpace
-onWord [world'..."
-
-<code>
-->]
-onSpace
-onWord [<-]
-onSpace
-onWord [<->]
-onSpace
-onWord [=>]
-onSpace
-onWord [<=]
-onSpace
-onWord [<=>]
-onSpace
-onWord [>>]
-onSpace
-onWord [<<]
-onSpace
-onWord [--]
-onSpace
-onWord [---]
+onSpecialSymbol [-]
+onSpecialSymbol [-]
+onSpecialSymbol [-]
 onSpace
 onWord [640x480]
 onSpace
-onWord [(c)]
+onSpecialSymbol [(]
+onWord [c]
+onSpecialSymbol [)]
 onSpace
-onWord [(tm)]
+onSpecialSymbol [(]
+onWord [tm]
+onSpecialSymbol [)]
 onSpace
-onWord [(r)
-"He]
+onSpecialSymbol [(]
+onWord [r]
+onSpecialSymbol [)]
+onSpace
+onSpecialSymbol ["]
+onWord [He]
 onSpace
 onWord [thought]
 onSpace
-onWord ['It's]
+onSpecialSymbol [']
+onWord [It]
+onSpecialSymbol [']
+onWord [s]
 onSpace
 onWord [a]
 onSpace
-onWord [man's]
+onWord [man]
+onSpecialSymbol [']
+onWord [s]
 onSpace
-onWord [world'..."
-</code>
-
-The]
+onWord [world]
+onSpecialSymbol [']
+onSpecialSymbol [.]
+onSpecialSymbol [.]
+onSpecialSymbol [.]
+onSpecialSymbol ["]
+endParagraph
+onMacroStandalone [code] [] [-> <- <-> => <= <=> >> << -- --- 640x480 (c) (tm) (r)
+"He thought 'It's a man's world'..."]
+beginParagraph
+onWord [The]
 onSpace
 onWord [same]
 onSpace
@@ -3244,7 +3325,8 @@ onWord [kind]
 onSpace
 onWord [of]
 onSpace
-onWord [HTML,]
+onWord [HTML]
+onSpecialSymbol [,]
 onSpace
 onWord [it]
 onSpace
@@ -3262,14 +3344,15 @@ onWord [to]
 onSpace
 onWord [the]
 onSpace
-onWord [[[doku>entities]
-endTableHeadCell [[align]=[right]]
-beginTableCell
+beginLink [Typed = [true] Type = [interwiki] Reference = [entities] Parameters = [[interWikiAlias] = [doku]]] [false]
 onWord [pattern]
 onSpace
-onWord [file]].
-
-There]
+onWord [file]
+endLink [Typed = [true] Type = [interwiki] Reference = [entities] Parameters = [[interWikiAlias] = [doku]]] [false]
+onSpecialSymbol [.]
+endParagraph
+beginParagraph
+onWord [There]
 onSpace
 onWord [are]
 onSpace
@@ -3291,21 +3374,30 @@ onWord [that]
 onSpace
 onWord [pattern]
 onSpace
-onWord [file:]
+onWord [file]
+onSpecialSymbol [:]
 onSpace
 onWord [multiplication]
 onSpace
 onWord [entity]
 onSpace
-onWord [(640x480),]
+onSpecialSymbol [(]
+onWord [640x480]
+onSpecialSymbol [)]
+onSpecialSymbol [,]
 onSpace
-onWord ['single']
+onSpecialSymbol [']
+onWord [single]
+onSpecialSymbol [']
 onSpace
 onWord [and]
 onSpace
-onWord ["double]
+onSpecialSymbol ["]
+onWord [double]
 onSpace
-onWord [quotes".]
+onWord [quotes]
+onSpecialSymbol ["]
+onSpecialSymbol [.]
 onSpace
 onWord [They]
 onSpace
@@ -3321,20 +3413,21 @@ onWord [through]
 onSpace
 onWord [a]
 onSpace
-onWord [[[doku>config:typography]
-endTableCell
-beginTableCell
+beginLink [Typed = [true] Type = [interwiki] Reference = [config:typography] Parameters = [[interWikiAlias] = [doku]]] [false]
 onWord [config]
 onSpace
-onWord [option]].
-
-=====]
-onSpace
+onWord [option]
+endLink [Typed = [true] Type = [interwiki] Reference = [config:typography] Parameters = [[interWikiAlias] = [doku]]] [false]
+onSpecialSymbol [.]
+endParagraph
+endSection
+endSection
+beginSection
+beginHeader [2, HQuoting]
 onWord [Quoting]
-onSpace
-onWord [=====
-
-Some]
+endHeader [2, HQuoting]
+beginParagraph
+onWord [Some]
 onSpace
 onWord [times]
 onSpace
@@ -3354,7 +3447,9 @@ onWord [to]
 onSpace
 onWord [show]
 onSpace
-onWord [it's]
+onWord [it]
+onSpecialSymbol [']
+onWord [s]
 onSpace
 onWord [a]
 onSpace
@@ -3362,7 +3457,8 @@ onWord [reply]
 onSpace
 onWord [or]
 onSpace
-onWord [comment.]
+onWord [comment]
+onSpecialSymbol [.]
 onSpace
 onWord [You]
 onSpace
@@ -3374,10 +3470,22 @@ onWord [the]
 onSpace
 onWord [following]
 onSpace
-onWord [syntax:
+onWord [syntax]
+onSpecialSymbol [:]
+endParagraph
+onMacroStandalone [code] [] [I think we should do it
 
-<code>
-I]
+> No we shouldn't
+
+>> Well, I say we should
+
+> Really?
+
+>> Yes!
+
+>>> Then lets do it!]
+beginParagraph
+onWord [I]
 onSpace
 onWord [think]
 onSpace
@@ -3387,104 +3495,80 @@ onWord [should]
 onSpace
 onWord [do]
 onSpace
-onWord [it
-
->]
-onSpace
+onWord [it]
+endParagraph
+beginQuotation
+beginQuotationLine
 onWord [No]
 onSpace
 onWord [we]
 onSpace
-onWord [shouldn't
-
->>]
-onSpace
-onWord [Well,]
+onWord [shouldn]
+onSpecialSymbol [']
+onWord [t]
+endQuotationLine
+endQuotation
+beginQuotation
+beginQuotationLine
+beginQuotation
+beginQuotationLine
+onWord [Well]
+onSpecialSymbol [,]
 onSpace
 onWord [I]
 onSpace
 onWord [say]
-onSpace
-onWord [we]
-onSpace
-onWord [should
-
->]
-onSpace
-onWord [Really?
-
->>]
-onSpace
-onWord [Yes!
-
->>>]
-onSpace
-onWord [Then]
-onSpace
-onWord [lets]
-onSpace
-onWord [do]
-onSpace
-onWord [it!
-</code>
-
-I]
-onSpace
-onWord [think]
 onSpace
 onWord [we]
 onSpace
 onWord [should]
-onSpace
-onWord [do]
-onSpace
-onWord [it
-
->]
-onSpace
-onWord [No]
-onSpace
-onWord [we]
-onSpace
-onWord [shouldn't
-
->>]
-onSpace
-onWord [Well,]
-onSpace
-onWord [I]
-onSpace
-onWord [say]
-onSpace
-onWord [we]
-onSpace
-onWord [should
-
->]
-onSpace
-onWord [Really?
-
->>]
-onSpace
-onWord [Yes!
-
->>>]
-onSpace
+endQuotationLine
+endQuotation
+endQuotationLine
+endQuotation
+beginQuotation
+beginQuotationLine
+onWord [Really]
+onSpecialSymbol [?]
+endQuotationLine
+endQuotation
+beginQuotation
+beginQuotationLine
+beginQuotation
+beginQuotationLine
+onWord [Yes]
+onSpecialSymbol [!]
+endQuotationLine
+endQuotation
+endQuotationLine
+endQuotation
+beginQuotation
+beginQuotationLine
+beginQuotation
+beginQuotationLine
+beginQuotation
+beginQuotationLine
 onWord [Then]
 onSpace
 onWord [lets]
 onSpace
 onWord [do]
 onSpace
-onWord [it!
-
-=====]
-onSpace
+onWord [it]
+onSpecialSymbol [!]
+endQuotationLine
+endQuotation
+endQuotationLine
+endQuotation
+endQuotationLine
+endQuotation
+endSection
+beginSection
+beginHeader [2, HTables]
 onWord [Tables]
-onSpace
-onWord [=====
-
-DokuWiki]
+endHeader [2, HTables]
+beginParagraph
+onWord [DokuWiki]
 onSpace
 onWord [supports]
 onSpace
@@ -3498,37 +3582,38 @@ onWord [to]
 onSpace
 onWord [create]
 onSpace
-onWord [tables.
-
-]
+onWord [tables]
+onSpecialSymbol [.]
+endParagraph
+beginTable
+beginTableRow
+beginTableHeadCell
+onWord [Heading]
+onSpace
+onWord [1]
+endTableHeadCell
+beginTableHeadCell
+onWord [Heading]
+onSpace
+onWord [2]
+endTableHeadCell
+beginTableHeadCell
+onWord [Heading]
+onSpace
+onWord [3]
+endTableHeadCell
+endTableRow
+beginTableRow
+beginTableCell
+onWord [Row]
+onSpace
+onWord [1]
+onSpace
+onWord [Col]
+onSpace
+onWord [1]
 endTableCell
-beginTableHeadCell [[align]=[centre]]
-onWord [Heading]
-onSpace
-onWord [1]
-endTableHeadCell [[align]=[centre]]
-beginTableHeadCell [[align]=[centre]]
-onWord [Heading]
-onSpace
-onWord [2]
-endTableHeadCell [[align]=[centre]]
-beginTableHeadCell [[align]=[centre]]
-onWord [Heading]
-onSpace
-onWord [3]
-endTableHeadCell [[align]=[centre]]
-endTableRow
-beginTableRow
-beginTableCell [[align]=[centre]]
-onWord [Row]
-onSpace
-onWord [1]
-onSpace
-onWord [Col]
-onSpace
-onWord [1]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Row]
 onSpace
 onWord [1]
@@ -3536,8 +3621,8 @@ onSpace
 onWord [Col]
 onSpace
 onWord [2]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [1]
@@ -3545,10 +3630,10 @@ onSpace
 onWord [Col]
 onSpace
 onWord [3]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Row]
 onSpace
 onWord [2]
@@ -3556,25 +3641,27 @@ onSpace
 onWord [Col]
 onSpace
 onWord [1]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [some]
 onSpace
 onWord [colspan]
 onSpace
-onWord [(note]
+onSpecialSymbol [(]
+onWord [note]
 onSpace
 onWord [the]
 onSpace
 onWord [double]
 onSpace
-onWord [pipe)]
-endTableCell [[align]=[centre]]
+onWord [pipe]
+onSpecialSymbol [)]
+endTableCell
 beginTableCell
 endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Row]
 onSpace
 onWord [3]
@@ -3582,8 +3669,8 @@ onSpace
 onWord [Col]
 onSpace
 onWord [1]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [3]
@@ -3591,8 +3678,8 @@ onSpace
 onWord [Col]
 onSpace
 onWord [2]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [3]
@@ -3600,11 +3687,11 @@ onSpace
 onWord [Col]
 onSpace
 onWord [3]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 endTable
-onWord [
-Table]
+beginParagraph
+onWord [Table]
 onSpace
 onWord [rows]
 onSpace
@@ -3622,11 +3709,9 @@ onWord [with]
 onSpace
 onWord [a]
 onSpace
-beginListItem
-beginTable
-beginTableRow
-beginTableCell
-onWord ['']
+beginFormat [MONOSPACE]
+onSpecialSymbol [|]
+endFormat [MONOSPACE]
 onSpace
 onWord [for]
 onSpace
@@ -3638,39 +3723,19 @@ onWord [or]
 onSpace
 onWord [a]
 onSpace
-onWord ['']
-endTableCell
-beginTableHeadCell [[align]=[left]]
-onWord ['']
+beginFormat [MONOSPACE]
+onSpecialSymbol [^]
+endFormat [MONOSPACE]
 onSpace
 onWord [for]
 onSpace
-onWord [headers.
-
-]
-endTableHeadCell [[align]=[left]]
-beginTableHeadCell [[align]=[centre]]
-onWord [Heading]
-onSpace
-onWord [1]
-endTableHeadCell [[align]=[centre]]
-beginTableHeadCell [[align]=[centre]]
-onWord [Heading]
-onSpace
-onWord [2]
-endTableHeadCell [[align]=[centre]]
-beginTableHeadCell [[align]=[centre]]
-onWord [Heading]
-onSpace
-onWord [3]
-endTableHeadCell [[align]=[centre]]
-endTableRow
-endTable
-onMacroStandalone [code] [] [| Row 1 Col 1    | Row 1 Col 2     | Row 1 Col 3        |
+onWord [headers]
+onSpecialSymbol [.]
+endParagraph
+onMacroStandalone [code] [] [^ Heading 1      ^ Heading 2       ^ Heading 3          ^
+| Row 1 Col 1    | Row 1 Col 2     | Row 1 Col 3        |
 | Row 2 Col 1    | some colspan (note the double pipe) ||
 | Row 3 Col 1    | Row 3 Col 2     | Row 3 Col 3        |]
-endListItem
-endList [BULLETED]
 beginParagraph
 onWord [To]
 onSpace
@@ -3678,7 +3743,8 @@ onWord [connect]
 onSpace
 onWord [cells]
 onSpace
-onWord [horizontally,]
+onWord [horizontally]
+onSpecialSymbol [,]
 onSpace
 onWord [just]
 onSpace
@@ -3698,7 +3764,8 @@ onWord [as]
 onSpace
 onWord [shown]
 onSpace
-onWord [above.]
+onWord [above]
+onSpecialSymbol [.]
 onSpace
 onWord [Be]
 onSpace
@@ -3720,7 +3787,8 @@ onWord [of]
 onSpace
 onWord [cell]
 onSpace
-onWord [separators!]
+onWord [separators]
+onSpecialSymbol [!]
 endParagraph
 beginParagraph
 onWord [Vertical]
@@ -3729,33 +3797,34 @@ onWord [tableheaders]
 onSpace
 onWord [are]
 onSpace
-onWord [possible,]
+onWord [possible]
+onSpecialSymbol [,]
 onSpace
-onWord [too.]
+onWord [too]
+onSpecialSymbol [.]
 endParagraph
-beginParagraph
 beginTable
 beginTableRow
-beginTableCell [[align]=[centre]]
-endTableCell [[align]=[centre]]
-beginTableHeadCell [[align]=[centre]]
+beginTableCell
+endTableCell
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [1]
-endTableHeadCell [[align]=[centre]]
-beginTableHeadCell [[align]=[centre]]
+endTableHeadCell
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [2]
-endTableHeadCell [[align]=[centre]]
+endTableHeadCell
 endTableRow
 beginTableRow
-beginTableHeadCell [[align]=[centre]]
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [3]
-endTableHeadCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableHeadCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [1]
@@ -3763,8 +3832,8 @@ onSpace
 onWord [Col]
 onSpace
 onWord [2]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [1]
@@ -3772,15 +3841,15 @@ onSpace
 onWord [Col]
 onSpace
 onWord [3]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableHeadCell [[align]=[centre]]
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [4]
-endTableHeadCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableHeadCell
+beginTableCell
 onWord [no]
 onSpace
 onWord [colspan]
@@ -3788,17 +3857,17 @@ onSpace
 onWord [this]
 onSpace
 onWord [time]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-endTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
+endTableCell
 endTableRow
 beginTableRow
-beginTableHeadCell [[align]=[centre]]
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [5]
-endTableHeadCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableHeadCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [2]
@@ -3806,8 +3875,8 @@ onSpace
 onWord [Col]
 onSpace
 onWord [2]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [2]
@@ -3815,19 +3884,22 @@ onSpace
 onWord [Col]
 onSpace
 onWord [3]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 endTable
-onWord [
-As]
+beginParagraph
+onWord [As]
 onSpace
 onWord [you]
 onSpace
 onWord [can]
 onSpace
-onWord [see,]
+onWord [see]
+onSpecialSymbol [,]
 onSpace
-onWord [it's]
+onWord [it]
+onSpecialSymbol [']
+onWord [s]
 onSpace
 onWord [the]
 onSpace
@@ -3849,13 +3921,14 @@ onWord [about]
 onSpace
 onWord [the]
 onSpace
-onWord [formatting:]
+onWord [formatting]
+onSpecialSymbol [:]
 endParagraph
 onMacroStandalone [code] [] [|              ^ Heading 1            ^ Heading 2          ^
 ^ Heading 3    | Row 1 Col 2          | Row 1 Col 3        |
 ^ Heading 4    | no colspan this time |                    |
 ^ Heading 5    | Row 2 Col 2          | Row 2 Col 3        |]
-beginFormat [MONOSPACE]
+beginParagraph
 onWord [You]
 onSpace
 onWord [can]
@@ -3864,20 +3937,21 @@ onWord [have]
 onSpace
 onWord [rowspans]
 onSpace
-onWord [(vertically]
+onSpecialSymbol [(]
+onWord [vertically]
 onSpace
 onWord [connected]
 onSpace
-onWord [cells)]
+onWord [cells]
+onSpecialSymbol [)]
 onSpace
 onWord [by]
 onSpace
 onWord [adding]
 onSpace
-endFormat [MONOSPACE]
-onSpace
+beginFormat [MONOSPACE]
 onVerbatim [:::] [true]
-beginParagraph
+endFormat [MONOSPACE]
 onSpace
 onWord [into]
 onSpace
@@ -3899,28 +3973,29 @@ onWord [they]
 onSpace
 onWord [should]
 onSpace
-onWord [connect.]
+onWord [connect]
+onSpecialSymbol [.]
 endParagraph
 beginTable
 beginTableRow
-beginTableHeadCell [[align]=[centre]]
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [1]
-endTableHeadCell [[align]=[centre]]
-beginTableHeadCell [[align]=[centre]]
+endTableHeadCell
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [2]
-endTableHeadCell [[align]=[centre]]
-beginTableHeadCell [[align]=[centre]]
+endTableHeadCell
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [3]
-endTableHeadCell [[align]=[centre]]
+endTableHeadCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Row]
 onSpace
 onWord [1]
@@ -3928,8 +4003,8 @@ onSpace
 onWord [Col]
 onSpace
 onWord [1]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [this]
 onSpace
 onWord [cell]
@@ -3937,8 +4012,8 @@ onSpace
 onWord [spans]
 onSpace
 onWord [vertically]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [1]
@@ -3946,10 +4021,10 @@ onSpace
 onWord [Col]
 onSpace
 onWord [3]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Row]
 onSpace
 onWord [2]
@@ -3957,11 +4032,13 @@ onSpace
 onWord [Col]
 onSpace
 onWord [1]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-onWord [:::]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
+onSpecialSymbol [:]
+onSpecialSymbol [:]
+onSpecialSymbol [:]
+endTableCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [2]
@@ -3969,10 +4046,10 @@ onSpace
 onWord [Col]
 onSpace
 onWord [3]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Row]
 onSpace
 onWord [3]
@@ -3980,11 +4057,13 @@ onSpace
 onWord [Col]
 onSpace
 onWord [1]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-onWord [:::]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
+onSpecialSymbol [:]
+onSpecialSymbol [:]
+onSpecialSymbol [:]
+endTableCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [2]
@@ -3992,12 +4071,11 @@ onSpace
 onWord [Col]
 onSpace
 onWord [3]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 endTable
 beginParagraph
-onWord [
-Apart]
+onWord [Apart]
 onSpace
 onWord [from]
 onSpace
@@ -4019,7 +4097,8 @@ onWord [contain]
 onSpace
 onWord [anything]
 onSpace
-onWord [else.]
+onWord [else]
+onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [^ Heading 1      ^ Heading 2                  ^ Heading 3          ^
 | Row 1 Col 1    | this cell spans vertically | Row 1 Col 3        |
@@ -4036,9 +4115,11 @@ onWord [the]
 onSpace
 onWord [table]
 onSpace
-onWord [contents,]
+onWord [contents]
+onSpecialSymbol [,]
 onSpace
-onWord [too.]
+onWord [too]
+onSpecialSymbol [.]
 onSpace
 onWord [Just]
 onSpace
@@ -4064,7 +4145,8 @@ onWord [of]
 onSpace
 onWord [your]
 onSpace
-onWord [text:]
+onWord [text]
+onSpecialSymbol [:]
 onSpace
 onWord [Add]
 onSpace
@@ -4082,7 +4164,8 @@ onWord [to]
 onSpace
 onWord [align]
 onSpace
-onWord [right,]
+onWord [right]
+onSpecialSymbol [,]
 onSpace
 onWord [two]
 onSpace
@@ -4120,17 +4203,18 @@ onWord [for]
 onSpace
 onWord [centered]
 onSpace
-onWord [text.]
+onWord [text]
+onSpecialSymbol [.]
 endParagraph
 beginTable
 beginTableRow
-beginTableHeadCell [[align]=[centre]]
+beginTableHeadCell [[align]=[center]]
 onWord [Table]
 onSpace
 onWord [with]
 onSpace
 onWord [alignment]
-endTableHeadCell [[align]=[centre]]
+endTableHeadCell [[align]=[center]]
 beginTableHeadCell
 endTableHeadCell
 beginTableHeadCell
@@ -4140,39 +4224,38 @@ beginTableRow
 beginTableCell [[align]=[right]]
 onWord [right]
 endTableCell [[align]=[right]]
-beginTableCell [[align]=[centre]]
+beginTableCell [[align]=[center]]
 onWord [center]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[left]]
+endTableCell [[align]=[center]]
+beginTableCell
 onWord [left]
-endTableCell [[align]=[left]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[left]]
+beginTableCell
 onWord [left]
-endTableCell [[align]=[left]]
+endTableCell
 beginTableCell [[align]=[right]]
 onWord [right]
 endTableCell [[align]=[right]]
-beginTableCell [[align]=[centre]]
+beginTableCell [[align]=[center]]
 onWord [center]
-endTableCell [[align]=[centre]]
+endTableCell [[align]=[center]]
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [xxxxxxxxxxxx]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [xxxxxxxxxxxx]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [xxxxxxxxxxxx]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 endTable
 beginParagraph
-onWord [
-This]
+onWord [This]
 onSpace
 onWord [is]
 onSpace
@@ -4186,14 +4269,16 @@ onWord [in]
 onSpace
 onWord [the]
 onSpace
-onWord [source:]
+onWord [source]
+onSpecialSymbol [:]
 endParagraph
 onMacroStandalone [code] [] [^           Table with alignment           ^^^
 |         right|    center    |left          |
 |left          |         right|    center    |
 | xxxxxxxxxxxx | xxxxxxxxxxxx | xxxxxxxxxxxx |]
 beginParagraph
-onWord [Note:]
+onWord [Note]
+onSpecialSymbol [:]
 onSpace
 onWord [Vertical]
 onSpace
@@ -4203,18 +4288,17 @@ onWord [is]
 onSpace
 onWord [not]
 onSpace
-onWord [supported.]
+onWord [supported]
+onSpecialSymbol [.]
 endParagraph
+endSection
 beginSection
-beginHeader [2, ]
-onSpace
+beginHeader [2, HNoFormatting]
 onWord [No]
 onSpace
 onWord [Formatting]
-onSpace
-endHeader [2, ]
-endSection
-beginFormat [MONOSPACE]
+endHeader [2, HNoFormatting]
+beginParagraph
 onWord [If]
 onSpace
 onWord [you]
@@ -4237,11 +4321,14 @@ onWord [is]
 onSpace
 onWord [typed]
 onSpace
-onWord [(without]
+onSpecialSymbol [(]
+onWord [without]
 onSpace
 onWord [any]
 onSpace
-onWord [formatting),]
+onWord [formatting]
+onSpecialSymbol [)]
+onSpecialSymbol [,]
 onSpace
 onWord [enclose]
 onSpace
@@ -4253,10 +4340,9 @@ onWord [either]
 onSpace
 onWord [with]
 onSpace
-endFormat [MONOSPACE]
-onSpace
-onVerbatim [<nowiki>] [true]
 beginFormat [MONOSPACE]
+onVerbatim [<nowiki>] [true]
+endFormat [MONOSPACE]
 onSpace
 onWord [tags]
 onSpace
@@ -4264,7 +4350,8 @@ onWord [or]
 onSpace
 onWord [even]
 onSpace
-onWord [simpler,]
+onWord [simpler]
+onSpecialSymbol [,]
 onSpace
 onWord [with]
 onSpace
@@ -4274,9 +4361,9 @@ onWord [percent]
 onSpace
 onWord [signs]
 onSpace
-endFormat [MONOSPACE]
+beginFormat [MONOSPACE]
 onVerbatim [%%] [true]
-beginParagraph
+endFormat [MONOSPACE]
 onSpecialSymbol [.]
 endParagraph
 onVerbatim [
@@ -4294,25 +4381,20 @@ onSpace
 onWord [for]
 onSpace
 onVerbatim [//__this__ text// with a smiley ;-)] [true]
-onSpace
 onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [<nowiki>
 This is some text which contains addresses like this: http://www.splitbrain.org and **formatting**, but nothing is done with it.
 </nowiki>
 The same is true for %%//__this__ text// with a smiley ;-)%%.]
-beginParagraph
+endSection
 beginSection
-beginHeader [2, ]
-onSpace
+beginHeader [2, HCodeBlocks]
 onWord [Code]
 onSpace
 onWord [Blocks]
-onSpace
-endHeader [2, ]
-endSection
-endParagraph
-beginFormat [MONOSPACE]
+endHeader [2, HCodeBlocks]
+beginParagraph
 onWord [You]
 onSpace
 onWord [can]
@@ -4347,7 +4429,8 @@ onWord [two]
 onSpace
 onWord [spaces]
 onSpace
-onWord [(like]
+onSpecialSymbol [(]
+onWord [like]
 onSpace
 onWord [used]
 onSpace
@@ -4357,7 +4440,8 @@ onWord [the]
 onSpace
 onWord [previous]
 onSpace
-onWord [examples)]
+onWord [examples]
+onSpecialSymbol [)]
 onSpace
 onWord [or]
 onSpace
@@ -4369,24 +4453,20 @@ onWord [the]
 onSpace
 onWord [tags]
 onSpace
-endFormat [MONOSPACE]
-onVerbatim [<code>] [true]
 beginFormat [MONOSPACE]
+onVerbatim [<code>] [true]
+endFormat [MONOSPACE]
 onSpace
 onWord [or]
 onSpace
-endFormat [MONOSPACE]
+beginFormat [MONOSPACE]
 onVerbatim [<file>] [true]
-beginParagraph
+endFormat [MONOSPACE]
 onSpecialSymbol [.]
 endParagraph
 onMacroStandalone [code] [] [This is text is indented by two spaces.]
-beginParagraph
-onMacroStandalone [code] [] [
-This is preformatted code all spaces are preserved: like              <-this]
-endParagraph
-onMacroStandalone [code] [] [
-This is pretty much the same, but you could use it to show that you quoted a file.]
+onMacroStandalone [code] [] [This is preformatted code all spaces are preserved: like              <-this]
+onMacroStandalone [code] [] [This is pretty much the same, but you could use it to show that you quoted a file.]
 beginParagraph
 onWord [Those]
 onSpace
@@ -4400,29 +4480,23 @@ onWord [by]
 onSpace
 onWord [this]
 onSpace
-onWord [source:]
+onWord [source]
+onSpecialSymbol [:]
 endParagraph
 onMacroStandalone [code] [] [  This is text is indented by two spaces.]
-beginParagraph
 onMacroStandalone [code] [] [<code>
 This is preformatted code all spaces are preserved: like              <-this
 </code>]
-endParagraph
 onMacroStandalone [code] [] [<file>
 This is pretty much the same, but you could use it to show that you quoted a file.
 </file>]
-beginParagraph
 beginSection
-beginHeader [3, ]
-onSpace
+beginHeader [3, HSyntaxHighlighting]
 onWord [Syntax]
 onSpace
 onWord [Highlighting]
-onSpace
-endHeader [3, ]
-endSection
-endParagraph
-beginFormat [MONOSPACE]
+endHeader [3, HSyntaxHighlighting]
+beginParagraph
 beginLink [Typed = [false] Type = [url] Reference = [wiki:DokuWiki]] [false]
 endLink [Typed = [false] Type = [url] Reference = [wiki:DokuWiki]] [false]
 onSpace
@@ -4430,7 +4504,8 @@ onWord [can]
 onSpace
 onWord [highlight]
 onSpace
-onWord [sourcecode,]
+onWord [sourcecode]
+onSpecialSymbol [,]
 onSpace
 onWord [which]
 onSpace
@@ -4442,7 +4517,8 @@ onWord [easier]
 onSpace
 onWord [to]
 onSpace
-onWord [read.]
+onWord [read]
+onSpecialSymbol [.]
 onSpace
 onWord [It]
 onSpace
@@ -4460,7 +4536,8 @@ onWord [Syntax]
 onSpace
 onWord [Highlighter]
 onSpace
-onWord [--]
+onSpecialSymbol [-]
+onSpecialSymbol [-]
 onSpace
 onWord [so]
 onSpace
@@ -4476,7 +4553,8 @@ onWord [GeSHi]
 onSpace
 onWord [is]
 onSpace
-onWord [supported.]
+onWord [supported]
+onSpecialSymbol [.]
 onSpace
 onWord [The]
 onSpace
@@ -4504,7 +4582,8 @@ onWord [the]
 onSpace
 onWord [previous]
 onSpace
-onWord [section,]
+onWord [section]
+onSpecialSymbol [,]
 onSpace
 onWord [but]
 onSpace
@@ -4538,19 +4617,22 @@ onWord [inside]
 onSpace
 onWord [the]
 onSpace
-onWord [tag,]
+onWord [tag]
+onSpecialSymbol [,]
 onSpace
-onWord [e.g.]
+onWord [e]
+onSpecialSymbol [.]
+onWord [g]
+onSpecialSymbol [.]
 onSpace
+beginFormat [MONOSPACE]
+onVerbatim [<code java>] [true]
 endFormat [MONOSPACE]
-onVerbatim [<c] [true]
-onWord [</nowiki>'']
 onSpace
 onWord [or]
 onSpace
 beginFormat [MONOSPACE]
-onVerbatim [<f] [true]
-onWord [</nowiki>]
+onVerbatim [<file java>] [true]
 endFormat [MONOSPACE]
 onSpecialSymbol [.]
 endParagraph
@@ -4576,424 +4658,636 @@ onWord [are]
 onSpace
 onWord [currently]
 onSpace
-onWord [recognized:]
+onWord [recognized]
+onSpecialSymbol [:]
 onSpace
 beginFormat [ITALIC]
+onWord [4cs]
+onSpecialSymbol [,]
 onSpace
-onWord [4cs,]
+onWord [6502acme]
+onSpecialSymbol [,]
 onSpace
-onWord [6502acme,]
+onWord [6502kickass]
+onSpecialSymbol [,]
 onSpace
-onWord [6502kickass,]
+onWord [6502tasm]
+onSpecialSymbol [,]
 onSpace
-onWord [6502tasm,]
+onWord [68000devpac]
+onSpecialSymbol [,]
 onSpace
-onWord [68000devpac,]
+onWord [abap]
+onSpecialSymbol [,]
 onSpace
-onWord [abap,]
+onWord [actionscript]
+onSpecialSymbol [-]
+onWord [french]
+onSpecialSymbol [,]
 onSpace
-onWord [actionscript-french,]
+onWord [actionscript]
+onSpecialSymbol [,]
 onSpace
-onWord [actionscript,]
+onWord [actionscript3]
+onSpecialSymbol [,]
 onSpace
-onWord [actionscript3,]
+onWord [ada]
+onSpecialSymbol [,]
 onSpace
-onWord [ada,]
+onWord [algol68]
+onSpecialSymbol [,]
 onSpace
-onWord [algol68,]
+onWord [apache]
+onSpecialSymbol [,]
 onSpace
-onWord [apache,]
+onWord [applescript]
+onSpecialSymbol [,]
 onSpace
-onWord [applescript,]
+onWord [asm]
+onSpecialSymbol [,]
 onSpace
-onWord [asm,]
+onWord [asp]
+onSpecialSymbol [,]
 onSpace
-onWord [asp,]
+onWord [autoconf]
+onSpecialSymbol [,]
 onSpace
-onWord [autoconf,]
+onWord [autohotkey]
+onSpecialSymbol [,]
 onSpace
-onWord [autohotkey,]
+onWord [autoit]
+onSpecialSymbol [,]
 onSpace
-onWord [autoit,]
+onWord [avisynth]
+onSpecialSymbol [,]
 onSpace
-onWord [avisynth,]
+onWord [awk]
+onSpecialSymbol [,]
 onSpace
-onWord [awk,]
+onWord [bascomavr]
+onSpecialSymbol [,]
 onSpace
-onWord [bascomavr,]
+onWord [bash]
+onSpecialSymbol [,]
 onSpace
-onWord [bash,]
+onWord [basic4gl]
+onSpecialSymbol [,]
 onSpace
-onWord [basic4gl,]
+onWord [bf]
+onSpecialSymbol [,]
 onSpace
-onWord [bf,]
+onWord [bibtex]
+onSpecialSymbol [,]
 onSpace
-onWord [bibtex,]
+onWord [blitzbasic]
+onSpecialSymbol [,]
 onSpace
-onWord [blitzbasic,]
+onWord [bnf]
+onSpecialSymbol [,]
 onSpace
-onWord [bnf,]
+onWord [boo]
+onSpecialSymbol [,]
 onSpace
-onWord [boo,]
+onWord [c]
+onSpecialSymbol [,]
 onSpace
-onWord [c,]
+onWord [c]
+onSpecialSymbol [_]
+onWord [loadrunner]
+onSpecialSymbol [,]
 onSpace
-onWord [c_loadrunner,]
+onWord [c]
+onSpecialSymbol [_]
+onWord [mac]
+onSpecialSymbol [,]
 onSpace
-onWord [c_mac,]
+onWord [caddcl]
+onSpecialSymbol [,]
 onSpace
-onWord [caddcl,]
+onWord [cadlisp]
+onSpecialSymbol [,]
 onSpace
-onWord [cadlisp,]
+onWord [cfdg]
+onSpecialSymbol [,]
 onSpace
-onWord [cfdg,]
+onWord [cfm]
+onSpecialSymbol [,]
 onSpace
-onWord [cfm,]
+onWord [chaiscript]
+onSpecialSymbol [,]
 onSpace
-onWord [chaiscript,]
+onWord [cil]
+onSpecialSymbol [,]
 onSpace
-onWord [cil,]
+onWord [clojure]
+onSpecialSymbol [,]
 onSpace
-onWord [clojure,]
+onWord [cmake]
+onSpecialSymbol [,]
 onSpace
-onWord [cmake,]
+onWord [cobol]
+onSpecialSymbol [,]
 onSpace
-onWord [cobol,]
+onWord [coffeescript]
+onSpecialSymbol [,]
 onSpace
-onWord [coffeescript,]
+onWord [cpp]
+onSpecialSymbol [,]
 onSpace
-onWord [cpp,]
+onWord [cpp]
+onSpecialSymbol [-]
+onWord [qt]
+onSpecialSymbol [,]
 onSpace
-onWord [cpp-qt,]
+onWord [csharp]
+onSpecialSymbol [,]
 onSpace
-onWord [csharp,]
+onWord [css]
+onSpecialSymbol [,]
 onSpace
-onWord [css,]
+onWord [cuesheet]
+onSpecialSymbol [,]
 onSpace
-onWord [cuesheet,]
+onWord [d]
+onSpecialSymbol [,]
 onSpace
-onWord [d,]
+onWord [dcs]
+onSpecialSymbol [,]
 onSpace
-onWord [dcs,]
+onWord [delphi]
+onSpecialSymbol [,]
 onSpace
-onWord [delphi,]
+onWord [diff]
+onSpecialSymbol [,]
 onSpace
-onWord [diff,]
+onWord [div]
+onSpecialSymbol [,]
 onSpace
-onWord [div,]
+onWord [dos]
+onSpecialSymbol [,]
 onSpace
-onWord [dos,]
+onWord [dot]
+onSpecialSymbol [,]
 onSpace
-onWord [dot,]
+onWord [e]
+onSpecialSymbol [,]
 onSpace
-onWord [e,]
+onWord [epc]
+onSpecialSymbol [,]
 onSpace
-onWord [epc,]
+onWord [ecmascript]
+onSpecialSymbol [,]
 onSpace
-onWord [ecmascript,]
+onWord [eiffel]
+onSpecialSymbol [,]
 onSpace
-onWord [eiffel,]
+onWord [email]
+onSpecialSymbol [,]
 onSpace
-onWord [email,]
+onWord [erlang]
+onSpecialSymbol [,]
 onSpace
-onWord [erlang,]
+onWord [euphoria]
+onSpecialSymbol [,]
 onSpace
-onWord [euphoria,]
+onWord [f1]
+onSpecialSymbol [,]
 onSpace
-onWord [f1,]
+onWord [falcon]
+onSpecialSymbol [,]
 onSpace
-onWord [falcon,]
+onWord [fo]
+onSpecialSymbol [,]
 onSpace
-onWord [fo,]
+onWord [fortran]
+onSpecialSymbol [,]
 onSpace
-onWord [fortran,]
+onWord [freebasic]
+onSpecialSymbol [,]
 onSpace
-onWord [freebasic,]
+onWord [fsharp]
+onSpecialSymbol [,]
 onSpace
-onWord [fsharp,]
+onWord [gambas]
+onSpecialSymbol [,]
 onSpace
-onWord [gambas,]
+onWord [genero]
+onSpecialSymbol [,]
 onSpace
-onWord [genero,]
+onWord [genie]
+onSpecialSymbol [,]
 onSpace
-onWord [genie,]
+onWord [gdb]
+onSpecialSymbol [,]
 onSpace
-onWord [gdb,]
+onWord [glsl]
+onSpecialSymbol [,]
 onSpace
-onWord [glsl,]
+onWord [gml]
+onSpecialSymbol [,]
 onSpace
-onWord [gml,]
+onWord [gnuplot]
+onSpecialSymbol [,]
 onSpace
-onWord [gnuplot,]
+onWord [go]
+onSpecialSymbol [,]
 onSpace
-onWord [go,]
+onWord [groovy]
+onSpecialSymbol [,]
 onSpace
-onWord [groovy,]
+onWord [gettext]
+onSpecialSymbol [,]
 onSpace
-onWord [gettext,]
+onWord [gwbasic]
+onSpecialSymbol [,]
 onSpace
-onWord [gwbasic,]
+onWord [haskell]
+onSpecialSymbol [,]
 onSpace
-onWord [haskell,]
+onWord [hicest]
+onSpecialSymbol [,]
 onSpace
-onWord [hicest,]
+onWord [hq9plus]
+onSpecialSymbol [,]
 onSpace
-onWord [hq9plus,]
+onWord [html]
+onSpecialSymbol [,]
 onSpace
-onWord [html,]
+onWord [html5]
+onSpecialSymbol [,]
 onSpace
-onWord [html5,]
+onWord [icon]
+onSpecialSymbol [,]
 onSpace
-onWord [icon,]
+onWord [idl]
+onSpecialSymbol [,]
 onSpace
-onWord [idl,]
+onWord [ini]
+onSpecialSymbol [,]
 onSpace
-onWord [ini,]
+onWord [inno]
+onSpecialSymbol [,]
 onSpace
-onWord [inno,]
+onWord [intercal]
+onSpecialSymbol [,]
 onSpace
-onWord [intercal,]
+onWord [io]
+onSpecialSymbol [,]
 onSpace
-onWord [io,]
+onWord [j]
+onSpecialSymbol [,]
 onSpace
-onWord [j,]
+onWord [java5]
+onSpecialSymbol [,]
 onSpace
-onWord [java5,]
+onWord [java]
+onSpecialSymbol [,]
 onSpace
-onWord [java,]
+onWord [javascript]
+onSpecialSymbol [,]
 onSpace
-onWord [javascript,]
+onWord [jquery]
+onSpecialSymbol [,]
 onSpace
-onWord [jquery,]
+onWord [kixtart]
+onSpecialSymbol [,]
 onSpace
-onWord [kixtart,]
+onWord [klonec]
+onSpecialSymbol [,]
 onSpace
-onWord [klonec,]
+onWord [klonecpp]
+onSpecialSymbol [,]
 onSpace
-onWord [klonecpp,]
+onWord [latex]
+onSpecialSymbol [,]
 onSpace
-onWord [latex,]
+onWord [lb]
+onSpecialSymbol [,]
 onSpace
-onWord [lb,]
+onWord [lisp]
+onSpecialSymbol [,]
 onSpace
-onWord [lisp,]
+onWord [llvm]
+onSpecialSymbol [,]
 onSpace
-onWord [llvm,]
+onWord [locobasic]
+onSpecialSymbol [,]
 onSpace
-onWord [locobasic,]
+onWord [logtalk]
+onSpecialSymbol [,]
 onSpace
-onWord [logtalk,]
+onWord [lolcode]
+onSpecialSymbol [,]
 onSpace
-onWord [lolcode,]
+onWord [lotusformulas]
+onSpecialSymbol [,]
 onSpace
-onWord [lotusformulas,]
+onWord [lotusscript]
+onSpecialSymbol [,]
 onSpace
-onWord [lotusscript,]
+onWord [lscript]
+onSpecialSymbol [,]
 onSpace
-onWord [lscript,]
+onWord [lsl2]
+onSpecialSymbol [,]
 onSpace
-onWord [lsl2,]
+onWord [lua]
+onSpecialSymbol [,]
 onSpace
-onWord [lua,]
+onWord [m68k]
+onSpecialSymbol [,]
 onSpace
-onWord [m68k,]
+onWord [magiksf]
+onSpecialSymbol [,]
 onSpace
-onWord [magiksf,]
+onWord [make]
+onSpecialSymbol [,]
 onSpace
-onWord [make,]
+onWord [mapbasic]
+onSpecialSymbol [,]
 onSpace
-onWord [mapbasic,]
+onWord [matlab]
+onSpecialSymbol [,]
 onSpace
-onWord [matlab,]
+onWord [mirc]
+onSpecialSymbol [,]
 onSpace
-onWord [mirc,]
+onWord [modula2]
+onSpecialSymbol [,]
 onSpace
-onWord [modula2,]
+onWord [modula3]
+onSpecialSymbol [,]
 onSpace
-onWord [modula3,]
+onWord [mmix]
+onSpecialSymbol [,]
 onSpace
-onWord [mmix,]
+onWord [mpasm]
+onSpecialSymbol [,]
 onSpace
-onWord [mpasm,]
+onWord [mxml]
+onSpecialSymbol [,]
 onSpace
-onWord [mxml,]
+onWord [mysql]
+onSpecialSymbol [,]
 onSpace
-onWord [mysql,]
+onWord [newlisp]
+onSpecialSymbol [,]
 onSpace
-onWord [newlisp,]
+onWord [nsis]
+onSpecialSymbol [,]
 onSpace
-onWord [nsis,]
+onWord [oberon2]
+onSpecialSymbol [,]
 onSpace
-onWord [oberon2,]
+onWord [objc]
+onSpecialSymbol [,]
 onSpace
-onWord [objc,]
+onWord [objeck]
+onSpecialSymbol [,]
 onSpace
-onWord [objeck,]
+onWord [ocaml]
+onSpecialSymbol [-]
+onWord [brief]
+onSpecialSymbol [,]
 onSpace
-onWord [ocaml-brief,]
+onWord [ocaml]
+onSpecialSymbol [,]
 onSpace
-onWord [ocaml,]
+onWord [oobas]
+onSpecialSymbol [,]
 onSpace
-onWord [oobas,]
+onWord [oracle8]
+onSpecialSymbol [,]
 onSpace
-onWord [oracle8,]
+onWord [oracle11]
+onSpecialSymbol [,]
 onSpace
-onWord [oracle11,]
+onWord [oxygene]
+onSpecialSymbol [,]
 onSpace
-onWord [oxygene,]
+onWord [oz]
+onSpecialSymbol [,]
 onSpace
-onWord [oz,]
+onWord [pascal]
+onSpecialSymbol [,]
 onSpace
-onWord [pascal,]
+onWord [pcre]
+onSpecialSymbol [,]
 onSpace
-onWord [pcre,]
+onWord [perl]
+onSpecialSymbol [,]
 onSpace
-onWord [perl,]
+onWord [perl6]
+onSpecialSymbol [,]
 onSpace
-onWord [perl6,]
+onWord [per]
+onSpecialSymbol [,]
 onSpace
-onWord [per,]
+onWord [pf]
+onSpecialSymbol [,]
 onSpace
-onWord [pf,]
+onWord [php]
+onSpecialSymbol [-]
+onWord [brief]
+onSpecialSymbol [,]
 onSpace
-onWord [php-brief,]
+onWord [php]
+onSpecialSymbol [,]
 onSpace
-onWord [php,]
+onWord [pike]
+onSpecialSymbol [,]
 onSpace
-onWord [pike,]
+onWord [pic16]
+onSpecialSymbol [,]
 onSpace
-onWord [pic16,]
+onWord [pixelbender]
+onSpecialSymbol [,]
 onSpace
-onWord [pixelbender,]
+onWord [pli]
+onSpecialSymbol [,]
 onSpace
-onWord [pli,]
+onWord [plsql]
+onSpecialSymbol [,]
 onSpace
-onWord [plsql,]
+onWord [postgresql]
+onSpecialSymbol [,]
 onSpace
-onWord [postgresql,]
+onWord [povray]
+onSpecialSymbol [,]
 onSpace
-onWord [povray,]
+onWord [powerbuilder]
+onSpecialSymbol [,]
 onSpace
-onWord [powerbuilder,]
+onWord [powershell]
+onSpecialSymbol [,]
 onSpace
-onWord [powershell,]
+onWord [proftpd]
+onSpecialSymbol [,]
 onSpace
-onWord [proftpd,]
+onWord [progress]
+onSpecialSymbol [,]
 onSpace
-onWord [progress,]
+onWord [prolog]
+onSpecialSymbol [,]
 onSpace
-onWord [prolog,]
+onWord [properties]
+onSpecialSymbol [,]
 onSpace
-onWord [properties,]
+onWord [providex]
+onSpecialSymbol [,]
 onSpace
-onWord [providex,]
+onWord [purebasic]
+onSpecialSymbol [,]
 onSpace
-onWord [purebasic,]
+onWord [pycon]
+onSpecialSymbol [,]
 onSpace
-onWord [pycon,]
+onWord [python]
+onSpecialSymbol [,]
 onSpace
-onWord [python,]
+onWord [q]
+onSpecialSymbol [,]
 onSpace
-onWord [q,]
+onWord [qbasic]
+onSpecialSymbol [,]
 onSpace
-onWord [qbasic,]
+onWord [rails]
+onSpecialSymbol [,]
 onSpace
-onWord [rails,]
+onWord [rebol]
+onSpecialSymbol [,]
 onSpace
-onWord [rebol,]
+onWord [reg]
+onSpecialSymbol [,]
 onSpace
-onWord [reg,]
+onWord [robots]
+onSpecialSymbol [,]
 onSpace
-onWord [robots,]
+onWord [rpmspec]
+onSpecialSymbol [,]
 onSpace
-onWord [rpmspec,]
+onWord [rsplus]
+onSpecialSymbol [,]
 onSpace
-onWord [rsplus,]
+onWord [ruby]
+onSpecialSymbol [,]
 onSpace
-onWord [ruby,]
+onWord [sas]
+onSpecialSymbol [,]
 onSpace
-onWord [sas,]
+onWord [scala]
+onSpecialSymbol [,]
 onSpace
-onWord [scala,]
+onWord [scheme]
+onSpecialSymbol [,]
 onSpace
-onWord [scheme,]
+onWord [scilab]
+onSpecialSymbol [,]
 onSpace
-onWord [scilab,]
+onWord [sdlbasic]
+onSpecialSymbol [,]
 onSpace
-onWord [sdlbasic,]
+onWord [smalltalk]
+onSpecialSymbol [,]
 onSpace
-onWord [smalltalk,]
+onWord [smarty]
+onSpecialSymbol [,]
 onSpace
-onWord [smarty,]
+onWord [sql]
+onSpecialSymbol [,]
 onSpace
-onWord [sql,]
+onWord [systemverilog]
+onSpecialSymbol [,]
 onSpace
-onWord [systemverilog,]
+onWord [tcl]
+onSpecialSymbol [,]
 onSpace
-onWord [tcl,]
+onWord [teraterm]
+onSpecialSymbol [,]
 onSpace
-onWord [teraterm,]
+onWord [text]
+onSpecialSymbol [,]
 onSpace
-onWord [text,]
+onWord [thinbasic]
+onSpecialSymbol [,]
 onSpace
-onWord [thinbasic,]
+onWord [tsql]
+onSpecialSymbol [,]
 onSpace
-onWord [tsql,]
+onWord [typoscript]
+onSpecialSymbol [,]
 onSpace
-onWord [typoscript,]
+onWord [unicon]
+onSpecialSymbol [,]
 onSpace
-onWord [unicon,]
+onWord [uscript]
+onSpecialSymbol [,]
 onSpace
-onWord [uscript,]
+onWord [vala]
+onSpecialSymbol [,]
 onSpace
-onWord [vala,]
+onWord [vbnet]
+onSpecialSymbol [,]
 onSpace
-onWord [vbnet,]
+onWord [vb]
+onSpecialSymbol [,]
 onSpace
-onWord [vb,]
+onWord [verilog]
+onSpecialSymbol [,]
 onSpace
-onWord [verilog,]
+onWord [vhdl]
+onSpecialSymbol [,]
 onSpace
-onWord [vhdl,]
+onWord [vim]
+onSpecialSymbol [,]
 onSpace
-onWord [vim,]
+onWord [visualfoxpro]
+onSpecialSymbol [,]
 onSpace
-onWord [visualfoxpro,]
+onWord [visualprolog]
+onSpecialSymbol [,]
 onSpace
-onWord [visualprolog,]
+onWord [whitespace]
+onSpecialSymbol [,]
 onSpace
-onWord [whitespace,]
+onWord [winbatch]
+onSpecialSymbol [,]
 onSpace
-onWord [winbatch,]
+onWord [whois]
+onSpecialSymbol [,]
 onSpace
-onWord [whois,]
+onWord [xbasic]
+onSpecialSymbol [,]
 onSpace
-onWord [xbasic,]
+onWord [xml]
+onSpecialSymbol [,]
 onSpace
-onWord [xml,]
+onWord [xorg]
+onSpecialSymbol [_]
+onWord [conf]
+onSpecialSymbol [,]
 onSpace
-onWord [xorg_conf,]
+onWord [xpp]
+onSpecialSymbol [,]
 onSpace
-onWord [xpp,]
+onWord [yaml]
+onSpecialSymbol [,]
 onSpace
-onWord [yaml,]
-onSpace
-onWord [z80,]
+onWord [z80]
+onSpecialSymbol [,]
 onSpace
 onWord [zxbasic]
 endFormat [ITALIC]
 endParagraph
+endSection
 beginSection
-beginHeader [3, ]
-onSpace
+beginHeader [3, HDownloadableCodeBlocks]
 onWord [Downloadable]
 onSpace
 onWord [Code]
 onSpace
 onWord [Blocks]
-onSpace
-endHeader [3, ]
-endSection
+endHeader [3, HDownloadableCodeBlocks]
 beginParagraph
 onWord [When]
 onSpace
@@ -5004,7 +5298,6 @@ onSpace
 onWord [the]
 onSpace
 beginFormat [MONOSPACE]
-onSpace
 onVerbatim [<code>] [true]
 endFormat [MONOSPACE]
 onSpace
@@ -5018,7 +5311,8 @@ onWord [syntax]
 onSpace
 onWord [as]
 onSpace
-onWord [above,]
+onWord [above]
+onSpecialSymbol [,]
 onSpace
 onWord [you]
 onSpace
@@ -5044,7 +5338,8 @@ onWord [download]
 onSpace
 onWord [as]
 onSpace
-onWord [well.]
+onWord [well]
+onSpecialSymbol [.]
 onSpace
 onWord [You]
 onSpace
@@ -5072,21 +5367,21 @@ onWord [code]
 onSpace
 onWord [like]
 onSpace
-onWord [this:]
+onWord [this]
+onSpecialSymbol [:]
 endParagraph
-onMacroStandalone [code] [] [
-<file php myexample.php>
-<?php echo "hello world!"; ?>]
-onWord [</code>]
-beginParagraph
-endParagraph
+onMacroStandalone [code] [] [<file php myexample.php>
+<?php echo "hello world!"; ?>
+</file>]
 onMacroStandalone [code] [language=php] [<?php echo "hello world!"; ?>]
 beginParagraph
 onWord [If]
 onSpace
 onWord [you]
 onSpace
-onWord [don't]
+onWord [don]
+onSpecialSymbol [']
+onWord [t]
 onSpace
 onWord [want]
 onSpace
@@ -5102,7 +5397,8 @@ onWord [a]
 onSpace
 onWord [downloadable]
 onSpace
-onWord [file,]
+onWord [file]
+onSpecialSymbol [,]
 onSpace
 onWord [specify]
 onSpace
@@ -5110,7 +5406,11 @@ onWord [a]
 onSpace
 onWord [dash]
 onSpace
-onWord [(''-'')]
+onSpecialSymbol [(]
+beginFormat [MONOSPACE]
+onSpecialSymbol [-]
+endFormat [MONOSPACE]
+onSpecialSymbol [)]
 onSpace
 onWord [as]
 onSpace
@@ -5118,17 +5418,18 @@ onWord [the]
 onSpace
 onWord [language]
 onSpace
-onWord [code:]
+onWord [code]
+onSpecialSymbol [:]
 onSpace
 beginFormat [MONOSPACE]
-onSpace
 onVerbatim [<code - myfile.foo>] [true]
 endFormat [MONOSPACE]
 onSpecialSymbol [.]
 endParagraph
+endSection
+endSection
 beginSection
-beginHeader [2, ]
-onSpace
+beginHeader [2, HEmbeddingHTMLandPHP]
 onWord [Embedding]
 onSpace
 onWord [HTML]
@@ -5136,9 +5437,7 @@ onSpace
 onWord [and]
 onSpace
 onWord [PHP]
-onSpace
-endHeader [2, ]
-endSection
+endHeader [2, HEmbeddingHTMLandPHP]
 beginParagraph
 onWord [You]
 onSpace
@@ -5169,7 +5468,6 @@ onSpace
 onWord [the]
 onSpace
 beginFormat [MONOSPACE]
-onSpace
 onVerbatim [<html>] [true]
 endFormat [MONOSPACE]
 onSpace
@@ -5179,9 +5477,11 @@ beginFormat [MONOSPACE]
 onVerbatim [<php>] [true]
 endFormat [MONOSPACE]
 onSpace
-onWord [tags.]
+onWord [tags]
+onSpecialSymbol [.]
 onSpace
-onWord [(Use]
+onSpecialSymbol [(]
+onWord [Use]
 onSpace
 onWord [uppercase]
 onSpace
@@ -5201,15 +5501,17 @@ onWord [block]
 onSpace
 onWord [level]
 onSpace
-onWord [elements.)]
+onWord [elements]
+onSpecialSymbol [.]
+onSpecialSymbol [)]
 endParagraph
 beginParagraph
 onWord [HTML]
 onSpace
-onWord [example:]
+onWord [example]
+onSpecialSymbol [:]
 endParagraph
-onMacroStandalone [code] [] [
-<html>
+onMacroStandalone [code] [] [<html>
 This is some <span style="color:red;font-size:150%;">inline HTML</span>
 </html>
 <HTML>
@@ -5224,14 +5526,12 @@ onMacroStandalone [html] [] [
 <p style="border:2px dashed red;">And this is some block HTML</p>
 ]
 beginParagraph
-endParagraph
-beginParagraph
 onWord [PHP]
 onSpace
-onWord [example:]
+onWord [example]
+onSpecialSymbol [:]
 endParagraph
-onMacroStandalone [code] [] [
-<php>
+onMacroStandalone [code] [] [<php>
 echo 'The PHP version: ';
 echo phpversion();
 echo ' (generated inline HTML)';
@@ -5253,8 +5553,6 @@ echo '<table class="inline"><tr><td>The same, but inside a block level element:<
 echo '<td>'.phpversion().'</td>';
 echo '</tr></table>';
 ]
-beginParagraph
-endParagraph
 beginParagraph
 beginFormat [BOLD]
 onWord [Please]
@@ -5283,11 +5581,13 @@ onWord [in]
 onSpace
 onWord [the]
 onSpace
-onWord [configuration.]
+onWord [configuration]
+onSpecialSymbol [.]
 onSpace
 onWord [If]
 onSpace
-onWord [disabled,]
+onWord [disabled]
+onSpecialSymbol [,]
 onSpace
 onWord [the]
 onSpace
@@ -5301,19 +5601,20 @@ onWord [instead]
 onSpace
 onWord [of]
 onSpace
-onWord [executed.]
+onWord [executed]
+onSpecialSymbol [.]
 endParagraph
+endSection
 beginSection
-beginHeader [2, ]
-onSpace
-onWord [RSS/ATOM]
+beginHeader [2, HRSS2FATOMFeedAggregation]
+onWord [RSS]
+onSpecialSymbol [/]
+onWord [ATOM]
 onSpace
 onWord [Feed]
 onSpace
 onWord [Aggregation]
-onSpace
-endHeader [2, ]
-endSection
+endHeader [2, HRSS2FATOMFeedAggregation]
 beginParagraph
 beginLink [Typed = [false] Type = [url] Reference = [DokuWiki]] [false]
 endLink [Typed = [false] Type = [url] Reference = [DokuWiki]] [false]
@@ -5330,7 +5631,8 @@ onWord [external]
 onSpace
 onWord [XML]
 onSpace
-onWord [feeds.]
+onWord [feeds]
+onSpecialSymbol [.]
 onSpace
 onWord [For]
 onSpace
@@ -5340,7 +5642,8 @@ onWord [the]
 onSpace
 onWord [XML]
 onSpace
-onWord [feeds,]
+onWord [feeds]
+onSpecialSymbol [,]
 onSpace
 beginLink [Typed = [false] Type = [url] Reference = [http://simplepie.org/]] [false]
 onWord [SimplePie]
@@ -5348,7 +5651,8 @@ endLink [Typed = [false] Type = [url] Reference = [http://simplepie.org/]] [fals
 onSpace
 onWord [is]
 onSpace
-onWord [used.]
+onWord [used]
+onSpecialSymbol [.]
 onSpace
 onWord [All]
 onSpace
@@ -5372,7 +5676,8 @@ onWord [DokuWiki]
 onSpace
 onWord [as]
 onSpace
-onWord [well.]
+onWord [well]
+onSpecialSymbol [.]
 onSpace
 onWord [You]
 onSpace
@@ -5394,24 +5699,25 @@ onWord [space]
 onSpace
 onWord [separated]
 onSpace
-onWord [parameters:]
+onWord [parameters]
+onSpecialSymbol [:]
 endParagraph
 beginTable
 beginTableRow
-beginTableHeadCell [[align]=[centre]]
+beginTableHeadCell
 onWord [Parameter]
-endTableHeadCell [[align]=[centre]]
-beginTableHeadCell [[align]=[centre]]
+endTableHeadCell
+beginTableHeadCell
 onWord [Description]
-endTableHeadCell [[align]=[centre]]
+endTableHeadCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [any]
 onSpace
 onWord [number]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [will]
 onSpace
 onWord [be]
@@ -5428,20 +5734,21 @@ onWord [items]
 onSpace
 onWord [to]
 onSpace
-onWord [show,]
+onWord [show]
+onSpecialSymbol [,]
 onSpace
 onWord [defaults]
 onSpace
 onWord [to]
 onSpace
 onWord [8]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [reverse]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [display]
 onSpace
 onWord [the]
@@ -5457,13 +5764,13 @@ onSpace
 onWord [feed]
 onSpace
 onWord [first]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [author]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [show]
 onSpace
 onWord [item]
@@ -5471,39 +5778,39 @@ onSpace
 onWord [authors]
 onSpace
 onWord [names]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [date]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [show]
 onSpace
 onWord [item]
 onSpace
 onWord [dates]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[right]]
+beginTableCell
 onWord [description]
-endTableCell [[align]=[right]]
-beginTableCell [[align]=[right]]
+endTableCell
+beginTableCell
 onWord [show]
 onSpace
 onWord [the]
 onSpace
 onWord [item]
 onSpace
-onWord [description.]
+onWord [description]
+onSpecialSymbol [.]
 onSpace
 onWord [If]
 onSpace
-onWord [[[doku>config:htmlok]
-endTableCell [[align]=[right]]
-beginTableCell [[align]=[left]]
-onWord [HTML]]]
+beginLink [Typed = [true] Type = [interwiki] Reference = [config:htmlok] Parameters = [[interWikiAlias] = [doku]]] [false]
+onWord [HTML]
+endLink [Typed = [true] Type = [interwiki] Reference = [config:htmlok] Parameters = [[interWikiAlias] = [doku]]] [false]
 onSpace
 onWord [is]
 onSpace
@@ -5518,13 +5825,13 @@ onSpace
 onWord [be]
 onSpace
 onWord [stripped]
-endTableCell [[align]=[left]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [nosort]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [do]
 onSpace
 onWord [not]
@@ -5540,26 +5847,45 @@ onSpace
 onWord [the]
 onSpace
 onWord [feed]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
-onWord [//n//[dhm]]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+beginTableCell
+beginFormat [ITALIC]
+onWord [n]
+endFormat [ITALIC]
+onSpecialSymbol [[]
+onWord [dhm]
+onSpecialSymbol []]
+endTableCell
+beginTableCell
 onWord [refresh]
 onSpace
-onWord [period,]
+onWord [period]
+onSpecialSymbol [,]
 onSpace
 onWord [where]
 onSpace
-onWord [d=days,]
+onWord [d]
+onSpecialSymbol [=]
+onWord [days]
+onSpecialSymbol [,]
 onSpace
-onWord [h=hours,]
+onWord [h]
+onSpecialSymbol [=]
+onWord [hours]
+onSpecialSymbol [,]
 onSpace
-onWord [m=minutes.]
+onWord [m]
+onSpecialSymbol [=]
+onWord [minutes]
+onSpecialSymbol [.]
 onSpace
-onWord [(e.g.]
+onSpecialSymbol [(]
+onWord [e]
+onSpecialSymbol [.]
+onWord [g]
+onSpecialSymbol [.]
 onSpace
 onWord [12h]
 onSpace
@@ -5567,13 +5893,14 @@ onSpecialSymbol [=]
 onSpace
 onWord [12]
 onSpace
-onWord [hours).]
-endTableCell [[align]=[centre]]
+onWord [hours]
+onSpecialSymbol [)]
+onSpecialSymbol [.]
+endTableCell
 endTableRow
 endTable
 beginParagraph
-onWord [
-The]
+onWord [The]
 onSpace
 onWord [refresh]
 onSpace
@@ -5585,7 +5912,8 @@ onWord [to]
 onSpace
 onWord [4]
 onSpace
-onWord [hours.]
+onWord [hours]
+onSpecialSymbol [.]
 onSpace
 onWord [Any]
 onSpace
@@ -5607,7 +5935,8 @@ onWord [as]
 onSpace
 onWord [10]
 onSpace
-onWord [minutes.]
+onWord [minutes]
+onSpecialSymbol [.]
 onSpace
 beginLink [Typed = [false] Type = [url] Reference = [wiki:DokuWiki]] [false]
 endLink [Typed = [false] Type = [url] Reference = [wiki:DokuWiki]] [false]
@@ -5632,7 +5961,8 @@ onWord [of]
 onSpace
 onWord [a]
 onSpace
-onWord [page,]
+onWord [page]
+onSpecialSymbol [,]
 onSpace
 onWord [obviously]
 onSpace
@@ -5654,7 +5984,8 @@ onWord [dynamic]
 onSpace
 onWord [external]
 onSpace
-onWord [content.]
+onWord [content]
+onSpecialSymbol [.]
 onSpace
 onWord [The]
 onSpace
@@ -5667,7 +5998,9 @@ endLink [Typed = [false] Type = [url] Reference = [wiki:DokuWiki]] [false]
 onSpace
 onWord [to]
 onSpace
-onWord [re-render]
+onWord [re]
+onSpecialSymbol [-]
+onWord [render]
 onSpace
 onWord [the]
 onSpace
@@ -5699,7 +6032,8 @@ onWord [was]
 onSpace
 onWord [last]
 onSpace
-onWord [rendered.]
+onWord [rendered]
+onSpecialSymbol [.]
 endParagraph
 beginParagraph
 onWord [By]
@@ -5718,13 +6052,15 @@ onWord [sorted]
 onSpace
 onWord [by]
 onSpace
-onWord [date,]
+onWord [date]
+onSpecialSymbol [,]
 onSpace
 onWord [newest]
 onSpace
 onWord [items]
 onSpace
-onWord [first.]
+onWord [first]
+onSpecialSymbol [.]
 onSpace
 onWord [You]
 onSpace
@@ -5748,7 +6084,8 @@ beginFormat [MONOSPACE]
 onWord [reverse]
 endFormat [MONOSPACE]
 onSpace
-onWord [parameter,]
+onWord [parameter]
+onSpecialSymbol [,]
 onSpace
 onWord [or]
 onSpace
@@ -5771,22 +6108,19 @@ onSpecialSymbol [.]
 endParagraph
 beginParagraph
 beginFormat [BOLD]
-onWord [Example:]
+onWord [Example]
+onSpecialSymbol [:]
 endFormat [BOLD]
 endParagraph
 onMacroStandalone [code] [] [{{rss>http://slashdot.org/index.rss 5 author date 1h }}]
-beginParagraph
-onMacroInline [rss] [feed=http://slashdot.org/index.rss|count=8]
-endParagraph
+onMacroStandalone [rss] [feed=http://slashdot.org/index.rss|count=5]
+endSection
 beginSection
-beginHeader [2, ]
-onSpace
+beginHeader [2, HControlMacros]
 onWord [Control]
 onSpace
 onWord [Macros]
-onSpace
-endHeader [2, ]
-endSection
+endHeader [2, HControlMacros]
 beginParagraph
 onWord [Some]
 onSpace
@@ -5814,7 +6148,8 @@ onWord [output]
 onSpace
 onWord [it]
 onSpace
-onWord [self.]
+onWord [self]
+onSpecialSymbol [.]
 onSpace
 onWord [The]
 onSpace
@@ -5826,22 +6161,23 @@ onWord [macros]
 onSpace
 onWord [are]
 onSpace
-onWord [availble:]
+onWord [availble]
+onSpecialSymbol [:]
 endParagraph
 beginTable
 beginTableRow
-beginTableHeadCell [[align]=[centre]]
+beginTableHeadCell
 onWord [Macro]
-endTableHeadCell [[align]=[centre]]
-beginTableHeadCell [[align]=[centre]]
+endTableHeadCell
+beginTableHeadCell
 onWord [Description]
-endTableHeadCell [[align]=[centre]]
+endTableHeadCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
-onWord [%%~~NOTOC~~%%]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+beginTableCell
+onVerbatim [~~NOTOC~~] [true]
+endTableCell
+beginTableCell
 onWord [If]
 onSpace
 onWord [this]
@@ -5856,7 +6192,8 @@ onWord [on]
 onSpace
 onWord [the]
 onSpace
-onWord [page,]
+onWord [page]
+onSpecialSymbol [,]
 onSpace
 onWord [no]
 onSpace
@@ -5871,13 +6208,13 @@ onSpace
 onWord [be]
 onSpace
 onWord [created]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
-onWord [%%~~NOCACHE~~%%]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+beginTableCell
+onVerbatim [~~NOCACHE~~] [true]
+endTableCell
+beginTableCell
 onWord [DokuWiki]
 onSpace
 onWord [caches]
@@ -5888,7 +6225,8 @@ onWord [output]
 onSpace
 onWord [by]
 onSpace
-onWord [default.]
+onWord [default]
+onSpecialSymbol [.]
 onSpace
 onWord [Sometimes]
 onSpace
@@ -5902,13 +6240,15 @@ onWord [be]
 onSpace
 onWord [wanted]
 onSpace
-onWord [(eg.]
+onSpecialSymbol [(]
+onWord [eg]
+onSpecialSymbol [.]
 onSpace
 onWord [when]
 onSpace
 onWord [the]
 onSpace
-onWord [%%<php>%%]
+onVerbatim [<php>] [true]
 onSpace
 onWord [syntax]
 onSpace
@@ -5916,7 +6256,9 @@ onWord [above]
 onSpace
 onWord [is]
 onSpace
-onWord [used),]
+onWord [used]
+onSpecialSymbol [)]
+onSpecialSymbol [,]
 onSpace
 onWord [adding]
 onSpace
@@ -5943,20 +6285,20 @@ onSpace
 onWord [every]
 onSpace
 onWord [call]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 endTable
+endSection
 beginSection
-beginHeader [2, ]
-onSpace
+beginHeader [2, HSyntaxPlugins]
 onWord [Syntax]
 onSpace
 onWord [Plugins]
-onSpace
-endHeader [2, ]
-endSection
+endHeader [2, HSyntaxPlugins]
 beginParagraph
-onWord [DokuWiki's]
+onWord [DokuWiki]
+onSpecialSymbol [']
+onWord [s]
 onSpace
 onWord [syntax]
 onSpace
@@ -5971,7 +6313,6 @@ onSpace
 beginLink [Typed = [true] Type = [interwiki] Reference = [plugins] Parameters = [[interWikiAlias] = [doku]]] [false]
 onWord [Plugins]
 endLink [Typed = [true] Type = [interwiki] Reference = [plugins] Parameters = [[interWikiAlias] = [doku]]] [false]
-onSpace
 onSpecialSymbol [.]
 onSpace
 onWord [How]
@@ -5998,7 +6339,8 @@ onWord [appropriate]
 onSpace
 onWord [description]
 onSpace
-onWord [pages.]
+onWord [pages]
+onSpecialSymbol [.]
 onSpace
 onWord [The]
 onSpace
@@ -6020,9 +6362,18 @@ onWord [particular]
 onSpace
 onWord [DokuWiki]
 onSpace
-onWord [installation:]
+onWord [installation]
+onSpecialSymbol [:]
 endParagraph
 beginParagraph
-onWord [~~INFO:syntaxplugins~~]
+onSpecialSymbol [~]
+onSpecialSymbol [~]
+onWord [INFO]
+onSpecialSymbol [:]
+onWord [syntaxplugins]
+onSpecialSymbol [~]
+onSpecialSymbol [~]
 endParagraph
+endSection
+endSection
 endDocument

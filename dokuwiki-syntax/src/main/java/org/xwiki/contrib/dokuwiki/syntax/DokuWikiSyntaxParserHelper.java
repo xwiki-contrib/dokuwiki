@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,9 +38,11 @@ import org.xwiki.rendering.listener.reference.ResourceType;
  *
  * @version $Id: $
  * @since 1.3
+ * @deprecated since 2.0 as these helpers aren't useful anymore with the ANTLR-based parser.
  */
 @Component(roles = DokuWikiSyntaxParserHelper.class)
 @Singleton
+@Deprecated
 public class DokuWikiSyntaxParserHelper
 {
     /**
@@ -49,9 +50,8 @@ public class DokuWikiSyntaxParserHelper
      *
      * @param list the list of characters
      * @return the string representation of the passed list of character
-     * @since 1.4
      */
-    public String getStringRepresentation(List<Character> list)
+    public String getStringRepresentation(ArrayList<Character> list)
     {
         StringBuilder builder = new StringBuilder(list.size());
         for (Character ch : list) {
@@ -61,19 +61,6 @@ public class DokuWikiSyntaxParserHelper
     }
 
     /**
-     * Builds a string from a list of characters.
-     *
-     * @param list the list of characters
-     * @return the string representation of the passed list of character
-     * @deprecated since 1.4 use {@link #getStringRepresentation(List)} instead
-     */
-    @Deprecated
-    public String getStringRepresentation(ArrayList<Character> list)
-    {
-        return getStringRepresentation((List<Character>) list);
-    }
-
-    /**
      * Process words based on space split.
      *
      * @param buffer Buffer stores list of characters.
@@ -81,26 +68,8 @@ public class DokuWikiSyntaxParserHelper
      * @param argumentTrimSize : Number of characters removed from input buffer.
      * @param listener Listener calls the java events.
      * @return paragraphOpenedLocal Returns the current status of paragraph tag.
-     * @deprecated since 1.4 use {@link #getStringRepresentation(List)} instead
      */
-    @Deprecated
     public boolean processWords(int argumentTrimSize, ArrayList<Character> buffer, Listener listener,
-            boolean paragraphJustOpened)
-    {
-        return processWords(argumentTrimSize, (List<Character>) buffer, listener, paragraphJustOpened);
-    }
-
-    /**
-     * Process words based on space split.
-     *
-     * @param buffer Buffer stores list of characters.
-     * @param paragraphJustOpened Keeps track of paragraph tag.
-     * @param argumentTrimSize : Number of characters removed from input buffer.
-     * @param listener Listener calls the java events.
-     * @return paragraphOpenedLocal Returns the current status of paragraph tag.
-     * @since 1.4
-     */
-    public boolean processWords(int argumentTrimSize, List<Character> buffer, Listener listener,
         boolean paragraphJustOpened)
     {
         buffer.subList(buffer.size() - argumentTrimSize, buffer.size()).clear();

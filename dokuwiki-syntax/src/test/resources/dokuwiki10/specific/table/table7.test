@@ -1,0 +1,33 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.0
+.#-----------------------------------------------------
+^Title^
+| content | extra
+
+===== A heading =====
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginTable
+beginTableRow
+beginTableHeadCell
+onWord [Title]
+endTableHeadCell
+endTableRow
+beginTableRow
+beginTableCell
+onWord [content]
+endTableCell
+endTableRow
+endTable
+beginSection
+beginSection
+beginHeader [2, HAheading]
+onWord [A]
+onSpace
+onWord [heading]
+endHeader [2, HAheading]
+endSection
+endSection
+endDocument

@@ -1,0 +1,81 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.0
+.#-----------------------------------------------------
+^HTML (aligns right)^Formatting (aligns center)^Links (aligns left)^
+|  <html>Some HTML</html> |  **Bold text**  |[[https://xwiki.org|a link]]\\ [[:|Start page]]  |
+
+Outside table
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginTable
+beginTableRow
+beginTableHeadCell
+onWord [HTML]
+onSpace
+onSpecialSymbol [(]
+onWord [aligns]
+onSpace
+onWord [right]
+onSpecialSymbol [)]
+endTableHeadCell
+beginTableHeadCell
+onWord [Formatting]
+onSpace
+onSpecialSymbol [(]
+onWord [aligns]
+onSpace
+onWord [center]
+onSpecialSymbol [)]
+endTableHeadCell
+beginTableHeadCell
+onWord [Links]
+onSpace
+onSpecialSymbol [(]
+onWord [aligns]
+onSpace
+onWord [left]
+onSpecialSymbol [)]
+endTableHeadCell
+endTableRow
+beginTableRow
+beginTableCell [[align]=[right]]
+onMacroInline [html] [] [Some HTML]
+endTableCell [[align]=[right]]
+beginTableCell [[align]=[center]]
+beginFormat [BOLD]
+onWord [Bold]
+onSpace
+onWord [text]
+endFormat [BOLD]
+endTableCell [[align]=[center]]
+beginTableCell
+beginLink [Typed = [false] Type = [url] Reference = [https://xwiki.org]] [false]
+onWord [a]
+onSpace
+onWord [link]
+endLink [Typed = [false] Type = [url] Reference = [https://xwiki.org]] [false]
+onNewLine
+beginLink [Typed = [false] Type = [url] Reference = [:]] [false]
+onWord [Start]
+onSpace
+onWord [page]
+endLink [Typed = [false] Type = [url] Reference = [:]] [false]
+endTableCell
+endTableRow
+endTable
+beginParagraph
+onWord [Outside]
+onSpace
+onWord [table]
+endParagraph
+endDocument
+.#-----------------------------------------------------
+.inputexpect|xwiki/2.1
+.#-----------------------------------------------------
+|=HTML (aligns right)|=Formatting (aligns center)|=Links (aligns left)
+|(% align="right" %){{html}}Some HTML{{/html}}|(% align="center" %)**Bold text**|[[a link>>https://xwiki.org]]
+[[Start page>>:]]
+
+Outside table

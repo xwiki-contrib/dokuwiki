@@ -31,9 +31,11 @@ import org.xwiki.rendering.listener.Listener;
  *
  * @version $Id:  $
  * @since 1.3
+ * @deprecated since 2.0 plugins are not supported anymore and need to be implemented directly in the syntax parser
  */
 @FunctionalInterface
 @Role
+@Deprecated
 public interface DokuWikiCurlyBracketPlugin
 {
     /**

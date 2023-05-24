@@ -11,12 +11,12 @@ This is some <span style="color:red;font-size:150%;">inline HTML</span>
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
+beginParagraph
 onMacroInline [html] [] [
 This is some <span style="color:red;font-size:150%;">inline HTML</span>
 ]
-beginParagraph
+endParagraph
 onMacroStandalone [html] [] [
 <p style="border:2px dashed red;">And this is some block HTML</p>
 ]
-endParagraph
 endDocument

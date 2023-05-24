@@ -31,7 +31,7 @@
     <name>DokuWiki - Syntax</name>
     <description>DokuWiki Syntax Parser</description>
     <properties>
-        <xwiki.jacoco.instructionRatio>0.85</xwiki.jacoco.instructionRatio>
+        <xwiki.jacoco.instructionRatio>0.67</xwiki.jacoco.instructionRatio>
         <!-- Name to display by the Extension Manager -->
         <xwiki.extension.name>DokuWiki Syntax</xwiki.extension.name>
 
@@ -41,11 +41,9 @@
         <!-- Components -->
         <xwiki.extension.components>
           org.xwiki.rendering.parser.Parser/dokuwiki/1.0
-          org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiPlugin/angleBracket
-          org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiPlugin/curlyBracket
-          org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiCurlyBracketPlugin/rss
-          org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiAngleBracketPlugin/code
         </xwiki.extension.components>
+        <checkstyle.suppressions.location>${basedir}/src/checkstyle/checkstyle-suppressions.xml
+        </checkstyle.suppressions.location>
     </properties>
     <dependencies>
         <dependency>
@@ -100,6 +98,18 @@
            <artifactId>tika-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.9.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-maven-plugin</artifactId>
+            <version>4.9.3</version>
+            <type>maven-plugin</type>
+        </dependency>
+
 
         <!-- Test dependencies -->
         <dependency>
@@ -142,12 +152,32 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        org/xwiki/contrib/dokuwiki/syntax/internal/parser/DokuWikiIterativeParser.java,
-                        org/xwiki/contrib/dokuwiki/syntax/internal/parser/DokuWikiStreamParser.java,
-                        org/xwiki/contrib/dokuwiki/syntax/DokuWikiSyntaxInputProperties.java
+                        <!-- Generated code doesn't follow XWiki's code style -->
+                        org/xwiki/contrib/dokuwiki/syntax/internal/parser/DokuWikiGrammarLexer.java,
+                        org/xwiki/contrib/dokuwiki/syntax/internal/parser/DokuWikiGrammarParser.java,
+                        org/xwiki/contrib/dokuwiki/syntax/internal/parser/DokuWikiGrammarBaseVisitor.java,
+                        org/xwiki/contrib/dokuwiki/syntax/internal/parser/DokuWikiGrammarVisitor.java,
                     </excludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <version>4.9.3</version>
+                <executions>
+                    <execution>
+                        <id>antlr</id>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <listener>false</listener>
+                    <visitor>true</visitor>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 </project>

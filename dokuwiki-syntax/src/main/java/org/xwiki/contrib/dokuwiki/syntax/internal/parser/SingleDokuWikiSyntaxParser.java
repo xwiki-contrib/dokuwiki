@@ -17,38 +17,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.dokuwiki.syntax.plugins.internal.angleBrackets;
+package org.xwiki.contrib.dokuwiki.syntax.internal.parser;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import org.xwiki.component.annotation.Component;
-import org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxParserHelper;
-import org.xwiki.contrib.dokuwiki.syntax.plugins.DokuWikiAngleBracketPlugin;
+import org.xwiki.component.annotation.Role;
 import org.xwiki.rendering.listener.Listener;
 
 /**
- * DokuWiki Code plugin parser.
+ * Parser for a single isolated syntax in a DokuWiki document like a link or an image.
  *
- * @version $Id: $
- * @since 1.3
+ * @version $Id$
+ * @since 2.0
  */
-@Component
-@Named("code")
-@Singleton
-public class Code implements DokuWikiAngleBracketPlugin
+@Role
+public interface SingleDokuWikiSyntaxParser
 {
-    @Inject
-    private DokuWikiSyntaxParserHelper helper;
-
-    @Override
-    public void parse(ArrayList<Character> buffer, Reader source, Listener listener)
-            throws IOException
-    {
-    }
+    /**
+     * Parse the given content and call the listener to generate the corresponding events.
+     *
+     * @param content the content to parse
+     * @param listener the listener to call to generate events
+     */
+    void parse(String content, Listener listener);
 }

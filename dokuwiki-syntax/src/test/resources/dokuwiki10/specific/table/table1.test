@@ -9,29 +9,28 @@
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-beginParagraph
 beginTable
 beginTableRow
-beginTableCell [[align]=[centre]]
-endTableCell [[align]=[centre]]
-beginTableHeadCell [[align]=[centre]]
+beginTableCell
+endTableCell
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [1]
-endTableHeadCell [[align]=[centre]]
-beginTableHeadCell [[align]=[centre]]
+endTableHeadCell
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [2]
-endTableHeadCell [[align]=[centre]]
+endTableHeadCell
 endTableRow
 beginTableRow
-beginTableHeadCell [[align]=[centre]]
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [3]
-endTableHeadCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableHeadCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [1]
@@ -39,8 +38,8 @@ onSpace
 onWord [Col]
 onSpace
 onWord [2]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [1]
@@ -48,15 +47,15 @@ onSpace
 onWord [Col]
 onSpace
 onWord [3]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableHeadCell [[align]=[centre]]
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [4]
-endTableHeadCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableHeadCell
+beginTableCell
 onWord [no]
 onSpace
 onWord [colspan]
@@ -64,17 +63,17 @@ onSpace
 onWord [this]
 onSpace
 onWord [time]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-endTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
+endTableCell
 endTableRow
 beginTableRow
-beginTableHeadCell [[align]=[centre]]
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [5]
-endTableHeadCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableHeadCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [2]
@@ -82,8 +81,8 @@ onSpace
 onWord [Col]
 onSpace
 onWord [2]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [2]
@@ -91,8 +90,7 @@ onSpace
 onWord [Col]
 onSpace
 onWord [3]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 endTable
-endParagraph
 endDocument

@@ -9,52 +9,76 @@
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-beginParagraph
 beginTable
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Image]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-onWord [''gif'',]
+endTableCell
+beginTableCell
+beginFormat [MONOSPACE]
+onWord [gif]
+endFormat [MONOSPACE]
+onSpecialSymbol [,]
 onSpace
-onWord [''jpg'',]
+beginFormat [MONOSPACE]
+onWord [jpg]
+endFormat [MONOSPACE]
+onSpecialSymbol [,]
 onSpace
-onWord [''png'']
-endTableCell [[align]=[centre]]
+beginFormat [MONOSPACE]
+onWord [png]
+endFormat [MONOSPACE]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Video]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-onWord [''webm'',]
+endTableCell
+beginTableCell
+beginFormat [MONOSPACE]
+onWord [webm]
+endFormat [MONOSPACE]
+onSpecialSymbol [,]
 onSpace
-onWord [''ogv'',]
+beginFormat [MONOSPACE]
+onWord [ogv]
+endFormat [MONOSPACE]
+onSpecialSymbol [,]
 onSpace
-onWord [''mp4'']
-endTableCell [[align]=[centre]]
+beginFormat [MONOSPACE]
+onWord [mp4]
+endFormat [MONOSPACE]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Audio]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-onWord [''ogg'',]
+endTableCell
+beginTableCell
+beginFormat [MONOSPACE]
+onWord [ogg]
+endFormat [MONOSPACE]
+onSpecialSymbol [,]
 onSpace
-onWord [''mp3'',]
+beginFormat [MONOSPACE]
+onWord [mp3]
+endFormat [MONOSPACE]
+onSpecialSymbol [,]
 onSpace
-onWord [''wav'']
-endTableCell [[align]=[centre]]
+beginFormat [MONOSPACE]
+onWord [wav]
+endFormat [MONOSPACE]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Flash]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-onWord [''swf'']
-endTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
+beginFormat [MONOSPACE]
+onWord [swf]
+endFormat [MONOSPACE]
+endTableCell
 endTableRow
 endTable
-endParagraph
 endDocument

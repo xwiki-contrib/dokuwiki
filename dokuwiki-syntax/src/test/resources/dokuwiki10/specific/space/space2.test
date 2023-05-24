@@ -61,17 +61,20 @@ onWord [a]
 onSpace
 onWord [whitespace]
 onSpace
-onWord [\\this]
+onSpecialSymbol [\]
+onSpecialSymbol [\]
+onWord [this]
 onSpace
 onWord [happens]
 onSpace
 onWord [without]
 onSpace
-onWord [it.]
+onWord [it]
+onSpecialSymbol [.]
 endParagraph
 endDocument
 .#-----------------------------------------------------
-.expect|xwiki/2.1
+.inputexpect|xwiki/2.1
 .#-----------------------------------------------------
 This is some text with some linebreaks
 Note that the two backslashes are only recognized at the end of a line

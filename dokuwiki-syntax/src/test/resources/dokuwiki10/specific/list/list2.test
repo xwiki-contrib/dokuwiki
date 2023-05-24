@@ -84,14 +84,16 @@ onSpace
 onWord [levels]
 endListItem
 beginListItem
-onWord [That's]
+onWord [That]
+onSpecialSymbol [']
+onWord [s]
 onSpace
 onWord [it]
 endListItem
 endList [NUMBERED]
 endDocument
 .#-----------------------------------------------------
-.expect|xwiki/2.1
+.inputexpect|xwiki/2.1
 .#-----------------------------------------------------
 * This is a list
 ** The second item

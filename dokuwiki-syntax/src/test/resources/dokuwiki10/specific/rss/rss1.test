@@ -6,7 +6,5 @@
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-beginParagraph
-onMacroInline [rss] [feed=http://slashdot.org/index.rss|count=8]
-endParagraph
+onMacroStandalone [rss] [feed=http://slashdot.org/index.rss|count=5]
 endDocument

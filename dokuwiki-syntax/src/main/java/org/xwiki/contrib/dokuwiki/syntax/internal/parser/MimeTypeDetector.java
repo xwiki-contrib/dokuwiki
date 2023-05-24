@@ -30,7 +30,7 @@ import org.xwiki.component.phase.Initializable;
  * Detect the mimetype of a URL or filename.
  *
  * @version $Id$
- * @since 1.4
+ * @since 2.0
  */
 @Component(roles = MimeTypeDetector.class)
 @Singleton

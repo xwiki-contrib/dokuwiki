@@ -11,24 +11,24 @@
 beginDocument
 beginTable
 beginTableRow
-beginTableHeadCell [[align]=[centre]]
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [1]
-endTableHeadCell [[align]=[centre]]
-beginTableHeadCell [[align]=[centre]]
+endTableHeadCell
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [2]
-endTableHeadCell [[align]=[centre]]
-beginTableHeadCell [[align]=[centre]]
+endTableHeadCell
+beginTableHeadCell
 onWord [Heading]
 onSpace
 onWord [3]
-endTableHeadCell [[align]=[centre]]
+endTableHeadCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Row]
 onSpace
 onWord [1]
@@ -36,8 +36,8 @@ onSpace
 onWord [Col]
 onSpace
 onWord [1]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [this]
 onSpace
 onWord [cell]
@@ -45,8 +45,8 @@ onSpace
 onWord [spans]
 onSpace
 onWord [vertically]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [1]
@@ -54,10 +54,10 @@ onSpace
 onWord [Col]
 onSpace
 onWord [3]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Row]
 onSpace
 onWord [2]
@@ -65,11 +65,13 @@ onSpace
 onWord [Col]
 onSpace
 onWord [1]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-onWord [:::]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
+onSpecialSymbol [:]
+onSpecialSymbol [:]
+onSpecialSymbol [:]
+endTableCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [2]
@@ -77,10 +79,10 @@ onSpace
 onWord [Col]
 onSpace
 onWord [3]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [Row]
 onSpace
 onWord [3]
@@ -88,11 +90,13 @@ onSpace
 onWord [Col]
 onSpace
 onWord [1]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
-onWord [:::]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
+onSpecialSymbol [:]
+onSpecialSymbol [:]
+onSpecialSymbol [:]
+endTableCell
+beginTableCell
 onWord [Row]
 onSpace
 onWord [2]
@@ -100,7 +104,7 @@ onSpace
 onWord [Col]
 onSpace
 onWord [3]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 endTable
 endDocument

@@ -12,11 +12,11 @@ beginParagraph
 beginLink [Typed = [false] Type = [url] Reference = [http://php.net]] [false]
 onImage [Typed = [false] Type = [attach] Reference = [wiki:dokuwiki-128.png]] [false] [[style]=[display: block; margin-left: auto; margin-right: auto;]]
 endLink [Typed = [false] Type = [url] Reference = [http://php.net]] [false]
+onSpace
 beginLink [Typed = [false] Type = [url] Reference = [http://php.net]] [false]
 onImage [Typed = [false] Type = [attach] Reference = [wiki:dokuwiki-128.png]] [false] [[style]=[float: right;]]
 endLink [Typed = [false] Type = [url] Reference = [http://php.net]] [false]
-endParagraph
-beginParagraph
+onSpace
 beginLink [Typed = [false] Type = [url] Reference = [http://php.net]] [false]
 onImage [Typed = [false] Type = [attach] Reference = [wiki:dokuwiki-128.png]] [false] [[style]=[float: left;]]
 endLink [Typed = [false] Type = [url] Reference = [http://php.net]] [false]
@@ -25,6 +25,4 @@ endDocument
 .#-----------------------------------------------------
 .expect|xwiki/2.1
 .#-----------------------------------------------------
-[[[[image:wiki:dokuwiki-128.png||style="display: block; margin-left: auto; margin-right: auto;"]]>>http://php.net]][[[[image:wiki:dokuwiki-128.png||style="float: right;"]]>>http://php.net]]
-
-[[[[image:wiki:dokuwiki-128.png||style="float: left;"]]>>http://php.net]]
+[[[[image:wiki:dokuwiki-128.png||style="display: block; margin-left: auto; margin-right: auto;"]]>>http://php.net]] [[[[image:wiki:dokuwiki-128.png||style="float: right;"]]>>http://php.net]] [[[[image:wiki:dokuwiki-128.png||style="float: left;"]]>>http://php.net]]

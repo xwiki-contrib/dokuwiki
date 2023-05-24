@@ -11,57 +11,51 @@
 .#-----------------------------------------------------
 beginDocument
 beginSection
-beginHeader [1, ]
-onSpace
+beginHeader [1, HHeadlineLevel1]
 onWord [Headline]
 onSpace
 onWord [Level]
 onSpace
 onWord [1]
-onSpace
-endHeader [1, ]
-endSection
+endHeader [1, HHeadlineLevel1]
 beginSection
-beginHeader [3, ]
-onSpace
+beginSection
+beginHeader [3, HHeadlineLevel3]
 onWord [Headline]
 onSpace
 onWord [Level]
 onSpace
 onWord [3]
-onSpace
-endHeader [3, ]
-endSection
+endHeader [3, HHeadlineLevel3]
 beginSection
-beginHeader [4, ]
-onSpace
+beginHeader [4, HHeadlineLevel4]
 onWord [Headline]
 onSpace
 onWord [Level]
 onSpace
 onWord [4]
-onSpace
-endHeader [4, ]
-endSection
+endHeader [4, HHeadlineLevel4]
 beginSection
-beginHeader [5, ]
-onSpace
+beginHeader [5, HHeadlineLevel5]
 onWord [Headline]
 onSpace
 onWord [Level]
 onSpace
 onWord [5]
-onSpace
-endHeader [5, ]
+endHeader [5, HHeadlineLevel5]
+endSection
+endSection
+endSection
+endSection
 endSection
 endDocument
 .#-----------------------------------------------------
-.expect|xwiki/2.1
+.inputexpect|xwiki/2.1
 .#-----------------------------------------------------
-=  Headline Level 1  =
+= Headline Level 1 =
 
-===  Headline Level 3  ===
+=== Headline Level 3 ===
 
-====  Headline Level 4  ====
+==== Headline Level 4 ====
 
-=====  Headline Level 5  =====
+===== Headline Level 5 =====

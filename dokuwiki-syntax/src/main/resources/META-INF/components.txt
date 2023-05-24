@@ -1,9 +1,9 @@
 org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiParser
 org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiStreamParser
-org.xwiki.contrib.dokuwiki.syntax.plugins.internal.CurlyBracketDokuWikiPlugin
-org.xwiki.contrib.dokuwiki.syntax.plugins.internal.AngleBracketDokuWikiPlugin
-org.xwiki.contrib.dokuwiki.syntax.plugins.internal.curlyBrackets.Rss
-org.xwiki.contrib.dokuwiki.syntax.plugins.internal.angleBrackets.Code
 org.xwiki.contrib.dokuwiki.syntax.DokuWikiSyntaxParserHelper
-org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiIterativeParser
 org.xwiki.contrib.dokuwiki.syntax.internal.parser.MimeTypeDetector
+org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiParserVisitor
+org.xwiki.contrib.dokuwiki.syntax.internal.parser.ImageSyntaxParser
+org.xwiki.contrib.dokuwiki.syntax.internal.parser.InterWikiReferenceParser
+org.xwiki.contrib.dokuwiki.syntax.internal.parser.LinkSyntaxParser
+org.xwiki.contrib.dokuwiki.syntax.internal.parser.InlinePlainParser

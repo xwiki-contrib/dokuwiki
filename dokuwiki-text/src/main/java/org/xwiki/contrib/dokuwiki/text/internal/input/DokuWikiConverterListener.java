@@ -19,6 +19,7 @@
  */
 package org.xwiki.contrib.dokuwiki.text.internal.input;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
@@ -37,16 +39,22 @@ import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.model.reference.LocalDocumentReference;
 import org.xwiki.model.reference.WikiReference;
+import org.xwiki.rendering.listener.Listener;
 import org.xwiki.rendering.listener.WrappingListener;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
+import org.xwiki.rendering.parser.ParseException;
+import org.xwiki.rendering.parser.StreamParser;
+import org.xwiki.rendering.renderer.PrintRenderer;
+import org.xwiki.rendering.renderer.PrintRendererFactory;
+import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
 
 /**
  * Convert DokuWiki content like links to their XWiki equivalent.
  *
  * @version $Id$
- * @since 1.4
+ * @since 2.0
  */
 @Component(roles = DokuWikiConverterListener.class)
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
@@ -86,6 +94,14 @@ public class DokuWikiConverterListener extends WrappingListener
     @Inject
     private EntityReferenceSerializer<String> serializer;
 
+    @Inject
+    @Named(org.xwiki.contrib.dokuwiki.syntax.internal.parser.DokuWikiStreamParser.SYNTAX_STRING)
+    private StreamParser nestedParser;
+
+    @Inject
+    @Named("xwiki/2.1")
+    private PrintRendererFactory xwiki21Factory;
+
     private String dokuWikiReference;
 
     /**
@@ -94,6 +110,31 @@ public class DokuWikiConverterListener extends WrappingListener
     public void setDokuWikiReference(String dokuWikiReference)
     {
         this.dokuWikiReference = dokuWikiReference;
+    }
+
+    @Override
+    public void onMacro(String id, Map<String, String> parameters, String content, boolean inline)
+    {
+        String convertedContent = content;
+
+        if ("footnote".equals(id)) {
+            Listener oldListener = getWrappedListener();
+            try (StringReader contentReader = new StringReader(content)) {
+                // We need to convert the footnote content to XWiki syntax
+                DefaultWikiPrinter printer = new DefaultWikiPrinter();
+                PrintRenderer renderer = this.xwiki21Factory.createRenderer(printer);
+                // Re-use this listener with a new printer as this listener has no state.
+                setWrappedListener(renderer);
+                this.nestedParser.parse(contentReader, this);
+                convertedContent = renderer.getPrinter().toString();
+            } catch (ParseException e) {
+                // Ignore, the conversion failed. We'll use the original content.
+            } finally {
+                this.setWrappedListener(oldListener);
+            }
+        }
+
+        super.onMacro(id, parameters, convertedContent, inline);
     }
 
     @Override

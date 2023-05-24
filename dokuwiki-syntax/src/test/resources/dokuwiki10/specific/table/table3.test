@@ -11,13 +11,13 @@
 beginDocument
 beginTable
 beginTableRow
-beginTableHeadCell [[align]=[centre]]
+beginTableHeadCell [[align]=[center]]
 onWord [Table]
 onSpace
 onWord [with]
 onSpace
 onWord [alignment]
-endTableHeadCell [[align]=[centre]]
+endTableHeadCell [[align]=[center]]
 beginTableHeadCell
 endTableHeadCell
 beginTableHeadCell
@@ -27,34 +27,34 @@ beginTableRow
 beginTableCell [[align]=[right]]
 onWord [right]
 endTableCell [[align]=[right]]
-beginTableCell [[align]=[centre]]
+beginTableCell [[align]=[center]]
 onWord [center]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[left]]
+endTableCell [[align]=[center]]
+beginTableCell
 onWord [left]
-endTableCell [[align]=[left]]
+endTableCell
 endTableRow
 beginTableRow
-beginTableCell [[align]=[left]]
+beginTableCell
 onWord [left]
-endTableCell [[align]=[left]]
+endTableCell
 beginTableCell [[align]=[right]]
 onWord [right]
 endTableCell [[align]=[right]]
-beginTableCell [[align]=[centre]]
+beginTableCell [[align]=[center]]
 onWord [center]
-endTableCell [[align]=[centre]]
+endTableCell [[align]=[center]]
 endTableRow
 beginTableRow
-beginTableCell [[align]=[centre]]
+beginTableCell
 onWord [xxxxxxxxxxxx]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [xxxxxxxxxxxx]
-endTableCell [[align]=[centre]]
-beginTableCell [[align]=[centre]]
+endTableCell
+beginTableCell
 onWord [xxxxxxxxxxxx]
-endTableCell [[align]=[centre]]
+endTableCell
 endTableRow
 endTable
 endDocument

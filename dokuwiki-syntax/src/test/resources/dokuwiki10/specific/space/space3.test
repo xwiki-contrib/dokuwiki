@@ -1,0 +1,55 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.0
+.#-----------------------------------------------------
+Paragraph\\
+
+[[link]]
+\\
+  * List item\\
+\\
+^ Table ^ 
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+onWord [Paragraph]
+onNewLine
+endParagraph
+beginParagraph
+beginLink [Typed = [false] Type = [url] Reference = [link]] [false]
+endLink [Typed = [false] Type = [url] Reference = [link]] [false]
+onSpace
+onNewLine
+endParagraph
+beginList [BULLETED]
+beginListItem
+onWord [List]
+onSpace
+onWord [item]
+onNewLine
+endListItem
+endList [BULLETED]
+beginParagraph
+onNewLine
+endParagraph
+beginTable
+beginTableRow
+beginTableHeadCell
+onWord [Table]
+endTableHeadCell
+endTableRow
+endTable
+endDocument
+.#-----------------------------------------------------
+.inputexpect|xwiki/2.1
+.#-----------------------------------------------------
+Paragraph\\
+
+[[link]] \\
+
+* List item\\
+
+\\
+
+|=Table

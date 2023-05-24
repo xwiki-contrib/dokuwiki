@@ -35,7 +35,7 @@ import org.xwiki.model.reference.LocalDocumentReference;
  * Various converter methods for DokuWiki references.
  *
  * @version $Id$
- * @since 1.4
+ * @since 2.0
  */
 @Component(roles = DokuWikiReferenceConverter.class)
 @Singleton
