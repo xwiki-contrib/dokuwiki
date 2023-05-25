@@ -592,8 +592,14 @@ public class DokuWikiParserVisitor extends DokuWikiGrammarBaseVisitor<Object>
         this.listener.beginTableRow(Listener.EMPTY_PARAMETERS);
 
         List<DokuWikiGrammarParser.TableCellContext> cells = ctx.tableCell();
+
+        // Skip empty cells at the beginning of the row as these are also skipped by DokuWiki.
+        int skipStart = 0;
+        while (skipStart < cells.size() && cells.get(skipStart).getText().length() == 1) {
+            skipStart++;
+        }
         // Skip the last "cell" as it should only be the end marker of the table row.
-        cells.stream().limit(cells.size() - 1L).forEach(this::visitTableCell);
+        cells.stream().limit(cells.size() - 1L).skip(skipStart).forEach(this::visitTableCell);
 
         this.listener.endTableRow(Listener.EMPTY_PARAMETERS);
 

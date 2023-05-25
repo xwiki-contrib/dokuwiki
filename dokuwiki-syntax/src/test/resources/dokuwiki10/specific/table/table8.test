@@ -1,0 +1,27 @@
+.#-----------------------------------------------------
+.input|dokuwiki/1.0
+.#-----------------------------------------------------
+^Title^
+||Content|
+| |
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginTable
+beginTableRow
+beginTableHeadCell
+onWord [Title]
+endTableHeadCell
+endTableRow
+beginTableRow
+beginTableCell
+onWord [Content]
+endTableCell
+endTableRow
+beginTableRow
+beginTableCell
+endTableCell
+endTableRow
+endTable
+endDocument
