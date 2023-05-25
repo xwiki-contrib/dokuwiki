@@ -197,7 +197,7 @@ footnote
 LIST_INDENT: '\n ' ' '+ ('*' | '-') ' '*;
 // ANTLR picks the longest match, so we need to make sure that preformatted doesn't match list items.
 PREFORMATTED: '\n ' ' '+ (~[ *\-\n] ~[\n]*)?;
-HEADING: '\n=' '='+ ~[\n]+ '=' '='+ [ \t]* {_input.LA(1) == '\n'}?;
+HEADING: '\n' ' '? '=' '='+ ~[\n]+ '=' '='+ [ \t]* {_input.LA(1) == '\n'}?;
 QUOTE_START: '\n' '>'+ ' '*;
 HORIZONTAL_LINE: '\n' [ \t]* '---' '-'+ [ \t]* {_input.LA(1) == '\n'}?;
 // Don't match the actual table cell separator so we can nicely match it inside the table cell.
