@@ -27,7 +27,7 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.commons.io.IOUtils;
@@ -86,7 +86,7 @@ public class DokuWikiStreamParser implements StreamParser
         try {
             // Pad with line breaks to make sure all rules match nicely.
             String input = LINE_BREAK + IOUtils.toString(source) + LINE_BREAK;
-            DokuWikiGrammarLexer grammarLexer = new DokuWikiGrammarLexer(CharStreams.fromString(input));
+            DokuWikiGrammarLexer grammarLexer = new DokuWikiGrammarLexer(new ANTLRInputStream(input));
             DokuWikiGrammarParser grammarParser = new DokuWikiGrammarParser(new CommonTokenStream(grammarLexer));
             ParseTree tree = grammarParser.document();
             DokuWikiParserVisitor dokuWikiParserVisitor = this.dokuWikiParserVisitorProvider.get();
