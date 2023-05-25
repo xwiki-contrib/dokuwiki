@@ -74,6 +74,8 @@ public class DokuWikiParserVisitor extends DokuWikiGrammarBaseVisitor<Object>
 
     private static final String CLOSING_ANGLE = ">";
 
+    private static final String LANGUAGE_PARAMETER = "language";
+
     /**
      * Helper class for wrapping a non-chaining listener as chaining listener to be used at the end of a listener chain.
      */
@@ -216,7 +218,7 @@ public class DokuWikiParserVisitor extends DokuWikiGrammarBaseVisitor<Object>
             String language = parameters[0];
 
             if (!language.equals("-") && !language.startsWith("[")) {
-                parametersMap.put("language", language);
+                parametersMap.put(LANGUAGE_PARAMETER, language);
             }
         }
 
@@ -430,7 +432,7 @@ public class DokuWikiParserVisitor extends DokuWikiGrammarBaseVisitor<Object>
             ensureBlockAcceptable();
         }
 
-        this.listener.onMacro("php", Listener.EMPTY_PARAMETERS, content, isInline);
+        this.listener.onMacro(CODE_MACRO, Collections.singletonMap(LANGUAGE_PARAMETER, "php"), content, isInline);
         return null;
     }
 

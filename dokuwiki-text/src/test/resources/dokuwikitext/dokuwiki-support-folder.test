@@ -1672,19 +1672,19 @@ echo '&lt;/tr&gt;&lt;/table&gt;';
 &lt;/PHP&gt;
 {{/code}}
 
-{{php}}
+{{code language="php"}}
 echo 'The PHP version: ';
 echo phpversion();
 echo ' (inline HTML)';
-{{/php}}
+{{/code}}
 
-{{php}}
+{{code language="php"}}
 
 echo '&lt;table class="inline"&gt;&lt;tr&gt;&lt;td&gt;The same, but inside a block level element:&lt;/td&gt;';
 echo '&lt;td&gt;'.phpversion().'&lt;/td&gt;';
 echo '&lt;/tr&gt;&lt;/table&gt;';
 
-{{/php}}
+{{/code}}
 
 **Please Note**: HTML and PHP embedding is disabled by default in the configuration. If disabled, the code is displayed instead of executed.
 

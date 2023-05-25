@@ -5542,13 +5542,13 @@ echo '<td>'.phpversion().'</td>';
 echo '</tr></table>';
 </PHP>]
 beginParagraph
-onMacroInline [php] [] [
+onMacroInline [code] [language=php] [
 echo 'The PHP version: ';
 echo phpversion();
 echo ' (inline HTML)';
 ]
 endParagraph
-onMacroStandalone [php] [] [
+onMacroStandalone [code] [language=php] [
 echo '<table class="inline"><tr><td>The same, but inside a block level element:</td>';
 echo '<td>'.phpversion().'</td>';
 echo '</tr></table>';

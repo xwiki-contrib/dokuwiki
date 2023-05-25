@@ -82,12 +82,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.xwiki.contrib</groupId>
-            <artifactId>macro-php</artifactId>
-            <version>4.0.46</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.xwiki.rendering</groupId>
             <artifactId>xwiki-rendering-macro-toc</artifactId>
             <version>${rendering.version}</version>
