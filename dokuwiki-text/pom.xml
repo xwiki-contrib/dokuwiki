@@ -43,13 +43,6 @@
           org.xwiki.filter.input.InputFilterStreamFactory/dokuwiki+text
         </xwiki.extension.components>
     </properties>
-    <repositories>
-        <repository>
-            <id>ailis-releases</id>
-            <name>Ailis Maven Releases</name>
-            <url>http://nexus.ailis.de/content/groups/public/</url>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>com.xk72</groupId>
