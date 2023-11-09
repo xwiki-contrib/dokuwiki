@@ -22,7 +22,7 @@
         <parameters>
           <entry>
             <string>creation_author</string>
-            <string>User</string>
+            <string>user</string>
           </entry>
           <entry>
             <string>creation_date</string>

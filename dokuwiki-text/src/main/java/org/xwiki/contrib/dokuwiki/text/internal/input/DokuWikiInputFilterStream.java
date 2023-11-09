@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -35,6 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
@@ -52,6 +55,8 @@ import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CloseShieldInputStream;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
@@ -110,8 +115,6 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     private static final String KEY_MEDIA_FOLDER = "media";
 
     private static final String KEY_PERSISTENT = "persistent";
-
-    private static final String KEY_CREATOR = "creator";
 
     private static final String KEY_LAST_CHANGE = "last_change";
 
@@ -453,22 +456,27 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
         FilterEventParameters documentLocaleParameters = new FilterEventParameters();
 
         if (Files.isRegularFile(metaFile)) {
-            String metadataFileContents = new String(Files.readAllBytes(metaFile), StandardCharsets.UTF_8);
-            MixedArray documentMetadata = Pherialize.unserialize(metadataFileContents).toArray();
-            readDocumentParametersFromMetadata(documentMetadata, documentLocaleParameters);
+            try {
+                String metadataFileContents = new String(Files.readAllBytes(metaFile), StandardCharsets.UTF_8);
+                MixedArray documentMetadata = Pherialize.unserialize(metadataFileContents).toArray();
+                readDocumentParametersFromMetadata(documentMetadata, documentLocaleParameters);
 
-            // Wiki document revision
-
-            if ((documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).containsKey(KEY_CREATED)
-                && documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).containsKey(KEY_MODIFIED))
-                && documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE)
-                    .getLong(KEY_CREATED) < documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE)
-                        .getLong(KEY_MODIFIED)) {
-                // Wiki Document Locale
-                proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
-                // read revisions
-                readPageRevision(pageItem, dokuwikiDataDirectory, proxyFilter);
-            } else {
+                // Wiki document revision
+                Long created = getLongMetadata(documentMetadata, KEY_DATE, KEY_CREATED);
+                Long modified = getLongMetadata(documentMetadata, KEY_DATE, KEY_MODIFIED);
+                if (created != null && modified != null && created < modified) {
+                    // Wiki Document Locale
+                    proxyFilter.beginWikiDocumentLocale(Locale.ROOT, documentLocaleParameters);
+                    // read revisions
+                    readPageRevision(pageItem, dokuwikiDataDirectory, proxyFilter);
+                } else {
+                    documentLocaleParameters =
+                        readDocumentContent(pageItem, documentLocaleParameters, proxyFilter);
+                }
+            } catch (Exception e) {
+                this.logger.warn(
+                    "Failed to parse DokuWiki page with metadata file [{}], ignoring metadata. Root cause: {}.",
+                    metaFile, ExceptionUtils.getRootCauseMessage(e));
                 documentLocaleParameters =
                     readDocumentContent(pageItem, documentLocaleParameters, proxyFilter);
             }
@@ -616,25 +624,77 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
     private void readDocumentParametersFromMetadata(MixedArray documentMetadata,
         FilterEventParameters documentParameters)
     {
-        if (documentMetadata.getArray(KEY_PERSISTENT).containsKey(KEY_CREATOR)
-            && !documentMetadata.getArray(KEY_PERSISTENT).get(KEY_CREATOR).equals("")) {
-            documentParameters.put(WikiDocumentFilter.PARAMETER_CREATION_AUTHOR,
-                documentMetadata.getArray(KEY_PERSISTENT).getString(KEY_CREATOR));
+        // Save the creator, only available since 2011-05-25 (note that the creator metadata in DokuWiki is the display
+        // name, not the actual username, see https://bugs.dokuwiki.org/1397.html).
+        String creator = getStringMetadata(documentMetadata, KEY_USER);
+        if (creator != null) {
+            documentParameters.put(WikiDocumentFilter.PARAMETER_CREATION_AUTHOR, creator);
         }
-        documentParameters.put(WikiDocumentFilter.PARAMETER_CREATION_DATE,
-            new Date(1000 * documentMetadata.getArray(KEY_PERSISTENT).getArray(KEY_DATE).getLong(KEY_CREATED)));
-        if (documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).containsKey(KEY_MODIFIED)
-            && !documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).getString(KEY_MODIFIED).equals("")) {
+
+        Long dateCreated = getLongMetadata(documentMetadata, KEY_DATE, KEY_CREATED);
+        // Save the creation date.
+        if (dateCreated != null) {
+            documentParameters.put(WikiDocumentFilter.PARAMETER_CREATION_DATE, new Date(1000 * dateCreated));
+        }
+
+        Long dateModified = getLongMetadata(documentMetadata, KEY_DATE, KEY_MODIFIED);
+        // Save the last revision date.
+        if (dateModified != null) {
             documentParameters.put(WikiDocumentFilter.PARAMETER_LASTREVISION,
-                documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).getString(KEY_MODIFIED));
-            documentParameters.put(WikiDocumentFilter.PARAMETER_REVISION_DATE,
-                new Date(1000 * documentMetadata.getArray(KEY_CURRENT).getArray(KEY_DATE).getLong(KEY_MODIFIED)));
+                getStringMetadata(documentMetadata, KEY_DATE, KEY_MODIFIED));
+            documentParameters.put(WikiDocumentFilter.PARAMETER_REVISION_DATE, new Date(1000 * dateModified));
         }
-        if (documentMetadata.getArray(KEY_CURRENT).containsKey(KEY_LAST_CHANGE)
-            && !documentMetadata.getArray(KEY_CURRENT).getString(KEY_USER).equals("")) {
-            documentParameters.put(WikiDocumentFilter.PARAMETER_REVISION_AUTHOR,
-                documentMetadata.getArray(KEY_CURRENT).getArray(KEY_LAST_CHANGE).getString(KEY_USER));
+
+        // Save the last revision author.
+        String lastRevisionAuthor = getStringMetadata(documentMetadata, KEY_LAST_CHANGE, KEY_USER);
+        if (lastRevisionAuthor != null) {
+            documentParameters.put(WikiDocumentFilter.PARAMETER_REVISION_AUTHOR, lastRevisionAuthor);
         }
+    }
+
+    private static <T> T getMetadata(MixedArray documentMetadata, String arrayName, String key,
+        Function<MixedArray, T> valueExtractor)
+    {
+        // Try both current and persistent metadata as metadata in DokuWiki is saved inconsistently.
+        // In old versions, it seems that sometimes only persistent metadata is present and correct, while in more
+        // recent versions it seems that some values only exist in the current metadata for external edits.
+        for (String persistentCurrent : Arrays.asList(KEY_CURRENT, KEY_PERSISTENT)) {
+            MixedArray metadataArray;
+            // Check if we have persistent and current metadata (after 2006-11-06).
+            if (documentMetadata.containsKey(persistentCurrent)) {
+                metadataArray = documentMetadata.getArray(persistentCurrent);
+            } else {
+                metadataArray = documentMetadata;
+            }
+            MixedArray innerMetadata;
+            if (arrayName == null) {
+                innerMetadata = metadataArray;
+            } else if (metadataArray.containsKey(arrayName)) {
+                innerMetadata = metadataArray.getArray(arrayName);
+            } else {
+                innerMetadata = null;
+            }
+            if (innerMetadata != null && innerMetadata.containsKey(key)
+                && StringUtils.isNotBlank(innerMetadata.getString(key))) {
+                return valueExtractor.apply(innerMetadata);
+            }
+        }
+        return null;
+    }
+
+    private static String getStringMetadata(MixedArray documentMetadata, String arrayName, String key)
+    {
+        return getMetadata(documentMetadata, arrayName, key, array -> array.getString(key));
+    }
+
+    private static Long getLongMetadata(MixedArray documentMetadata, String arrayName, String key)
+    {
+        return getMetadata(documentMetadata, arrayName, key, array -> array.getLong(key));
+    }
+
+    private static String getStringMetadata(MixedArray documentMetadata, String key)
+    {
+        return getStringMetadata(documentMetadata, null, key);
     }
 
     private void saveEntryToDisk(ArchiveInputStream archiveInputStream, ArchiveEntry archiveEntry, File folderToSave)
