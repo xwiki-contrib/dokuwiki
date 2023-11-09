@@ -117,6 +117,92 @@
     </wikiDocumentLocale>
   </wikiDocument>
 </wikiSpace>
+<wikiSpace name="test">
+  <wikiDocument name="WebHome">
+    <wikiDocumentLocale>
+      <p>
+        <parameters>
+          <entry>
+            <string>creation_author</string>
+            <string>michael</string>
+          </entry>
+          <entry>
+            <string>creation_date</string>
+            <date>2023-11-09 10:38:03.0 UTC</date>
+          </entry>
+          <entry>
+            <string>lastrevision</string>
+            <string>1699526291</string>
+          </entry>
+          <entry>
+            <string>revision_date</string>
+            <date>2023-11-09 10:38:11.0 UTC</date>
+          </entry>
+          <entry>
+            <string>revision_author</string>
+            <string>michael</string>
+          </entry>
+        </parameters>
+      </p>
+      <wikiDocumentRevision revision="1699526283">
+        <p>
+          <parameters>
+            <entry>
+              <string>content</string>
+              <string>= Test =</string>
+            </entry>
+          </parameters>
+        </p>
+      </wikiDocumentRevision>
+      <wikiDocumentRevision revision="1699526291">
+        <p>
+          <parameters>
+            <entry>
+              <string>content</string>
+              <string>= Test =
+
+Second version content.</string>
+            </entry>
+          </parameters>
+        </p>
+      </wikiDocumentRevision>
+    </wikiDocumentLocale>
+  </wikiDocument>
+</wikiSpace>
+<wikiSpace name="testpage">
+  <wikiDocument name="WebHome">
+    <wikiDocumentLocale>
+      <p>
+        <parameters>
+          <entry>
+            <string>creation_author</string>
+            <string>michael</string>
+          </entry>
+          <entry>
+            <string>creation_date</string>
+            <date>2023-11-08 12:52:33.0 UTC</date>
+          </entry>
+          <entry>
+            <string>lastrevision</string>
+            <string>1699447953</string>
+          </entry>
+          <entry>
+            <string>revision_date</string>
+            <date>2023-11-08 12:52:33.0 UTC</date>
+          </entry>
+          <entry>
+            <string>revision_author</string>
+            <string>michael</string>
+          </entry>
+          <entry>
+            <string>content</string>
+            <string>= Test page =</string>
+          </entry>
+        </parameters>
+      </p>
+    </wikiDocumentLocale>
+  </wikiDocument>
+</wikiSpace>
 <wikiSpace name="wiki">
   <wikiSpace name="dokuwiki">
     <wikiDocument name="WebHome">

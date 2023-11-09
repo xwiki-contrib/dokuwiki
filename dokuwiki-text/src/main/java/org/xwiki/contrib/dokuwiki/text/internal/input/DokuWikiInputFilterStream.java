@@ -122,6 +122,10 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
     private static final String DOKUWIKI_START_PAGE = "start";
 
+    private static final Pattern PATTERN_ATTIC_EXTENSION = Pattern.compile("\\.txt(\\.[^.]*)?$");
+
+    private static final Pattern PATTERN_ATTIC_VERSION_EXTENSION = Pattern.compile("\\.\\d+\\.txt(\\.[^.]*)?$");
+
     @Inject
     @Named("xwiki/2.1")
     private PrintRendererFactory xwiki21Factory;
@@ -540,7 +544,12 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
         if (Files.isDirectory(atticSubDirectory)) {
             try (Stream<Path> stream = Files.list(atticSubDirectory)) {
-                stream.filter(p -> p.getFileName().toString().startsWith(fileNameWithoutExtension))
+                stream
+                    // Filter directories.
+                    .filter(Files::isRegularFile)
+                    // Filter files that don't match the current file name.
+                    .filter(p -> PATTERN_ATTIC_VERSION_EXTENSION.matcher(p.getFileName().toString())
+                        .replaceFirst("").equals(fileNameWithoutExtension))
                     .sorted(Comparator.comparing(p -> extractRevision(fileNameWithoutExtension, p)))
                     .forEach(p -> {
                         try {
@@ -564,9 +573,8 @@ public class DokuWikiInputFilterStream extends AbstractBeanInputFilterStream<Dok
 
     private static long extractRevision(String fileNameWithoutExtension, Path p)
     {
-        String revision = p.getFileName().toString().replace(fileNameWithoutExtension + KEY_FULL_STOP, "")
-            .replace(".txt.gz", "");
-        return Long.parseLong(revision);
+        String revision = p.getFileName().toString().replace(fileNameWithoutExtension + KEY_FULL_STOP, "");
+        return Long.parseLong(PATTERN_ATTIC_EXTENSION.matcher(revision).replaceAll(""));
     }
 
     private String parseContent(String pageContents, String dokuwikiReference)
