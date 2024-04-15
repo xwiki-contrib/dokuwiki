@@ -51,10 +51,6 @@
             <artifactId>commons-codec</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-configuration</groupId>
-            <artifactId>commons-configuration</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.xwiki.platform</groupId>
             <artifactId>xwiki-platform-filter-event-model</artifactId>
             <version>${platform.version}</version>
@@ -66,7 +62,7 @@
         </dependency>
         <dependency>
             <groupId>org.xwiki.platform</groupId>
-            <artifactId>xwiki-platform-model</artifactId>
+            <artifactId>xwiki-platform-model-api</artifactId>
             <version>${platform.version}</version>
         </dependency>
         <dependency>
@@ -76,9 +72,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.xwiki.platform</groupId>
-            <artifactId>xwiki-platform-rendering-macro-rss</artifactId>
-            <version>${platform.version}</version>
+            <groupId>org.xwiki.contrib</groupId>
+            <artifactId>rss-display</artifactId>
+            <version>15.6</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -95,7 +91,6 @@
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
-            <version>4.5.1</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -150,7 +145,7 @@
             <plugin>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-maven-plugin</artifactId>
-                <version>4.5.1</version>
+                <version>${antlr4.version}</version>
                 <executions>
                     <execution>
                         <id>antlr</id>
