@@ -281,6 +281,24 @@ Not sure what this means? See the [[FAQ on the Licenses>>interwiki:doku:faq:lice
   </wikiSpace>
 </wikiSpace>
 <wikiSpace name="wiki">
+  <wikiSpace name="nested">
+    <wikiSpace name="page">
+      <wikiDocument name="WebHome">
+        <wikiDocumentLocale>
+          <p>
+            <parameters>
+              <entry>
+                <string>content</string>
+                <string>Nested page.</string>
+              </entry>
+            </parameters>
+          </p>
+        </wikiDocumentLocale>
+      </wikiDocument>
+    </wikiSpace>
+  </wikiSpace>
+</wikiSpace>
+<wikiSpace name="wiki">
   <wikiDocument name="WebHome">
     <wikiDocumentLocale>
       <wikiAttachment name="dokuwiki-128.png" size="27895">
