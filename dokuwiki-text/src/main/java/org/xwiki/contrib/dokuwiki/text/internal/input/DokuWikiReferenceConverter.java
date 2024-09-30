@@ -95,6 +95,8 @@ public class DokuWikiReferenceConverter
             parent = parent.getParent();
         }
 
+        Collections.reverse(parentPath);
+
         String fileNameWithoutExtension = StringUtils.removeEnd(path.getFileName().toString(), ".txt");
 
         if (parentPath.isEmpty()) {
