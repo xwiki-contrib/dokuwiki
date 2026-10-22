@@ -74,7 +74,7 @@
         <dependency>
             <groupId>org.xwiki.contrib</groupId>
             <artifactId>rss-display</artifactId>
-            <version>15.6</version>
+            <version>15.7</version>
             <optional>true</optional>
         </dependency>
         <dependency>
